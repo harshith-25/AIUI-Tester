@@ -1,0 +1,182 @@
+2026-02-17 16:02:04 | INFO     | __main__:_load_test_cases:110 - Loading test cases from: my_tests.csv
+2026-02-17 16:02:04 | INFO     | utils.csv_reader:read_test_cases:23 - 📂 Reading test cases from: my_tests.csv
+2026-02-17 16:02:04 | INFO     | utils.csv_reader:read_test_cases:48 - ✅ Successfully parsed 1 test cases
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:24 - ================================================================================
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:25 - 🚀 Starting Test Suite Execution
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:26 - ================================================================================
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:27 - Total Tests: 1
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:28 - Max Parallel: 3
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:29 - Retry Enabled: True
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_test_suite:30 - ================================================================================
+2026-02-17 16:02:04 | INFO     | core.test_runner:_run_parallel:81 - Running tests in parallel (max 3 concurrent)...
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_with_semaphore:87 - 
+################################################################################
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_with_semaphore:88 - Starting Test 1/1: TC-001
+2026-02-17 16:02:04 | INFO     | core.test_runner:run_with_semaphore:89 - ################################################################################
+2026-02-17 16:02:04 | INFO     | core.test_engine:execute_test:26 - ================================================================================
+2026-02-17 16:02:04 | INFO     | core.test_engine:execute_test:27 - 🧪 Executing Test: TC-001 - Login Test
+2026-02-17 16:02:04 | INFO     | core.test_engine:execute_test:28 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-17 16:02:04 | INFO     | core.test_engine:execute_test:31 - ================================================================================
+2026-02-17 16:02:04 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-17 16:02:05 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-17 16:02:05 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-17 16:02:05 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 16:02:05 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 1
+2026-02-17 16:02:05 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 16:02:09 | ERROR    | agents.copilot_agent:execute_step:151 - Error in Copilot step: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74166 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74166 seconds before retrying.'}}
+2026-02-17 16:02:09 | ERROR    | core.test_engine:execute_test:82 - ❌ Step execution error: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74166 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74166 seconds before retrying.'}}
+2026-02-17 16:02:09 | WARNING  | core.test_engine:execute_test:86 - AI provider rate-limited. Switching to deterministic fallback flow.
+2026-02-17 16:02:09 | INFO     | browser.browser_manager:navigate:39 - Navigating to http://localhost:3001
+2026-02-17 16:02:11 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-17 16:02:21 | INFO     | browser.browser_manager:click:45 - Clicking: button[type='submit']
+2026-02-17 16:02:31 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Login')
+2026-02-17 16:02:41 | INFO     | browser.browser_manager:click:45 - Clicking: input[type='submit']
+2026-02-17 16:02:55 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_160254.png
+2026-02-17 16:02:55 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:453 - 
+================================================================================
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:454 - 📊 Test Summary: TC-001
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:455 - ================================================================================
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:464 - Status: ❌ FAILED
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:465 - Duration: 50.78s
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:466 - Steps: 3/4 passed
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:467 - Success Rate: 75.0%
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:468 - Validation: ❌ FAILED
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:469 - Expected: dashboard
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:470 - Actual: Expected result not found in page or AI observations
+2026-02-17 16:02:55 | INFO     | core.test_engine:_log_test_summary:475 - ================================================================================
+
+2026-02-17 16:02:55 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-17 16:02:55 | INFO     | core.test_runner:run_with_semaphore:93 - Completed Test 1/1: TC-001
+2026-02-17 16:02:55 | WARNING  | core.test_runner:_retry_failed_tests:150 - 
+================================================================================
+2026-02-17 16:02:55 | WARNING  | core.test_runner:_retry_failed_tests:151 - 🔄 Retrying 1 failed tests
+2026-02-17 16:02:55 | WARNING  | core.test_runner:_retry_failed_tests:152 - ================================================================================
+2026-02-17 16:02:55 | INFO     | core.test_runner:_retry_failed_tests:160 - 
+Retrying TC-001 (attempt 1/2)
+2026-02-17 16:03:00 | INFO     | core.test_engine:execute_test:26 - ================================================================================
+2026-02-17 16:03:00 | INFO     | core.test_engine:execute_test:27 - 🧪 Executing Test: TC-001 - Login Test
+2026-02-17 16:03:00 | INFO     | core.test_engine:execute_test:28 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-17 16:03:00 | WARNING  | core.test_engine:execute_test:30 -    Retry attempt: 1/2
+2026-02-17 16:03:00 | INFO     | core.test_engine:execute_test:31 - ================================================================================
+2026-02-17 16:03:00 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-17 16:03:01 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-17 16:03:02 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-17 16:03:02 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 16:03:02 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 1
+2026-02-17 16:03:02 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 16:03:04 | ERROR    | agents.copilot_agent:execute_step:151 - Error in Copilot step: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74110 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74110 seconds before retrying.'}}
+2026-02-17 16:03:04 | ERROR    | core.test_engine:execute_test:82 - ❌ Step execution error: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74110 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74110 seconds before retrying.'}}
+2026-02-17 16:03:04 | WARNING  | core.test_engine:execute_test:86 - AI provider rate-limited. Switching to deterministic fallback flow.
+2026-02-17 16:03:04 | INFO     | browser.browser_manager:navigate:39 - Navigating to http://localhost:3001
+2026-02-17 16:03:07 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-17 16:03:17 | INFO     | browser.browser_manager:click:45 - Clicking: button[type='submit']
+2026-02-17 16:03:27 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Login')
+2026-02-17 16:03:37 | INFO     | browser.browser_manager:click:45 - Clicking: input[type='submit']
+2026-02-17 16:03:50 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_160350.png
+2026-02-17 16:03:50 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:453 - 
+================================================================================
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:454 - 📊 Test Summary: TC-001
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:455 - ================================================================================
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:464 - Status: ❌ FAILED
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:465 - Duration: 50.09s
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:466 - Steps: 3/4 passed
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:467 - Success Rate: 75.0%
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:468 - Validation: ❌ FAILED
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:469 - Expected: dashboard
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:470 - Actual: Expected result not found in page or AI observations
+2026-02-17 16:03:50 | INFO     | core.test_engine:_log_test_summary:475 - ================================================================================
+
+2026-02-17 16:03:50 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-17 16:03:50 | INFO     | core.test_runner:_retry_failed_tests:160 - 
+Retrying TC-001 (attempt 2/2)
+2026-02-17 16:03:55 | INFO     | core.test_engine:execute_test:26 - ================================================================================
+2026-02-17 16:03:55 | INFO     | core.test_engine:execute_test:27 - 🧪 Executing Test: TC-001 - Login Test
+2026-02-17 16:03:55 | INFO     | core.test_engine:execute_test:28 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-17 16:03:55 | WARNING  | core.test_engine:execute_test:30 -    Retry attempt: 2/2
+2026-02-17 16:03:55 | INFO     | core.test_engine:execute_test:31 - ================================================================================
+2026-02-17 16:03:55 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-17 16:03:56 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-17 16:03:57 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-17 16:03:57 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 16:03:57 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 1
+2026-02-17 16:03:57 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 16:04:00 | ERROR    | agents.copilot_agent:execute_step:151 - Error in Copilot step: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74055 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74055 seconds before retrying.'}}
+2026-02-17 16:04:00 | ERROR    | core.test_engine:execute_test:82 - ❌ Step execution error: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74055 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 74055 seconds before retrying.'}}
+2026-02-17 16:04:00 | WARNING  | core.test_engine:execute_test:86 - AI provider rate-limited. Switching to deterministic fallback flow.
+2026-02-17 16:04:00 | INFO     | browser.browser_manager:navigate:39 - Navigating to http://localhost:3001
+2026-02-17 16:04:02 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-17 16:04:12 | INFO     | browser.browser_manager:click:45 - Clicking: button[type='submit']
+2026-02-17 16:04:22 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Login')
+2026-02-17 16:04:32 | INFO     | browser.browser_manager:click:45 - Clicking: input[type='submit']
+2026-02-17 16:04:45 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_160445.png
+2026-02-17 16:04:46 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:453 - 
+================================================================================
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:454 - 📊 Test Summary: TC-001
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:455 - ================================================================================
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:464 - Status: ❌ FAILED
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:465 - Duration: 50.62s
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:466 - Steps: 3/4 passed
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:467 - Success Rate: 75.0%
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:468 - Validation: ❌ FAILED
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:469 - Expected: dashboard
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:470 - Actual: Expected result not found in page or AI observations
+2026-02-17 16:04:46 | INFO     | core.test_engine:_log_test_summary:475 - ================================================================================
+
+2026-02-17 16:04:46 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-17 16:04:46 | ERROR    | core.test_runner:_retry_failed_tests:184 - ❌ All retries failed for TC-001
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:219 - 
+================================================================================
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:220 - 📊 TEST SUITE SUMMARY
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:221 - ================================================================================
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:222 - Suite: Test Suite - 20260217_160204
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:223 - Duration: 161.92s
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:224 - --------------------------------------------------------------------------------
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:225 - Total Tests: 1
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:226 - ✅ Passed: 0 (0.0%)
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:227 - ❌ Failed: 1
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:228 - 💥 Errors: 0
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:229 - ⊘ Skipped: 0
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:230 - ================================================================================
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:233 - 
+📋 Individual Test Results:
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:234 - --------------------------------------------------------------------------------
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:245 - ❌ TC-001               | FAILED   |  50.78s | Steps: 3/4
+2026-02-17 16:04:46 | INFO     | core.test_runner:_log_suite_summary:252 - ================================================================================
+
+2026-02-17 16:04:46 | ERROR    | __main__:run:100 - Fatal error: [Errno 22] Invalid argument
+2026-02-17 16:04:46 | ERROR    | __main__:run:102 - Traceback (most recent call last):
+  File "C:\Users\harsh\UITEST\main.py", line 81, in run
+    self._display_results(suite_result, statistics, failure_analysis)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\harsh\UITEST\main.py", line 177, in _display_results
+    console.print("\n")
+    ~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\console.py", line 2042, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\console.py", line 2078, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\_windows_renderer.py", line 19, in legacy_windows_render
+    term.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\harsh\UITEST\.venv\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.flush()
+    ~~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+

@@ -1,0 +1,19 @@
+"test_id","test_name","description","expected_result","priority","category"
+"TC-001","Widget - Login Verification","Navigate to https://silfratech.in/miraq/v4/.
+a. It will first ask for the name, give it as Harshith S.
+b. Later it will ask for email, give silfra.harshith@gmail.com.
+c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
+d. Confirm the widget shows successful verification or login-complete style confirmation text.
+e. Click the Submit button and wait for the response.
+f. Mark this complete case success only if all the steps are completed and passed.","verification","Critical","Smoke Test"
+"TC-002","Widget - Validate Content in Documents Folder","Navigate to https://silfratech.in/miraq/v4/.
+a. It will first ask for the name, give it as Harshith S.
+b. Later it will ask for email, give silfra.harshith@gmail.com.
+c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
+d. Confirm the widget shows successful verification or login-complete style confirmation text.
+e. After verification, perform the post-login navigation: use the in-widget back action to move out of the current conversation panel.
+f. Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents.
+g. Wait until the file list is visible, then click Validate Content for the first file only.
+h. Wait for the file list to load within the Documents folder.
+i. Wait for the validation process to complete and verify that a success message is displayed.
+j. Mark this complete case success only if all the steps are completed and passed.","verification","High","Functionality Test"

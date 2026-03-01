@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Report - {{ suite.suite_name }}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .report-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+        
+        .test-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .test-card.passed {
+            border-left-color: var(--success-color);
+        }
+        
+        .test-card.failed {
+            border-left-color: var(--danger-color);
+        }
+        
+        .test-card.error {
+            border-left-color: var(--warning-color);
+        }
+        
+        .badge-custom {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .step-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .step-item.passed {
+            background: #d1fae5;
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .step-item.failed {
+            background: #fee2e2;
+            border-left: 3px solid var(--danger-color);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+        
+        .screenshot-thumb {
+            max-width: 200px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .screenshot-thumb:hover {
+            transform: scale(1.05);
+        }
+        
+        .ai-observation {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 1rem;
+            border-left: 2px solid #e5e7eb;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+        
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .collapsible:hover {
+            background: #f3f4f6;
+        }
+
+        .results-table td, .results-table th {
+            vertical-align: middle;
+        }
+
+        .results-table .col-long {
+            max-width: 340px;
+            white-space: normal;
+            word-break: break-word;
+        }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="report-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-flask"></i> Test Execution Report
+                    </h1>
+                    <h3 class="mb-0 opacity-75">{{ suite.suite_name }}</h3>
+                    <p class="mb-0 mt-2 opacity-75">
+                        <i class="far fa-calendar"></i> {{ generated_at }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="btn-group no-print" role="group">
+                        <button onclick="window.print()" class="btn btn-light">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button onclick="exportToJSON()" class="btn btn-light">
+                            <i class="fas fa-download"></i> Export JSON
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-vial fa-2x text-primary mb-3"></i>
+                    <p class="stat-value text-primary">{{ suite.total_tests }}</p>
+                    <p class="stat-label">Total Tests</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                    <p class="stat-value text-success">{{ suite.passed_tests }}</p>
+                    <p class="stat-label">Passed</p>
+                    <small class="text-muted">{{ suite.pass_rate|round(1) }}%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-times-circle fa-2x text-danger mb-3"></i>
+                    <p class="stat-value text-danger">{{ suite.failed_tests }}</p>
+                    <p class="stat-label">Failed</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-clock fa-2x text-info mb-3"></i>
+                    <p class="stat-value text-info">{{ suite.duration_seconds|format_duration }}</p>
+                    <p class="stat-label">Duration</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <h5 class="mb-3"><i class="fas fa-chart-pie"></i> Test Status Distribution</h5>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Test Duration (Top 10)</h5>
+                    <div class="chart-container">
+                        <canvas id="durationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        {% if statistics %}
+        <div class="stat-card mb-4">
+            <h5 class="mb-3"><i class="fas fa-chart-line"></i> Execution Statistics</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <h6>Execution Metrics</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Average Duration:</strong> {{ statistics.execution.average_test_duration|format_duration }}</li>
+                        <li><strong>Median Duration:</strong> {{ statistics.execution.median_test_duration|format_duration }}</li>
+                        <li><strong>Fastest Test:</strong> {{ statistics.execution.min_duration|format_duration }}</li>
+                        <li><strong>Slowest Test:</strong> {{ statistics.execution.max_duration|format_duration }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Step Metrics</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Total Steps:</strong> {{ statistics.steps.total_steps }}</li>
+                        <li><strong>Avg Steps/Test:</strong> {{ statistics.steps.average_steps_per_test|round(1) }}</li>
+                        <li><strong>Max Steps:</strong> {{ statistics.steps.max_steps }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Retry Information</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Tests Retried:</strong> {{ statistics.retries.tests_retried }}</li>
+                        <li><strong>Total Retries:</strong> {{ statistics.retries.total_retries }}</li>
+                        <li><strong>Avg Success Rate:</strong> {{ statistics.success.average_step_success_rate|round(1) }}%</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Failure Analysis -->
+        {% if failure_analysis and failure_analysis.total_failures > 0 %}
+        <div class="stat-card mb-4">
+            <h5 class="mb-3"><i class="fas fa-exclamation-triangle text-danger"></i> Failure Analysis</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Error Types</h6>
+                    <ul class="list-unstyled">
+                        {% for error_type, count in failure_analysis.error_types.items() %}
+                        <li>
+                            <span class="badge bg-danger">{{ count }}</span>
+                            {{ error_type or 'Unknown' }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Common Failure Points</h6>
+                    <ul class="list-unstyled">
+                        {% for step, count in failure_analysis.common_failure_steps.items() %}
+                        <li>
+                            <span class="badge bg-warning">{{ count }}</span>
+                            {{ step }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Test Results -->
+        <div class="stat-card">
+            <h5 class="mb-3"><i class="fas fa-list"></i> Test Results Details</h5>
+
+            <!-- Consolidated Table -->
+            <div class="table-responsive mb-4">
+                <table class="table table-sm table-striped table-hover results-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Test ID</th>
+                            <th>Test Name</th>
+                            <th>Status</th>
+                            <th>Duration</th>
+                            <th>Steps</th>
+                            <th>Validation</th>
+                            <th>Expected Result</th>
+                            <th>Actual Result</th>
+                            <th>Retries</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for test in suite.test_results %}
+                        <tr data-status="{{ test.status.value }}">
+                            <td><code>{{ test.test_id }}</code></td>
+                            <td>{{ test.test_name }}</td>
+                            <td>
+                                <span class="badge bg-{{ test.status|status_color }}">
+                                    {{ test.status.value.upper() }}
+                                </span>
+                            </td>
+                            <td>{{ test.duration_seconds|format_duration }}</td>
+                            <td>{{ test.passed_steps }}/{{ test.total_steps }}</td>
+                            <td>
+                                {% if test.validation_passed %}
+                                <span class="badge bg-success">Passed</span>
+                                {% else %}
+                                <span class="badge bg-danger">Failed</span>
+                                {% endif %}
+                            </td>
+                            <td class="col-long">{{ test.expected_result }}</td>
+                            <td class="col-long">{{ test.actual_result }}</td>
+                            <td>{{ test.retry_count }}</td>
+                            <td>{{ test.start_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>{{ test.end_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Filter Buttons -->
+            <div class="btn-group mb-3 no-print" role="group">
+                <button type="button" class="btn btn-outline-primary active" onclick="filterTests('all')">
+                    All ({{ suite.total_tests }})
+                </button>
+                <button type="button" class="btn btn-outline-success" onclick="filterTests('passed')">
+                    Passed ({{ suite.passed_tests }})
+                </button>
+                <button type="button" class="btn btn-outline-danger" onclick="filterTests('failed')">
+                    Failed ({{ suite.failed_tests }})
+                </button>
+            </div>
+            
+            <!-- Test Cards -->
+            <div id="testResultsContainer">
+                {% for test in suite.test_results %}
+                <div class="test-card {{ test.status.value }}" data-status="{{ test.status.value }}">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="mb-1">
+                                {{ test.status|status_icon }}
+                                {{ test.test_name }}
+                            </h5>
+                            <small class="text-muted">{{ test.test_id }}</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge badge-custom bg-{{ test.status|status_color }}">
+                                {{ test.status.value.upper() }}
+                            </span>
+                            <br>
+                            <small class="text-muted">
+                                <i class="far fa-clock"></i> {{ test.duration_seconds|format_duration }}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Test Metrics -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <small class="text-muted">Steps</small>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-success" style="width: {{ (test.passed_steps / test.total_steps * 100)|round if test.total_steps > 0 else 0 }}%">
+                                    {{ test.passed_steps }}/{{ test.total_steps }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Success Rate</small>
+                            <div><strong>{{ test.success_rate|round(1) }}%</strong></div>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Validation</small>
+                            <div>
+                                {% if test.validation_passed %}
+                                <span class="badge bg-success">✓ Passed</span>
+                                {% else %}
+                                <span class="badge bg-danger">✗ Failed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Retry Count</small>
+                            <div><strong>{{ test.retry_count }}</strong></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Expected vs Actual -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">Expected Result:</small>
+                                <div class="alert alert-info mb-0 py-2">{{ test.expected_result }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">Actual Result:</small>
+                                <div class="alert alert-{{ 'success' if test.validation_passed else 'warning' }} mb-0 py-2">
+                                    {{ test.actual_result }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Steps Details (Collapsible) -->
+                    {% if test.step_results %}
+                    <div class="collapsible" data-bs-toggle="collapse" data-bs-target="#steps-{{ loop.index }}">
+                        <h6 class="mb-2">
+                            <i class="fas fa-chevron-down"></i>
+                            Step Details ({{ test.step_results|length }})
+                        </h6>
+                    </div>
+                    <div class="collapse" id="steps-{{ loop.index }}">
+                        {% for step in test.step_results %}
+                        <div class="step-item {{ step.status.value }}">
+                            <div>
+                                <strong>Step {{ step.step_number }}:</strong>
+                                {{ step.action }}
+                                {% if step.target %}
+                                → <code>{{ step.target }}</code>
+                                {% endif %}
+                                {% if step.value %}
+                                = "{{ step.value }}"
+                                {% endif %}
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-{{ step.status|status_color }}">
+                                    {{ step.status.value }}
+                                </span>
+                                <small class="text-muted ms-2">{{ step.duration_ms|round }}ms</small>
+                            </div>
+                        </div>
+                        {% if step.error_message %}
+                        <div class="alert alert-danger py-2 my-2">
+                            <small><strong>Error:</strong> {{ step.error_message }}</small>
+                        </div>
+                        {% endif %}
+                        {% if step.ai_observation %}
+                        <div class="ai-observation">
+                            <small><i class="fas fa-robot"></i> <strong>AI Agent:</strong> {{ step.ai_observation }}</small>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- AI Observations -->
+                    {% if test.ai_observations %}
+                    <div class="collapsible mt-3" data-bs-toggle="collapse" data-bs-target="#ai-obs-{{ loop.index }}">
+                        <h6 class="mb-2">
+                            <i class="fas fa-chevron-down"></i>
+                            <i class="fas fa-robot"></i> AI Agent Observations
+                        </h6>
+                    </div>
+                    <div class="collapse" id="ai-obs-{{ loop.index }}">
+                        {% for observation in test.ai_observations %}
+                        <div class="ai-observation">
+                            {{ observation }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Screenshots -->
+                    {% set screenshots = embedded_test_screenshots.get(test.test_id, []) %}
+                    {% if not screenshots %}
+                    {% set screenshots = test_screenshots.get(test.test_id, []) %}
+                    {% endif %}
+                    {% if screenshots %}
+                    <div class="mt-3">
+                        <h6><i class="fas fa-camera"></i> Screenshots ({{ screenshots|length }})</h6>
+                        <div class="d-flex gap-2 flex-wrap">
+                            {% for screenshot in screenshots %}
+                            {% set shot_path = screenshot|asset_path %}
+                            {% if shot_path.startswith('data:') %}
+                            <img src="{{ shot_path }}" class="screenshot-thumb" alt="Screenshot" 
+                                 onclick='showScreenshot({{ shot_path|tojson }})'>
+                            {% else %}
+                            <img src="{{ shot_path }}" data-asset-path="{{ shot_path }}" class="screenshot-thumb" alt="Screenshot" 
+                                 onclick='showScreenshot(this.dataset.assetPath)'>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% set embedded_videos = embedded_test_videos.get(test.test_id, []) %}
+                    {% set videos = test_videos.get(test.test_id, []) %}
+                    {% if embedded_videos %}
+                    {% set videos = embedded_videos %}
+                    {% endif %}
+                    {% if videos %}
+                    <div class="mt-3">
+                        <h6><i class="fas fa-video"></i> Videos ({{ videos|length }})</h6>
+                        <div class="d-flex flex-column gap-3">
+                            {% for video in videos %}
+                            {% if video is mapping %}
+                            {% set video_path = video.src %}
+                            {% set video_type = video.mime %}
+                            {% else %}
+                            {% set video_path = video|asset_path %}
+                            {% set video_type = video_path|video_mime %}
+                            {% endif %}
+                            <video controls preload="metadata" style="max-width: 100%; border-radius: 8px;">
+                                {% if video_path.startswith('data:') %}
+                                <source src="{{ video_path }}" type="{{ video_type }}">
+                                {% else %}
+                                <source src="{{ video_path }}" data-asset-path="{{ video_path }}" type="{{ video_type }}">
+                                {% endif %}
+                                Your browser does not support the video tag.
+                            </video>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Timestamps -->
+                    <div class="mt-3 text-muted">
+                        <small>
+                            <i class="far fa-clock"></i>
+                            Started: {{ test.start_time.strftime('%Y-%m-%d %H:%M:%S') }} |
+                            Ended: {{ test.end_time.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Screenshot Modal -->
+    <div class="modal fade" id="screenshotModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Screenshot</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalScreenshot" src="" alt="Screenshot" style="max-width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Status Distribution Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ chart_data.status.labels|tojson }},
+                datasets: [{
+                    data: {{ chart_data.status.data|tojson }},
+                    backgroundColor: {{ chart_data.status.colors|tojson }},
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Duration Chart
+        const durationCtx = document.getElementById('durationChart').getContext('2d');
+        new Chart(durationCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ chart_data.duration.labels|tojson }},
+                datasets: [{
+                    label: 'Duration (seconds)',
+                    data: {{ chart_data.duration.data|tojson }},
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Seconds'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+        
+        // Filter tests
+        function filterTests(status) {
+            const cards = document.querySelectorAll('.test-card');
+            const rows = document.querySelectorAll('.results-table tbody tr');
+            const buttons = document.querySelectorAll('.btn-group button');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Filter table rows
+            rows.forEach(row => {
+                if (status === 'all' || row.dataset.status === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        // Resolve asset path for both:
+        // 1) direct report open under /test_results/
+        // 2) report opened from project root (/index.html via Live Server)
+        function resolveAssetPath(path) {
+            if (!path) return path;
+            const normalized = String(path).replace(/\\/g, '/');
+            if (/^(https?:|file:|data:|\/)/i.test(normalized)) {
+                return normalized;
+            }
+            const pagePath = window.location.pathname.replace(/\\/g, '/').toLowerCase();
+            if (pagePath.includes('/test_results/')) {
+                return normalized;
+            }
+            return `test_results/${normalized}`;
+        }
+
+        // Resolve media URLs at runtime based on hosting location.
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-asset-path]').forEach((el) => {
+                const resolved = resolveAssetPath(el.dataset.assetPath);
+                if (el.tagName === 'SOURCE') {
+                    el.src = resolved;
+                    const video = el.closest('video');
+                    if (video) video.load();
+                } else {
+                    el.src = resolved;
+                }
+            });
+        });
+
+        // Show screenshot in modal
+        function showScreenshot(path) {
+            document.getElementById('modalScreenshot').src = resolveAssetPath(path);
+            new bootstrap.Modal(document.getElementById('screenshotModal')).show();
+        }
+        
+        // Export to JSON
+        function exportToJSON() {
+            const data = {
+                suite_name: '{{ suite.suite_name }}',
+                generated_at: '{{ generated_at }}',
+                total_tests: {{ suite.total_tests }},
+                passed: {{ suite.passed_tests }},
+                failed: {{ suite.failed_tests }},
+                pass_rate: {{ suite.pass_rate|round(2) }},
+                duration: {{ suite.duration_seconds }},
+                results: {{ test_results_json|tojson }}
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'test_results_{{ suite.suite_name }}.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

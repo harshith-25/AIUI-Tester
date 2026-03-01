@@ -1,0 +1,311 @@
+2026-02-27 12:17:00 | INFO     | __main__:_load_test_cases:110 - Loading test cases from: generated_cases\miraq_input.csv
+2026-02-27 12:17:00 | INFO     | utils.csv_reader:read_test_cases:23 - 📂 Reading test cases from: generated_cases\miraq_input.csv
+2026-02-27 12:17:00 | INFO     | utils.csv_reader:read_test_cases:48 - ✅ Successfully parsed 3 test cases
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:24 - ================================================================================
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:25 - 🚀 Starting Test Suite Execution
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:26 - ================================================================================
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:27 - Total Tests: 3
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:28 - Max Parallel: 3
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:29 - Retry Enabled: True
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_test_suite:30 - ================================================================================
+2026-02-27 12:17:00 | INFO     | core.test_runner:_run_parallel:81 - Running tests in parallel (max 3 concurrent)...
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:87 - 
+################################################################################
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:88 - Starting Test 1/3: TC-001
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:89 - ################################################################################
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-001 - Widget Login - Successful Verification
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.CRITICAL | Category: TestCategory.SMOKE
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-27 12:17:00 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:87 - 
+################################################################################
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:88 - Starting Test 2/3: TC-002
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:89 - ################################################################################
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-002 - Document Checking Flow - Validate Content
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-27 12:17:00 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-002
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:87 - 
+################################################################################
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:88 - Starting Test 3/3: TC-003
+2026-02-27 12:17:00 | INFO     | core.test_runner:run_with_semaphore:89 - ################################################################################
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-003 - IntentClassifier Check - Ask Question
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.MEDIUM | Category: TestCategory.FUNCTIONALITY
+2026-02-27 12:17:00 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-27 12:17:00 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-003
+2026-02-27 12:17:24 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-27 12:17:26 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-27 12:17:26 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-27 12:17:26 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-003] Starting deterministic fallback flow
+2026-02-27 12:17:26 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-003] Description length: 965 characters
+2026-02-27 12:17:26 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-003] Parsed URL: https://silfratech.in/miraq/v4/
+2026-02-27 12:17:26 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-27 12:17:26 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-27 12:17:28 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-27 12:17:28 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-27 12:17:28 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-002] Starting deterministic fallback flow
+2026-02-27 12:17:28 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-002] Description length: 1170 characters
+2026-02-27 12:17:28 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-002] Parsed URL: https://silfratech.in/miraq/v4/
+2026-02-27 12:17:28 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-27 12:17:28 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-27 12:17:29 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-27 12:17:29 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-27 12:17:29 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-001] Starting deterministic fallback flow
+2026-02-27 12:17:29 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-001] Description length: 568 characters
+2026-02-27 12:17:29 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-001] Parsed URL: https://silfratech.in/miraq/v4/
+2026-02-27 12:17:29 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-27 12:17:37 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 1: playwright_navigate -> https://silfratech.in/miraq/v4/ | status=passed | duration_ms=10999
+2026-02-27 12:17:37 | INFO     | core.test_engine:_run_fallback_flow:389 - [TC-003] Widget flow detected; enforcing conversational steps
+2026-02-27 12:17:37 | INFO     | browser.browser_manager:click:45 - Clicking: chat_launcher
+2026-02-27 12:17:38 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 2: playwright_click -> chat_launcher | status=passed | duration_ms=1236
+2026-02-27 12:17:38 | INFO     | browser.browser_manager:click:45 - Clicking: chat_start_button
+2026-02-27 12:17:40 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 3: playwright_click -> chat_start_button | status=passed | duration_ms=1157
+2026-02-27 12:17:40 | INFO     | core.test_engine:_run_fallback_flow:408 - [TC-003] Parsed full name: Harshith
+2026-02-27 12:17:40 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with 'Harshith'
+2026-02-27 12:17:40 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:42 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 4: playwright_fill -> chat_input | status=passed | duration_ms=2802
+2026-02-27 12:17:42 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-003] Description step a: COMPLETED - Entered name in widget
+2026-02-27 12:17:42 | INFO     | core.test_engine:_run_fallback_flow:421 - [TC-003] Parsed email: silfra.harshith@gmail.com
+2026-02-27 12:17:43 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with 'silfra.harshith@gmail.com'
+2026-02-27 12:17:43 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:44 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 1: playwright_navigate -> https://silfratech.in/miraq/v4/ | status=passed | duration_ms=14907
+2026-02-27 12:17:44 | INFO     | core.test_engine:_run_fallback_flow:389 - [TC-001] Widget flow detected; enforcing conversational steps
+2026-02-27 12:17:44 | INFO     | browser.browser_manager:click:45 - Clicking: chat_launcher
+2026-02-27 12:17:44 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 1: playwright_navigate -> https://silfratech.in/miraq/v4/ | status=passed | duration_ms=16644
+2026-02-27 12:17:44 | INFO     | core.test_engine:_run_fallback_flow:389 - [TC-002] Widget flow detected; enforcing conversational steps
+2026-02-27 12:17:44 | INFO     | browser.browser_manager:click:45 - Clicking: chat_launcher
+2026-02-27 12:17:45 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 5: playwright_fill -> chat_input | status=passed | duration_ms=2723
+2026-02-27 12:17:45 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-003] Description step b: COMPLETED - Entered email in widget
+2026-02-27 12:17:45 | INFO     | core.test_engine:_run_fallback_flow:434 - [TC-003] Parsed OTP value
+2026-02-27 12:17:45 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with '123456'
+2026-02-27 12:17:46 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 2: playwright_click -> chat_launcher | status=passed | duration_ms=1501
+2026-02-27 12:17:46 | INFO     | browser.browser_manager:click:45 - Clicking: chat_start_button
+2026-02-27 12:17:46 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 2: playwright_click -> chat_launcher | status=passed | duration_ms=1506
+2026-02-27 12:17:46 | INFO     | browser.browser_manager:click:45 - Clicking: chat_start_button
+2026-02-27 12:17:46 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:47 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 3: playwright_click -> chat_start_button | status=passed | duration_ms=1509
+2026-02-27 12:17:47 | INFO     | core.test_engine:_run_fallback_flow:408 - [TC-001] Parsed full name: Harshith
+2026-02-27 12:17:47 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with 'Harshith'
+2026-02-27 12:17:48 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 3: playwright_click -> chat_start_button | status=passed | duration_ms=1958
+2026-02-27 12:17:48 | INFO     | core.test_engine:_run_fallback_flow:408 - [TC-002] Parsed full name: Harshith
+2026-02-27 12:17:48 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with 'Harshith'
+2026-02-27 12:17:48 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:49 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:50 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 6: playwright_fill -> chat_input | status=passed | duration_ms=5152
+2026-02-27 12:17:50 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-003] Description step c: COMPLETED - Entered OTP and submitted
+2026-02-27 12:17:50 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 4: playwright_fill -> chat_input | status=passed | duration_ms=3299
+2026-02-27 12:17:50 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-001] Description step a: COMPLETED - Entered name in widget
+2026-02-27 12:17:50 | INFO     | core.test_engine:_run_fallback_flow:421 - [TC-001] Parsed email: silfra.harshith@gmail.com
+2026-02-27 12:17:50 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with 'silfra.harshith@gmail.com'
+2026-02-27 12:17:51 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 4: playwright_fill -> chat_input | status=passed | duration_ms=3087
+2026-02-27 12:17:51 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step a: COMPLETED - Entered name in widget
+2026-02-27 12:17:51 | INFO     | core.test_engine:_run_fallback_flow:421 - [TC-002] Parsed email: silfra.harshith@gmail.com
+2026-02-27 12:17:51 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with 'silfra.harshith@gmail.com'
+2026-02-27 12:17:51 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:52 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:53 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 7: validate_widget_confirmation -> widget_success_or_login_complete | status=passed | duration_ms=2302
+2026-02-27 12:17:53 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-003] Description step d: COMPLETED - Verified success/login-complete confirmation in widget
+2026-02-27 12:17:53 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-003] documents_button: trying selector 1/12 -> button[aria-label*='folder' i]
+2026-02-27 12:17:54 | INFO     | browser.browser_manager:click:45 - Clicking: button[aria-label*='folder' i]
+2026-02-27 12:17:54 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 5: playwright_fill -> chat_input | status=passed | duration_ms=3439
+2026-02-27 12:17:54 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-001] Description step b: COMPLETED - Entered email in widget
+2026-02-27 12:17:54 | INFO     | core.test_engine:_run_fallback_flow:434 - [TC-001] Parsed OTP value
+2026-02-27 12:17:54 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with '123456'
+2026-02-27 12:17:55 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 5: playwright_fill -> chat_input | status=passed | duration_ms=3916
+2026-02-27 12:17:55 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step b: COMPLETED - Entered email in widget
+2026-02-27 12:17:55 | INFO     | core.test_engine:_run_fallback_flow:434 - [TC-002] Parsed OTP value
+2026-02-27 12:17:55 | INFO     | browser.browser_manager:fill:55 - Filling 'chat_input' with '123456'
+2026-02-27 12:17:56 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:56 | INFO     | browser.browser_manager:click:45 - Clicking: chat_send_button
+2026-02-27 12:17:58 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-003] documents_button: selector failed -> button[aria-label*='folder' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button[aria-label*='folder' i]")
+
+2026-02-27 12:17:58 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-003] documents_button: trying selector 2/12 -> button[title*='folder' i]
+2026-02-27 12:17:58 | INFO     | browser.browser_manager:click:45 - Clicking: button[title*='folder' i]
+2026-02-27 12:17:59 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 6: playwright_fill -> chat_input | status=passed | duration_ms=4459
+2026-02-27 12:17:59 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-001] Description step c: COMPLETED - Entered OTP and submitted
+2026-02-27 12:17:59 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 6: playwright_fill -> chat_input | status=passed | duration_ms=3748
+2026-02-27 12:17:59 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step c: COMPLETED - Entered OTP and submitted
+2026-02-27 12:18:00 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 7: validate_widget_confirmation -> widget_success_or_login_complete | status=passed | duration_ms=1519
+2026-02-27 12:18:00 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-001] Description step d: COMPLETED - Verified success/login-complete confirmation in widget
+2026-02-27 12:18:00 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 7: validate_widget_confirmation -> widget_success_or_login_complete | status=passed | duration_ms=1523
+2026-02-27 12:18:00 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step d: COMPLETED - Verified success/login-complete confirmation in widget
+2026-02-27 12:18:00 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] back_action: trying selector 1/4 -> button:has-text('Back')
+2026-02-27 12:18:00 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Back')
+2026-02-27 12:18:02 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-003] documents_button: selector failed -> button[title*='folder' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button[title*='folder' i]")
+
+2026-02-27 12:18:02 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-003] documents_button: trying selector 3/12 -> [aria-label*='documents' i]
+2026-02-27 12:18:02 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='documents' i]
+2026-02-27 12:18:03 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 8: playwright_wait -> 3s | status=passed | duration_ms=3009
+2026-02-27 12:18:04 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_121803.png
+2026-02-27 12:18:04 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 9: playwright_screenshot -> screenshots\TC-001_step_1_121803.png | status=passed | duration_ms=779
+2026-02-27 12:18:04 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-001] Description step g: COMPLETED - Marked test passed only if all described steps passed
+2026-02-27 12:18:04 | INFO     | core.test_engine:_run_fallback_flow:598 - [TC-001] Deterministic fallback flow completed with 9 steps
+2026-02-27 12:18:04 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-002] back_action: selector failed -> button:has-text('Back') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Back')")
+
+2026-02-27 12:18:04 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] back_action: trying selector 2/4 -> [aria-label*='back' i]
+2026-02-27 12:18:04 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='back' i]
+2026-02-27 12:18:05 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:853 - 
+================================================================================
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:854 - 📊 Test Summary: TC-001
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:855 - ================================================================================
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:864 - Status: ✅ PASSED
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:865 - Duration: 64.61s
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:866 - Steps: 9/9 passed
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:867 - Success Rate: 100.0%
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:868 - Validation: ✅ PASSED
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:869 - Expected: verification
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:870 - Actual: Found expected text in page: 'verification'
+2026-02-27 12:18:05 | INFO     | core.test_engine:_log_test_summary:875 - ================================================================================
+
+2026-02-27 12:18:05 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-27 12:18:05 | INFO     | core.test_runner:run_with_semaphore:93 - Completed Test 1/3: TC-001
+2026-02-27 12:18:06 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-003] documents_button: selector failed -> [aria-label*='documents' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='documents' i]")
+
+2026-02-27 12:18:06 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-003] documents_button: trying selector 4/12 -> [title*='documents' i]
+2026-02-27 12:18:06 | INFO     | browser.browser_manager:click:45 - Clicking: [title*='documents' i]
+2026-02-27 12:18:08 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-002] back_action: selector failed -> [aria-label*='back' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='back' i]")
+
+2026-02-27 12:18:08 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] back_action: trying selector 3/4 -> #silfra-chat-widget-container button.xpert-icon-btn
+2026-02-27 12:18:08 | INFO     | browser.browser_manager:click:45 - Clicking: #silfra-chat-widget-container button.xpert-icon-btn
+2026-02-27 12:18:09 | SUCCESS  | core.test_engine:_try_click_selectors:708 - [TC-002] back_action: selector matched -> #silfra-chat-widget-container button.xpert-icon-btn
+2026-02-27 12:18:09 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 8: playwright_click -> back_action | status=passed | duration_ms=9101
+2026-02-27 12:18:09 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step d: COMPLETED - Used in-widget back action
+2026-02-27 12:18:10 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] documents_button: trying selector 1/12 -> button[aria-label*='folder' i]
+2026-02-27 12:18:10 | INFO     | browser.browser_manager:click:45 - Clicking: button[aria-label*='folder' i]
+2026-02-27 12:18:10 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-003] documents_button: selector failed -> [title*='documents' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[title*='documents' i]")
+
+2026-02-27 12:18:10 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-003] documents_button: trying selector 5/12 -> #silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2)
+2026-02-27 12:18:10 | INFO     | browser.browser_manager:click:45 - Clicking: #silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2)
+2026-02-27 12:18:14 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-002] documents_button: selector failed -> button[aria-label*='folder' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button[aria-label*='folder' i]")
+
+2026-02-27 12:18:14 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] documents_button: trying selector 2/12 -> button[title*='folder' i]
+2026-02-27 12:18:14 | INFO     | browser.browser_manager:click:45 - Clicking: button[title*='folder' i]
+2026-02-27 12:18:14 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-003] documents_button: selector failed -> #silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2) | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("#silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2)")
+
+2026-02-27 12:18:14 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-003] documents_button: trying selector 6/12 -> :nth-match(#silfra-chat-widget-container button, 2)
+2026-02-27 12:18:14 | INFO     | browser.browser_manager:click:45 - Clicking: :nth-match(#silfra-chat-widget-container button, 2)
+2026-02-27 12:18:15 | SUCCESS  | core.test_engine:_try_click_selectors:708 - [TC-003] documents_button: selector matched -> :nth-match(#silfra-chat-widget-container button, 2)
+2026-02-27 12:18:15 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 8: playwright_click -> documents_button | status=passed | duration_ms=21680
+2026-02-27 12:18:15 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-003] Description step e: COMPLETED - Clicked folder icon/Documents and opened list
+2026-02-27 12:18:18 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-002] documents_button: selector failed -> button[title*='folder' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button[title*='folder' i]")
+
+2026-02-27 12:18:18 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] documents_button: trying selector 3/12 -> [aria-label*='documents' i]
+2026-02-27 12:18:18 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='documents' i]
+2026-02-27 12:18:18 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 9: playwright_wait -> 3s | status=passed | duration_ms=3015
+2026-02-27 12:18:19 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-003_step_1_121818.png
+2026-02-27 12:18:19 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 10: playwright_screenshot -> screenshots\TC-003_step_1_121818.png | status=passed | duration_ms=550
+2026-02-27 12:18:19 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-003] Description step g: COMPLETED - Marked test passed only if all described steps passed
+2026-02-27 12:18:19 | INFO     | core.test_engine:_run_fallback_flow:598 - [TC-003] Deterministic fallback flow completed with 10 steps
+2026-02-27 12:18:19 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-003_final.png
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:853 - 
+================================================================================
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:854 - 📊 Test Summary: TC-003
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:855 - ================================================================================
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:864 - Status: ✅ PASSED
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:865 - Duration: 78.89s
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:866 - Steps: 10/10 passed
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:867 - Success Rate: 100.0%
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:868 - Validation: ✅ PASSED
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:869 - Expected: verification
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:870 - Actual: Found expected text in page: 'verification'
+2026-02-27 12:18:19 | INFO     | core.test_engine:_log_test_summary:875 - ================================================================================
+
+2026-02-27 12:18:20 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-27 12:18:20 | INFO     | core.test_runner:run_with_semaphore:93 - Completed Test 3/3: TC-003
+2026-02-27 12:18:22 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-002] documents_button: selector failed -> [aria-label*='documents' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='documents' i]")
+
+2026-02-27 12:18:22 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] documents_button: trying selector 4/12 -> [title*='documents' i]
+2026-02-27 12:18:22 | INFO     | browser.browser_manager:click:45 - Clicking: [title*='documents' i]
+2026-02-27 12:18:26 | WARNING  | core.test_engine:_try_click_selectors:712 - [TC-002] documents_button: selector failed -> [title*='documents' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[title*='documents' i]")
+
+2026-02-27 12:18:26 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] documents_button: trying selector 5/12 -> #silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2)
+2026-02-27 12:18:26 | INFO     | browser.browser_manager:click:45 - Clicking: #silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2)
+2026-02-27 12:18:27 | SUCCESS  | core.test_engine:_try_click_selectors:708 - [TC-002] documents_button: selector matched -> #silfra-chat-widget-container .xpert-home-action-icon:nth-of-type(2)
+2026-02-27 12:18:27 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 9: playwright_click -> documents_button | status=passed | duration_ms=17094
+2026-02-27 12:18:27 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step e: COMPLETED - Clicked folder icon/Documents and opened list
+2026-02-27 12:18:29 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 10: playwright_wait -> documents_list_wait_2s | status=passed | duration_ms=2008
+2026-02-27 12:18:29 | INFO     | core.test_engine:_try_click_selectors:706 - [TC-002] validate_content_first_file: trying selector 1/7 -> :nth-match(button:has-text('Validate Content'), 1)
+2026-02-27 12:18:29 | INFO     | browser.browser_manager:click:45 - Clicking: :nth-match(button:has-text('Validate Content'), 1)
+2026-02-27 12:18:30 | SUCCESS  | core.test_engine:_try_click_selectors:708 - [TC-002] validate_content_first_file: selector matched -> :nth-match(button:has-text('Validate Content'), 1)
+2026-02-27 12:18:30 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 11: playwright_click -> validate_content_first_file | status=passed | duration_ms=1109
+2026-02-27 12:18:30 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step f: COMPLETED - Clicked Validate Content on first file
+2026-02-27 12:18:33 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 12: playwright_wait -> 3s | status=passed | duration_ms=3006
+2026-02-27 12:18:34 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-002_step_1_121833.png
+2026-02-27 12:18:34 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 13: playwright_screenshot -> screenshots\TC-002_step_1_121833.png | status=passed | duration_ms=797
+2026-02-27 12:18:34 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-002] Description step g: COMPLETED - Marked test passed only if all described steps passed
+2026-02-27 12:18:34 | INFO     | core.test_engine:_run_fallback_flow:598 - [TC-002] Deterministic fallback flow completed with 13 steps
+2026-02-27 12:18:34 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-002_final.png
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:853 - 
+================================================================================
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:854 - 📊 Test Summary: TC-002
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:855 - ================================================================================
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:864 - Status: ✅ PASSED
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:865 - Duration: 94.12s
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:866 - Steps: 13/13 passed
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:867 - Success Rate: 100.0%
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:868 - Validation: ❌ FAILED
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:869 - Expected: verification
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:870 - Actual: Expected result not found in page or AI observations
+2026-02-27 12:18:34 | INFO     | core.test_engine:_log_test_summary:875 - ================================================================================
+
+2026-02-27 12:18:35 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-27 12:18:35 | INFO     | core.test_runner:run_with_semaphore:93 - Completed Test 2/3: TC-002
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:230 - 
+================================================================================
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:231 - 📊 TEST SUITE SUMMARY
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:232 - ================================================================================
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:233 - Suite: Test Suite - 20260227_121700
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:234 - Duration: 95.06s
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:235 - --------------------------------------------------------------------------------
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:236 - Total Tests: 3
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:237 - ✅ Passed: 3 (100.0%)
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:238 - ❌ Failed: 0
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:239 - 💥 Errors: 0
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:240 - ⊘ Skipped: 0
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:241 - ================================================================================
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:244 - 
+📋 Individual Test Results:
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:245 - --------------------------------------------------------------------------------
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-001               | PASSED   |  64.61s | Steps: 9/9
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-002               | PASSED   |  94.12s | Steps: 13/13
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-003               | PASSED   |  78.89s | Steps: 10/10
+2026-02-27 12:18:35 | INFO     | core.test_runner:_log_suite_summary:263 - ================================================================================
+
+2026-02-27 12:18:35 | INFO     | reporters:generate_all_reports:22 - 📊 Generating test reports...
+2026-02-27 12:18:35 | INFO     | reporters.csv_reporter:generate_report:29 - 📄 Generating CSV report: test_results\test_results_121835_27022026.csv
+2026-02-27 12:18:35 | SUCCESS  | reporters.csv_reporter:generate_report:68 - ✅ CSV report generated: test_results\test_results_121835_27022026.csv
+2026-02-27 12:18:35 | INFO     | reporters.csv_reporter:generate_report:69 -    Total rows: 32
+2026-02-27 12:18:35 | INFO     | reporters.csv_reporter:generate_report:70 -    File size: 6.23 KB
+2026-02-27 12:18:35 | INFO     | reporters.html_reporter:generate_report:54 - 🎨 Generating HTML report: test_results\test_report_121835_27022026.html
+2026-02-27 12:18:35 | SUCCESS  | reporters.html_reporter:generate_report:84 - ✅ HTML report generated: test_results\test_report_121835_27022026.html
+2026-02-27 12:18:35 | INFO     | reporters.html_reporter:generate_report:85 -    File size: 4854.97 KB
+2026-02-27 12:18:35 | INFO     | reporters.html_reporter:generate_report:86 -    Open in browser: file://C:\Users\harsh\UITEST\test_results\test_report_121835_27022026.html
+2026-02-27 12:18:35 | INFO     | reporters.junit_reporter:generate_report:26 - 🧪 Generating JUnit report: test_results\junit_report_121835_27022026.xml
+2026-02-27 12:18:35 | SUCCESS  | reporters.junit_reporter:generate_report:67 - ✅ JUnit report generated: test_results\junit_report_121835_27022026.xml
+2026-02-27 12:18:35 | SUCCESS  | reporters:generate_all_reports:49 - ✅ Generated 3 report(s)

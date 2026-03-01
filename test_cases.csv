@@ -1,0 +1,2 @@
+test_id,test_name,description,expected_result,priority,category
+TC-001,Login Test,"Navigate to https://example.com, enter username 'admin', enter password 'pass123', click login button, verify dashboard appears",dashboard,High,Smoke Test

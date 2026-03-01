@@ -1,0 +1,11 @@
+test_id,test_name,description,expected_result,priority,category
+
+TC-005,Login Test,"Navigate to https://silfratech.in/miraq/v4/,
+a. It will first ask for the name, give it as Harshith S
+b. later it will ask for email, give silfra.harshith@gmail.com
+c. then it will ask for otp give it as 123456, and submit and wait for response and then do next step
+d. Confirm the widget shows successful verification or login-complete style confirmation text. After verification, perform the post-login navigation: use the in-widget back action to move out of the current conversation panel.
+e. Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents.
+f. Wait until the file list is visible, then click Validate Content for the first file only.
+g. Mark this complete case success only if all the steps are completed and passed
+",verification,High,Smoke Test

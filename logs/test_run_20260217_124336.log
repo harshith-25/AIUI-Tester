@@ -1,0 +1,259 @@
+2026-02-17 12:43:39 | INFO     | __main__:_load_test_cases:110 - Loading test cases from: my_tests.csv
+2026-02-17 12:43:39 | INFO     | utils.csv_reader:read_test_cases:23 - 📂 Reading test cases from: my_tests.csv
+2026-02-17 12:43:39 | INFO     | utils.csv_reader:read_test_cases:48 - ✅ Successfully parsed 1 test cases
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:24 - ================================================================================
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:25 - 🚀 Starting Test Suite Execution
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:26 - ================================================================================
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:27 - Total Tests: 1
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:28 - Max Parallel: 3
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:29 - Retry Enabled: True
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_test_suite:30 - ================================================================================
+2026-02-17 12:43:42 | INFO     | core.test_runner:_run_parallel:81 - Running tests in parallel (max 3 concurrent)...
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_with_semaphore:87 - 
+################################################################################
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_with_semaphore:88 - Starting Test 1/1: TC-001
+2026-02-17 12:43:42 | INFO     | core.test_runner:run_with_semaphore:89 - ################################################################################
+2026-02-17 12:43:42 | INFO     | core.test_engine:execute_test:26 - ================================================================================
+2026-02-17 12:43:42 | INFO     | core.test_engine:execute_test:27 - 🧪 Executing Test: TC-001 - Login Test
+2026-02-17 12:43:42 | INFO     | core.test_engine:execute_test:28 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-17 12:43:42 | INFO     | core.test_engine:execute_test:31 - ================================================================================
+2026-02-17 12:43:42 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-17 12:43:44 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-17 12:43:46 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-17 12:43:46 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:43:46 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 1
+2026-02-17 12:43:46 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:43:59 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_navigate with args: {'url': 'https://silfratech.in/miraq/v4/'}
+2026-02-17 12:43:59 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-17 12:44:25 | SUCCESS  | agents.tool_executor:execute_tools:31 - ✅ Tool playwright_navigate completed in 26200ms
+2026-02-17 12:44:25 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:25 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 2
+2026-02-17 12:44:25 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:27 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_wait with args: {'seconds': 3}
+2026-02-17 12:44:30 | SUCCESS  | agents.tool_executor:execute_tools:31 - ✅ Tool playwright_wait completed in 3022ms
+2026-02-17 12:44:30 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_screenshot with args: {}
+2026-02-17 12:44:30 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_124430.png
+2026-02-17 12:44:30 | SUCCESS  | agents.tool_executor:execute_tools:31 - ✅ Tool playwright_screenshot completed in 389ms
+2026-02-17 12:44:30 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:30 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 3
+2026-02-17 12:44:30 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:32 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_click with args: {'selector': 'div.widget-shell .chat-icon'}
+2026-02-17 12:44:32 | INFO     | browser.browser_manager:click:45 - Clicking: div.widget-shell .chat-icon
+2026-02-17 12:44:42 | ERROR    | agents.tool_executor:execute_tools:52 - ❌ Tool playwright_click failed: Page.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("div.widget-shell .chat-icon")
+
+2026-02-17 12:44:42 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:42 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 4
+2026-02-17 12:44:42 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:44 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_click with args: {'selector': '.widget-shell .chat-icon'}
+2026-02-17 12:44:44 | INFO     | browser.browser_manager:click:45 - Clicking: .widget-shell .chat-icon
+2026-02-17 12:44:54 | ERROR    | agents.tool_executor:execute_tools:52 - ❌ Tool playwright_click failed: Page.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator(".widget-shell .chat-icon")
+
+2026-02-17 12:44:54 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:54 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 5
+2026-02-17 12:44:54 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:55 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_screenshot with args: {}
+2026-02-17 12:44:56 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_2_124455.png
+2026-02-17 12:44:56 | SUCCESS  | agents.tool_executor:execute_tools:31 - ✅ Tool playwright_screenshot completed in 240ms
+2026-02-17 12:44:56 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:56 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 6
+2026-02-17 12:44:56 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:58 | INFO     | agents.copilot_agent:execute_step:95 - 🤖 Copilot: I attempted to locate and click on the chat icon within the widget shell using two different selectors, but both attempts failed due to a timeout. I have captured a screenshot of the current page state for reference.
+
+Next, I will analyze the page structure further to identify an alternative way to locate the chat icon.
+2026-02-17 12:44:58 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_get_text with args: {'selector': 'body'}
+2026-02-17 12:44:58 | SUCCESS  | agents.tool_executor:execute_tools:31 - ✅ Tool playwright_get_text completed in 17ms
+2026-02-17 12:44:58 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:44:58 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 7
+2026-02-17 12:44:58 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:00 | INFO     | agents.copilot_agent:execute_step:95 - 🤖 Copilot: The page text does not seem to include any mention of a chat widget or icon. It primarily describes the features of the platform. This suggests that the chat widget might be dynamically loaded or hidden.
+
+I will investigate further to determine if the chat widget is present in the DOM but not visible.
+2026-02-17 12:45:00 | INFO     | agents.tool_executor:execute_tools:23 - 🔧 Executing tool: playwright_get_text with args: {'selector': 'html'}
+2026-02-17 12:45:00 | SUCCESS  | agents.tool_executor:execute_tools:31 - ✅ Tool playwright_get_text completed in 9ms
+2026-02-17 12:45:00 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:00 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 8
+2026-02-17 12:45:00 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:38 | INFO     | agents.copilot_agent:execute_step:95 - 🤖 Copilot: The extracted text from the HTML does not provide any additional information about the chat widget or its icon. It seems that the widget might not be loaded or is hidden.
+
+I recommend verifying if the chat widget is enabled on the website or if there are specific conditions under which it appears (e.g., user interaction or scrolling). Let me know if you would like me to try any other approach or if there are additional details about the widget's behavior.
+2026-02-17 12:45:38 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:38 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 9
+2026-02-17 12:45:38 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:42 | INFO     | agents.copilot_agent:execute_step:95 - 🤖 Copilot: Since I was unable to locate or interact with the chat widget, I cannot proceed with the subsequent steps involving entering the first and last name, email, and OTP. The test cannot be completed as described due to the inability to interact with the chat widget.
+
+Please confirm if there are any additional instructions or if you'd like me to attempt alternative actions.
+2026-02-17 12:45:42 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:42 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 10
+2026-02-17 12:45:42 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:46 | INFO     | agents.copilot_agent:execute_step:95 - 🤖 Copilot: Since the chat widget interaction is a prerequisite for the subsequent steps, and I was unable to locate or interact with it, I cannot proceed further with the test. 
+
+The test is incomplete due to the inability to find and interact with the chat widget. If you have additional details about the widget's behavior or alternative steps to try, please let me know.
+2026-02-17 12:45:46 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:46 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 11
+2026-02-17 12:45:46 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:50 | INFO     | agents.copilot_agent:execute_step:95 - 🤖 Copilot: As the chat widget interaction is essential for proceeding with the test and I was unable to locate or interact with it, I must confirm that the test cannot be completed as described.
+
+If you have further instructions or modifications to the test, please let me know, and I will proceed accordingly.
+2026-02-17 12:45:50 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:50 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 12
+2026-02-17 12:45:50 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:45:55 | ERROR    | agents.copilot_agent:execute_step:151 - Error in Copilot step: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85940 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85940 seconds before retrying.'}}
+2026-02-17 12:45:55 | ERROR    | core.test_engine:execute_test:82 - ❌ Step execution error: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85940 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85940 seconds before retrying.'}}
+2026-02-17 12:45:55 | WARNING  | core.test_engine:execute_test:86 - AI provider rate-limited. Switching to deterministic fallback flow.
+2026-02-17 12:45:55 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-17 12:46:01 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-17 12:46:11 | INFO     | browser.browser_manager:click:45 - Clicking: button[type='submit']
+2026-02-17 12:46:21 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Login')
+2026-02-17 12:46:31 | INFO     | browser.browser_manager:click:45 - Clicking: input[type='submit']
+2026-02-17 12:46:45 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_3_124644.png
+2026-02-17 12:46:45 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:359 - 
+================================================================================
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:360 - 📊 Test Summary: TC-001
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:361 - ================================================================================
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:370 - Status: ❌ FAILED
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:371 - Duration: 182.74s
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:372 - Steps: 33/44 passed
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:373 - Success Rate: 75.0%
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:374 - Validation: ❌ FAILED
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:375 - Expected: dashboard
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:376 - Actual: Expected result not found in page or AI observations
+2026-02-17 12:46:45 | INFO     | core.test_engine:_log_test_summary:381 - ================================================================================
+
+2026-02-17 12:46:54 | INFO     | browser.browser_manager:close:129 - Browser closed
+2026-02-17 12:46:54 | INFO     | core.test_runner:run_with_semaphore:93 - Completed Test 1/1: TC-001
+2026-02-17 12:46:54 | WARNING  | core.test_runner:_retry_failed_tests:150 - 
+================================================================================
+2026-02-17 12:46:54 | WARNING  | core.test_runner:_retry_failed_tests:151 - 🔄 Retrying 1 failed tests
+2026-02-17 12:46:54 | WARNING  | core.test_runner:_retry_failed_tests:152 - ================================================================================
+2026-02-17 12:46:54 | INFO     | core.test_runner:_retry_failed_tests:160 - 
+Retrying TC-001 (attempt 1/2)
+2026-02-17 12:46:59 | INFO     | core.test_engine:execute_test:26 - ================================================================================
+2026-02-17 12:46:59 | INFO     | core.test_engine:execute_test:27 - 🧪 Executing Test: TC-001 - Login Test
+2026-02-17 12:46:59 | INFO     | core.test_engine:execute_test:28 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-17 12:46:59 | WARNING  | core.test_engine:execute_test:30 -    Retry attempt: 1/2
+2026-02-17 12:46:59 | INFO     | core.test_engine:execute_test:31 - ================================================================================
+2026-02-17 12:46:59 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-17 12:47:01 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-17 12:47:03 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-17 12:47:03 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:47:03 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 1
+2026-02-17 12:47:03 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:47:15 | ERROR    | agents.copilot_agent:execute_step:151 - Error in Copilot step: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85860 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85860 seconds before retrying.'}}
+2026-02-17 12:47:15 | ERROR    | core.test_engine:execute_test:82 - ❌ Step execution error: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85860 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85860 seconds before retrying.'}}
+2026-02-17 12:47:15 | WARNING  | core.test_engine:execute_test:86 - AI provider rate-limited. Switching to deterministic fallback flow.
+2026-02-17 12:47:15 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-17 12:47:28 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-17 12:47:38 | INFO     | browser.browser_manager:click:45 - Clicking: button[type='submit']
+2026-02-17 12:47:48 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Login')
+2026-02-17 12:47:58 | INFO     | browser.browser_manager:click:45 - Clicking: input[type='submit']
+2026-02-17 12:48:12 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_124811.png
+2026-02-17 12:48:12 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:359 - 
+================================================================================
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:360 - 📊 Test Summary: TC-001
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:361 - ================================================================================
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:370 - Status: ❌ FAILED
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:371 - Duration: 73.05s
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:372 - Steps: 3/4 passed
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:373 - Success Rate: 75.0%
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:374 - Validation: ❌ FAILED
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:375 - Expected: dashboard
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:376 - Actual: Expected result not found in page or AI observations
+2026-02-17 12:48:12 | INFO     | core.test_engine:_log_test_summary:381 - ================================================================================
+
+2026-02-17 12:48:19 | INFO     | browser.browser_manager:close:129 - Browser closed
+2026-02-17 12:48:19 | INFO     | core.test_runner:_retry_failed_tests:160 - 
+Retrying TC-001 (attempt 2/2)
+2026-02-17 12:48:24 | INFO     | core.test_engine:execute_test:26 - ================================================================================
+2026-02-17 12:48:24 | INFO     | core.test_engine:execute_test:27 - 🧪 Executing Test: TC-001 - Login Test
+2026-02-17 12:48:24 | INFO     | core.test_engine:execute_test:28 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-17 12:48:24 | WARNING  | core.test_engine:execute_test:30 -    Retry attempt: 2/2
+2026-02-17 12:48:24 | INFO     | core.test_engine:execute_test:31 - ================================================================================
+2026-02-17 12:48:24 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-17 12:48:26 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-17 12:48:29 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-17 12:48:29 | INFO     | core.test_engine:execute_test:53 - 
+────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:48:29 | INFO     | core.test_engine:execute_test:54 - ▶️  AI Agent Iteration 1
+2026-02-17 12:48:29 | INFO     | core.test_engine:execute_test:55 - ────────────────────────────────────────────────────────────────────────────────
+2026-02-17 12:48:32 | ERROR    | agents.copilot_agent:execute_step:151 - Error in Copilot step: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85783 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85783 seconds before retrying.'}}
+2026-02-17 12:48:32 | ERROR    | core.test_engine:execute_test:82 - ❌ Step execution error: Error code: 429 - {'error': {'code': 'RateLimitReached', 'message': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85783 seconds before retrying.', 'details': 'Rate limit of 50 per 86400s exceeded for UserByModelByDay. Please wait 85783 seconds before retrying.'}}
+2026-02-17 12:48:32 | WARNING  | core.test_engine:execute_test:86 - AI provider rate-limited. Switching to deterministic fallback flow.
+2026-02-17 12:48:32 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://silfratech.in/miraq/v4/
+2026-02-17 12:49:02 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-17 12:49:12 | INFO     | browser.browser_manager:click:45 - Clicking: button[type='submit']
+2026-02-17 12:49:22 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Login')
+2026-02-17 12:49:32 | INFO     | browser.browser_manager:click:45 - Clicking: input[type='submit']
+2026-02-17 12:49:46 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_124945.png
+2026-02-17 12:49:46 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:359 - 
+================================================================================
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:360 - 📊 Test Summary: TC-001
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:361 - ================================================================================
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:370 - Status: ❌ FAILED
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:371 - Duration: 81.84s
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:372 - Steps: 2/4 passed
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:373 - Success Rate: 50.0%
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:374 - Validation: ❌ FAILED
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:375 - Expected: dashboard
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:376 - Actual: Expected result not found in page or AI observations
+2026-02-17 12:49:46 | INFO     | core.test_engine:_log_test_summary:381 - ================================================================================
+
+2026-02-17 12:49:49 | INFO     | browser.browser_manager:close:129 - Browser closed
+2026-02-17 12:49:49 | ERROR    | core.test_runner:_retry_failed_tests:184 - ❌ All retries failed for TC-001
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:219 - 
+================================================================================
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:220 - 📊 TEST SUITE SUMMARY
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:221 - ================================================================================
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:222 - Suite: Test Suite - 20260217_124342
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:223 - Duration: 366.31s
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:224 - --------------------------------------------------------------------------------
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:225 - Total Tests: 1
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:226 - ✅ Passed: 0 (0.0%)
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:227 - ❌ Failed: 1
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:228 - 💥 Errors: 0
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:229 - ⊘ Skipped: 0
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:230 - ================================================================================
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:233 - 
+📋 Individual Test Results:
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:234 - --------------------------------------------------------------------------------
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:245 - ❌ TC-001               | FAILED   | 182.74s | Steps: 33/44
+2026-02-17 12:49:49 | INFO     | core.test_runner:_log_suite_summary:252 - ================================================================================
+
+2026-02-17 12:49:49 | INFO     | reporters:generate_all_reports:22 - 📊 Generating test reports...
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_report:25 - 📄 Generating CSV report: test_results\test_results_20260217_124949.csv
+2026-02-17 12:49:49 | SUCCESS  | reporters.csv_reporter:generate_report:64 - ✅ CSV report generated: test_results\test_results_20260217_124949.csv
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_report:65 -    Total rows: 44
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_report:66 -    File size: 18.47 KB
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_summary_report:76 - 📊 Generating summary CSV report: test_results\test_summary_20260217_124949.csv
+2026-02-17 12:49:49 | SUCCESS  | reporters.csv_reporter:generate_summary_report:105 - ✅ Summary CSV report generated: test_results\test_summary_20260217_124949.csv
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_statistics_report:115 - 📈 Generating statistics CSV report: test_results\test_statistics_20260217_124949.csv
+2026-02-17 12:49:49 | SUCCESS  | reporters.csv_reporter:generate_statistics_report:145 - ✅ Statistics CSV report generated: test_results\test_statistics_20260217_124949.csv
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_failure_report:230 - 📋 Generating failure report: test_results\test_failures_20260217_124949.csv
+2026-02-17 12:49:49 | SUCCESS  | reporters.csv_reporter:generate_failure_report:258 - ✅ Failure report generated: test_results\test_failures_20260217_124949.csv
+2026-02-17 12:49:49 | INFO     | reporters.csv_reporter:generate_failure_report:259 -    Failed tests: 1
+2026-02-17 12:49:49 | INFO     | reporters.html_reporter:generate_report:50 - 🎨 Generating HTML report: test_results\test_report_20260217_124949.html
+2026-02-17 12:49:49 | SUCCESS  | reporters.html_reporter:generate_report:80 - ✅ HTML report generated: test_results\test_report_20260217_124949.html
+2026-02-17 12:49:49 | INFO     | reporters.html_reporter:generate_report:81 -    File size: 5448.93 KB
+2026-02-17 12:49:49 | INFO     | reporters.html_reporter:generate_report:82 -    Open in browser: file://C:\Users\harsh\UITEST\test_results\test_report_20260217_124949.html
+2026-02-17 12:49:49 | INFO     | reporters.junit_reporter:generate_report:22 - 🧪 Generating JUnit report: test_results\junit_report_20260217_124949.xml
+2026-02-17 12:49:49 | SUCCESS  | reporters.junit_reporter:generate_report:63 - ✅ JUnit report generated: test_results\junit_report_20260217_124949.xml
+2026-02-17 12:49:49 | SUCCESS  | reporters:generate_all_reports:65 - ✅ Generated 6 report(s)

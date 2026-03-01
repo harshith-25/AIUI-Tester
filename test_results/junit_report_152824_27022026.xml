@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="Test Suite - 20260227_152702" tests="3" failures="0" errors="0" skipped="0" time="81.169" timestamp="2026-02-27T15:27:02.806851">
+  <properties>
+    <property name="pass_rate" value="100.00" />
+  </properties>
+  <testcase classname="ui_tests" name="TC-001 - Widget Login - Successful Verification" time="38.323">
+    <system-out />
+  </testcase>
+  <testcase classname="ui_tests" name="TC-002 - Document Checking Flow - Validate Content" time="63.696">
+    <system-out />
+  </testcase>
+  <testcase classname="ui_tests" name="TC-003 - IntentClassifier Check - Ask Question" time="79.906">
+    <system-out />
+  </testcase>
+</testsuite>

@@ -1,0 +1,334 @@
+test_id,test_name,description,expected_result,priority,category
+TC-001,Super Admin - Show List of All Institutes,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Institutes section from the main menu.
+e. Wait for the institute list to load.
+f. Verify that all institutes are listed with names, IDs, and relevant details.","Super Admin is successfully authenticated and the complete list of all institutes is displayed with correct institute details and no errors.",High,Smoke Test
+TC-002,Super Admin - Institute Configuration Edit,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Institutes section from the main menu.
+e. Select an existing institute from the list.
+f. Click the Edit Configuration button or icon.
+g. Modify one or more configuration fields (e.g., name, address, or settings).
+h. Click Save or Update.
+i. Verify a success confirmation message appears.
+j. Reload the institute configuration and confirm the updated values are persisted.","Super Admin is able to open and edit institute configuration settings; changes are saved and correctly reflected upon reload.",High,Functional
+TC-003,Super Admin - Add Institution,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Institutes section.
+e. Click the Add Institution button.
+f. Fill in all required fields such as name, address, and contact details.
+g. Click Save or Submit.
+h. Verify the new institution appears in the institute list.","Super Admin can successfully add a new institution; the institution is saved and visible in the list.",High,Functional
+TC-004,Super Admin - Edit Institution,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Institutes section.
+e. Select an existing institution from the list.
+f. Click the Edit button or icon for that institution.
+g. Modify a field such as the institution name or contact number.
+h. Click Save.
+i. Verify the updated information is reflected in the institute list.","Super Admin can successfully edit an existing institution; all changes are saved and displayed correctly in the list.",High,Functional
+TC-005,Super Admin - Delete Institution,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Institutes section.
+e. Select an existing institution from the list.
+f. Click the Delete button or icon for that institution.
+g. Wait for the confirmation dialog to appear and click Confirm or Yes.
+h. Verify the institution is removed from the list.
+i. Confirm a success message is shown.","Super Admin can delete an institution; the institution no longer appears in the institutes list and a success message is displayed.",High,Functional
+TC-006,Super Admin - Manage Role,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Role Management from the admin menu.
+e. View the existing list of roles.
+f. Click Add Role and fill in the role name and permissions.
+g. Click Save and verify the new role appears in the roles list.
+h. Select an existing role and click Edit.
+i. Modify permissions and click Save.
+j. Verify the updated role reflects the changes.","Super Admin can view, add, and edit roles with appropriate permissions; all changes are saved and the roles list is updated accordingly.",High,Functional
+TC-007,Super Admin - Show List of All Hospital Admin Users,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management from the admin menu.
+e. Filter or select the Hospital Admin user type from the role filter.
+f. Wait for the list to load.
+g. Verify all hospital admin users are listed with their names, emails, and statuses.","Super Admin can view the complete list of all hospital admin users with their names, emails, and statuses displayed correctly and no data is missing.",High,Functional
+TC-008,Super Admin - Add Hospital Admin User,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management.
+e. Click the Add User button.
+f. Select Hospital Admin as the role.
+g. Fill in all required fields such as name, email, contact, and institution.
+h. Click Save or Submit.
+i. Verify the new hospital admin user appears in the user list.","Super Admin can successfully add a new hospital admin user; the user is saved and visible in the user list with correct details.",High,Functional
+TC-009,Super Admin - Edit Hospital Admin User,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management.
+e. Locate an existing hospital admin user from the list.
+f. Click the Edit button or icon for that user.
+g. Modify a field such as name or phone number.
+h. Click Save.
+i. Verify the updated information is reflected in the user list.","Super Admin can edit an existing hospital admin user; all changes are saved and the user list reflects the updated information.",High,Functional
+TC-010,Super Admin - Delete User,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management.
+e. Select a user to be deleted from the list.
+f. Click the Delete button or icon for that user.
+g. Wait for the confirmation dialog and click Confirm or Yes.
+h. Verify the user is removed from the user list.
+i. Confirm a success message is displayed.","Super Admin can delete a user; the user no longer appears in the user list and a success confirmation is shown.",High,Functional
+TC-011,Super Admin - List of Services,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Services section from the admin menu.
+e. Wait for the services list to load.
+f. Verify that all services are displayed with their names, types, and statuses.","Super Admin can view the complete list of services with relevant details such as service name, type, and status displayed correctly.",Medium,Functional
+TC-012,Super Admin - Add Service,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Services section.
+e. Click the Add Service button.
+f. Fill in required fields such as service name, type, and description.
+g. Click Save or Submit.
+h. Verify the new service appears in the services list.","Super Admin can add a new service; the service is saved and visible in the services list with correct details.",High,Functional
+TC-013,Super Admin - Edit Service,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Services section.
+e. Select an existing service from the list.
+f. Click the Edit button or icon.
+g. Modify a field such as service name or description.
+h. Click Save.
+i. Verify the updated service information is reflected in the list.","Super Admin can edit an existing service; all changes are saved and the services list reflects the updated information.",High,Functional
+TC-014,Super Admin - Service Mapping,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Service Mapping section.
+e. Select an institution or user to map services to.
+f. Assign one or more available services to the selected entity.
+g. Click Save or Confirm.
+h. Verify the mapping is saved and displayed correctly in the service mapping view.","Super Admin can map services to institutions or users; the mappings are persisted and correctly reflected in the service mapping section.",High,Functional
+TC-015,Super Admin - Trash Studies,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Workspace or Studies section.
+e. Select one or more studies from the list.
+f. Click the Trash or Delete button.
+g. Confirm the action in the dialog that appears.
+h. Navigate to the Trash section and verify the trashed studies appear there.
+i. Confirm the studies are no longer in the active studies list.","Super Admin can move studies to trash; trashed studies are removed from the active list and visible in the Trash section.",High,Functional
+TC-016,Super Admin - List Service Calendar,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Service Calendar section from the admin menu.
+e. Wait for the calendar list to load.
+f. Verify that all service calendar entries are displayed with names, dates, and associated services.","Super Admin can view the complete service calendar list with all scheduling details displayed accurately.",Medium,Functional
+TC-017,Super Admin - Add Service Calendar,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Service Calendar section.
+e. Click the Add Calendar Entry button.
+f. Fill in required fields such as service name, date, time, and recurrence settings.
+g. Click Save or Submit.
+h. Verify the new calendar entry appears in the service calendar list.","Super Admin can add a new service calendar entry; the entry is saved and visible in the calendar list with correct details.",Medium,Functional
+TC-018,Super Admin - Edit Service Calendar,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Service Calendar section.
+e. Select an existing calendar entry from the list.
+f. Click the Edit button or icon.
+g. Modify a field such as date, time, or recurrence.
+h. Click Save.
+i. Verify the updated entry is reflected in the calendar list.","Super Admin can edit a service calendar entry; all changes are saved and the calendar list reflects the updated information.",Medium,Functional
+TC-019,Super Admin - Audit Trails Login Sessions,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Audit Trails from the admin menu.
+e. Click on the Login Sessions sub-section.
+f. Wait for the session logs to load.
+g. Verify the list shows user names, timestamps, IP addresses, and session statuses.
+h. Apply a date or user filter and verify the results update accordingly.","Super Admin can view all login session audit logs with accurate user, timestamp, and IP details; filters work correctly and return relevant results.",High,Security
+TC-020,Super Admin - Audit Trails Study Logs,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Audit Trails from the admin menu.
+e. Click on the Study Logs sub-section.
+f. Wait for the study logs to load.
+g. Verify that study ID, action performed, user, and timestamp are displayed for each log entry.","Super Admin can view all study audit logs with complete and accurate study activity details.",High,Security
+TC-021,Super Admin - Audit Trails Session Logs,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Audit Trails from the admin menu.
+e. Click on the Session Logs sub-section.
+f. Wait for the session logs to load.
+g. Verify that session details including user, session duration, and actions performed are visible for each entry.","Super Admin can view all session logs with accurate session and user activity details displayed without errors.",High,Security
+TC-022,Super Admin - Features Toggle (Multi-level Assign / User Availability Calendar / Service Definition),"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to System Features or Feature Management section.
+e. Locate the toggle for Multi-level Assign and turn it ON; click Save and verify the feature is enabled.
+f. Locate the toggle for User Availability Calendar and turn it OFF; click Save and verify the feature is disabled.
+g. Locate the toggle for Service Definition and switch its state; click Save and verify it reflects the new state.
+h. Revert all changes and confirm the system responds correctly.","Super Admin can enable or disable features such as Multi-level Assign, User Availability Calendar, and Service Definition; each state change is saved and reflected immediately in the application.",High,Functional
+TC-023,Super Admin - System Configuration (Auto Assign Interval / Queue Size / TAT / Alerts),"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to System Configuration from the admin menu.
+e. Update the Auto Assign Interval field with a new value.
+f. Update the Auto Assign Queue Size field with a new value.
+g. Enable or configure the Check Service TAT option.
+h. Configure the Send Alerts settings with appropriate values.
+i. Click Save or Apply.
+j. Verify a success confirmation message is displayed and configuration changes are persisted.","Super Admin can configure system parameters including auto-assign interval, queue size, TAT checking, and alert settings; all changes are saved and applied successfully.",High,Functional
+TC-024,Super Admin - Upload Configuration (DICOM / Compression),"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Upload Configuration section.
+e. View the current Default DICOM Receive Configuration settings.
+f. Modify one or more DICOM receive configuration parameters.
+g. Locate the Compression Configuration settings and update the values.
+h. Click Save.
+i. Verify a success message is shown and the updated configuration is displayed correctly.","Super Admin can view and modify upload configurations including DICOM receive and compression settings; all changes are persisted and reflected correctly after saving.",High,Functional
+TC-025,Super Admin - Master Password Configuration (Enable / Change),"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Master Password Configuration section.
+e. Enable the master password feature using the available toggle or checkbox.
+f. Enter a new master password and confirm it in the confirm password field.
+g. Click Save or Apply and verify a success confirmation message appears.
+h. Navigate back to the section and click Change Password.
+i. Enter the current master password followed by the new password and confirm it.
+j. Click Save and verify the password change confirmation message is shown.","Super Admin can enable and change the master password; changes are applied successfully and confirmation messages are displayed at each step.",High,Security
+TC-026,Super Admin - Workspace (List Scans / Export / Delete Studies / Patient View / Study View),"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Workspace section.
+e. Verify the full list of all scans and studies is displayed.
+f. Apply available filters and confirm the list updates accordingly.
+g. Select one or more studies and click Export; verify the export action is triggered successfully.
+h. Select a study and click Delete; confirm the deletion in the dialog and verify the study is removed.
+i. Switch to Patient View and verify studies are grouped by patient.
+j. Switch to Study View and verify studies are displayed by individual study.","Super Admin can list all scans, export selected studies, delete studies with confirmation, and toggle between Patient View and Study View in the Workspace without errors.",High,Smoke Test
+TC-027,Super Admin - Calendar My Meeting,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Calendar section from the main menu.
+e. Click on the My Meeting tab or view.
+f. Wait for the meeting list to load.
+g. Verify that all scheduled meetings for the logged-in Super Admin are displayed.
+h. Click on a meeting entry and verify meeting details such as title, time, and participants are shown.","Super Admin can view their scheduled meetings under the My Meeting calendar view with correct and complete meeting details.",Medium,Functional
+TC-028,Super Admin - My Doctors Calendar,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Calendar section.
+e. Click on the My Doctors Calendar tab or view.
+f. Wait for the calendar to load.
+g. Verify that the calendar displays availability and schedules for all associated doctors.
+h. Navigate across different dates or weeks and verify the calendar updates correctly.","Super Admin can view the doctors calendar showing doctor availability and scheduling information accurately; navigation across dates works without errors.",Medium,Functional
+TC-029,Super Admin - Update User Profile,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Click the profile icon or navigate to My Profile from the top menu.
+e. Click the Edit button on the profile page.
+f. Update one or more fields such as name, email, or phone number.
+g. Click Save or Update.
+h. Verify a success confirmation message is displayed.
+i. Reload the profile page and confirm the updated details are shown correctly.","Super Admin can update their user profile; all changes are saved and the updated profile information is displayed correctly upon reload.",Medium,Functional
+TC-030,Super Admin - Change Password,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to Change Password from the profile menu or settings.
+e. Enter the current password as i2iadmin.
+f. Enter a new password and confirm it in the confirm password field.
+g. Click Save or Change Password.
+h. Verify a success confirmation message is shown.
+i. Log out of the application.
+j. Navigate to https://dev2.heartnetnetindiademo.in/connect and log in using the new password.
+k. Verify successful login with the updated credentials.","Super Admin can successfully change their password; the new password is applied and login with the updated credentials works correctly.",High,Security
+TC-031,Super Admin - List All Types of Users,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management section.
+e. View the complete list of all users across all roles.
+f. Verify that user types including Super Admin, Hospital Admin, Technician, Physician, and others are listed.
+g. Apply a role-based filter and verify the list updates to show only users of the selected role.","Super Admin can view the complete list of all user types with accurate role and status information; role-based filtering works correctly.",High,Functional
+TC-032,Super Admin - Add User,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management section.
+e. Click the Add User button.
+f. Select a user role from the role dropdown.
+g. Fill in all required fields such as name, email, contact number, and institution.
+h. Click Save or Submit.
+i. Verify the new user appears in the user list with correct role and details.","Super Admin can add a new user of any type; the user is saved and visible in the user list with correct role and profile details.",High,Functional
+TC-033,Super Admin - Edit User,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management section.
+e. Select an existing user from the list.
+f. Click the Edit button or icon for that user.
+g. Modify one or more fields such as name or contact number.
+h. Click Save.
+i. Verify the updated user information is reflected in the user list.","Super Admin can edit existing user details; all changes are saved and the user list reflects the updated information.",High,Functional
+TC-034,Super Admin - Add/Edit User Signature,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to User Management section.
+e. Select a user from the list.
+f. Click on Add Signature or Edit Signature option.
+g. Upload a signature image or draw the signature in the provided input field.
+h. Click Save.
+i. Verify the signature is saved and displayed in the user profile.","Super Admin can add or edit a user's signature; the signature is saved and correctly associated with the user's profile.",Medium,Functional
+TC-035,Super Admin - Service Offered,"Navigate to https://dev2.heartnetnetindiademo.in/connect.
+a. Enter username as i2iadmin.
+b. Enter password as i2iadmin.
+c. Click the Login button and wait for the dashboard to load.
+d. Navigate to the Services Offered section.
+e. View the current list of services offered.
+f. Click Add and fill in the required fields for the new service offering.
+g. Click Save and verify the new service appears in the Services Offered list.
+h. Select an existing service and click Edit.
+i. Modify a field and click Save.
+j. Verify the updated service is reflected correctly in the list.","Super Admin can view, add, and edit services offered; all changes are saved and the services offered list is updated accurately.",Medium,Functional

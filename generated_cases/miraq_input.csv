@@ -1,0 +1,36 @@
+"test_id","test_name","description","expected_result","priority","category"
+"TC-001","Widget Login - Successful Verification","Navigate to https://silfratech.in/miraq/v4/.
+a. It will first ask for the name, give it as Harshith S.
+b. Later it will ask for email, give silfra.harshith@gmail.com.
+c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
+d. Confirm the widget shows successful verification or login-complete style confirmation text.
+e. Click on the widget icon located in the bottom right corner of the page.
+f. Click on the chat icon within the widget.
+g. Mark this complete case success only if all the steps are completed and passed.","verification","Critical","Smoke Test"
+"TC-002","Document Checking Flow - Validate Content","Navigate to https://silfratech.in/miraq/v4/.
+a. It will first ask for the name, give it as Harshith S.
+b. Later it will ask for email, give silfra.harshith@gmail.com.
+c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
+d. Confirm the widget shows successful verification or login-complete style confirmation text.
+e. After verification, perform the post-login navigation: use the in-widget back action to move out of the current conversation panel.
+f. Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents.
+g. Wait until the file list is visible, then click Validate Content for the first file only.
+h. Click on the widget icon located in the bottom right corner of the page.
+i. Click on the chat icon within the widget.
+j. Use the in-widget back action to navigate to the main menu.
+k. Click on the Documents (folder) icon located in the bottom toolbar.
+l. Wait for the file list to load.
+m. Wait for the validation process to complete and verify that it completes successfully.
+n. Mark this complete case success only if all the steps are completed and passed.","verification","High","Functional"
+"TC-003","IntentClassifier Check - Ask Question","Navigate to https://silfratech.in/miraq/v4/.
+a. It will first ask for the name, give it as Harshith S.
+b. Later it will ask for email, give silfra.harshith@gmail.com.
+c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
+d. Confirm the widget shows successful verification or login-complete style confirmation text.
+e. Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents.
+f. Click on the widget icon located in the bottom right corner of the page.
+g. Click on the chat icon within the widget.
+h. Click on the chat icon located to the left of the Documents icon in the bottom toolbar.
+i. Type the question 'Who are you?' in the chat input field and press Enter.
+j. Wait for the response from the IntentClassifier and verify that it provides an appropriate and accurate reply.
+k. Mark this complete case success only if all the steps are completed and passed.","verification","Medium","Functional"

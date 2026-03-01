@@ -1,0 +1,105 @@
+2026-02-24 16:43:03 | INFO     | __main__:_load_test_cases:110 - Loading test cases from: single_case_tmp.csv
+2026-02-24 16:43:03 | INFO     | utils.csv_reader:read_test_cases:23 - 📂 Reading test cases from: single_case_tmp.csv
+2026-02-24 16:43:03 | INFO     | utils.csv_reader:read_test_cases:48 - ✅ Successfully parsed 1 test cases
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:24 - ================================================================================
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:25 - 🚀 Starting Test Suite Execution
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:26 - ================================================================================
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:27 - Total Tests: 1
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:28 - Max Parallel: 1
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:29 - Retry Enabled: False
+2026-02-24 16:43:03 | INFO     | core.test_runner:run_test_suite:30 - ================================================================================
+2026-02-24 16:43:03 | INFO     | core.test_runner:_run_sequential:63 - Running tests sequentially...
+2026-02-24 16:43:03 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-24 16:43:03 | INFO     | core.test_runner:_run_sequential:68 - Test 1/1
+2026-02-24 16:43:03 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-24 16:43:03 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-24 16:43:03 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-001 - Super Admin - Show List of All Institutes
+2026-02-24 16:43:03 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.SMOKE
+2026-02-24 16:43:03 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-24 16:43:03 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-24 16:43:05 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-24 16:43:05 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-24 16:43:05 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-24 16:43:05 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-001] Starting deterministic fallback flow
+2026-02-24 16:43:05 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-001] Description length: 365 characters
+2026-02-24 16:43:05 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-001] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-24 16:43:05 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-24 16:43:11 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=6000
+2026-02-24 16:43:11 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-24 16:43:13 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 2: playwright_click -> login_button | status=passed | duration_ms=1106
+2026-02-24 16:43:13 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-001] nav_institutes: trying selector 1/3 -> text=Institutes
+2026-02-24 16:43:13 | INFO     | browser.browser_manager:click:45 - Clicking: text=Institutes
+2026-02-24 16:43:17 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-001] nav_institutes: selector failed -> text=Institutes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Institutes")
+
+2026-02-24 16:43:17 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-001] nav_institutes: trying selector 2/3 -> a:has-text('Institutes')
+2026-02-24 16:43:17 | INFO     | browser.browser_manager:click:45 - Clicking: a:has-text('Institutes')
+2026-02-24 16:43:21 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-001] nav_institutes: selector failed -> a:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("a:has-text('Institutes')")
+
+2026-02-24 16:43:21 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-001] nav_institutes: trying selector 3/3 -> button:has-text('Institutes')
+2026-02-24 16:43:21 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Institutes')
+2026-02-24 16:43:25 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-001] nav_institutes: selector failed -> button:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-24 16:43:25 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 3: playwright_click -> institutes | status=skipped | duration_ms=12054
+2026-02-24 16:43:25 | ERROR    | core.test_engine:add_step:357 - [TC-001] Step error: Optional navigation not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-24 16:43:28 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 4: playwright_wait -> 3s | status=passed | duration_ms=3014
+2026-02-24 16:43:28 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_164328.png
+2026-02-24 16:43:28 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 5: playwright_screenshot -> screenshots\TC-001_step_1_164328.png | status=passed | duration_ms=182
+2026-02-24 16:43:28 | ERROR    | core.test_engine:mark_description_step:346 - [TC-001] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-24 16:43:28 | ERROR    | core.test_engine:mark_description_step:348 - [TC-001] Description step g error: One or more steps failed
+2026-02-24 16:43:28 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-001] Deterministic fallback flow completed with 5 steps
+2026-02-24 16:43:28 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:804 - 
+================================================================================
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:805 - 📊 Test Summary: TC-001
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:806 - ================================================================================
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:815 - Status: ❌ FAILED
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:816 - Duration: 24.50s
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:817 - Steps: 4/5 passed
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:818 - Success Rate: 80.0%
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:819 - Validation: ❌ FAILED
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:820 - Expected: Super Admin is successfully authenticated and the complete list of all institutes is displayed with correct institute details and no errors.
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:821 - Actual: Expected result not found in page or AI observations
+2026-02-24 16:43:28 | INFO     | core.test_engine:_log_test_summary:826 - ================================================================================
+
+2026-02-24 16:43:28 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:230 - 
+================================================================================
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:231 - 📊 TEST SUITE SUMMARY
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:232 - ================================================================================
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:233 - Suite: Test Suite - 20260224_164303
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:234 - Duration: 26.75s
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:235 - --------------------------------------------------------------------------------
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:236 - Total Tests: 1
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:237 - ✅ Passed: 0 (0.0%)
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:238 - ❌ Failed: 1
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:239 - 💥 Errors: 0
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:240 - ⊘ Skipped: 0
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:241 - ================================================================================
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:244 - 
+📋 Individual Test Results:
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:245 - --------------------------------------------------------------------------------
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:256 - ❌ TC-001               | FAILED   |  24.50s | Steps: 4/5
+2026-02-24 16:43:30 | INFO     | core.test_runner:_log_suite_summary:263 - ================================================================================
+
+2026-02-24 16:43:30 | INFO     | reporters:generate_all_reports:22 - 📊 Generating test reports...
+2026-02-24 16:43:30 | INFO     | reporters.csv_reporter:generate_report:29 - 📄 Generating CSV report: test_results\test_results_164330_24022026.csv
+2026-02-24 16:43:30 | SUCCESS  | reporters.csv_reporter:generate_report:68 - ✅ CSV report generated: test_results\test_results_164330_24022026.csv
+2026-02-24 16:43:30 | INFO     | reporters.csv_reporter:generate_report:69 -    Total rows: 5
+2026-02-24 16:43:30 | INFO     | reporters.csv_reporter:generate_report:70 -    File size: 1.59 KB
+2026-02-24 16:43:30 | INFO     | reporters.html_reporter:generate_report:54 - 🎨 Generating HTML report: test_results\test_report_164330_24022026.html
+2026-02-24 16:43:30 | SUCCESS  | reporters.html_reporter:generate_report:84 - ✅ HTML report generated: test_results\test_report_164330_24022026.html
+2026-02-24 16:43:30 | INFO     | reporters.html_reporter:generate_report:85 -    File size: 7304.85 KB
+2026-02-24 16:43:30 | INFO     | reporters.html_reporter:generate_report:86 -    Open in browser: file://C:\Users\harsh\UITEST\test_results\test_report_164330_24022026.html
+2026-02-24 16:43:30 | INFO     | reporters.junit_reporter:generate_report:26 - 🧪 Generating JUnit report: test_results\junit_report_164330_24022026.xml
+2026-02-24 16:43:30 | SUCCESS  | reporters.junit_reporter:generate_report:67 - ✅ JUnit report generated: test_results\junit_report_164330_24022026.xml
+2026-02-24 16:43:30 | SUCCESS  | reporters:generate_all_reports:49 - ✅ Generated 3 report(s)

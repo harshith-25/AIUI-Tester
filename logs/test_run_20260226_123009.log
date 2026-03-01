@@ -1,0 +1,952 @@
+2026-02-26 12:30:11 | INFO     | __main__:_load_test_cases:110 - Loading test cases from: generated_cases\generated_from_sheet2.csv
+2026-02-26 12:30:11 | INFO     | utils.csv_reader:read_test_cases:23 - 📂 Reading test cases from: generated_cases\generated_from_sheet2.csv
+2026-02-26 12:30:11 | INFO     | utils.csv_reader:read_test_cases:48 - ✅ Successfully parsed 10 test cases
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:24 - ================================================================================
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:25 - 🚀 Starting Test Suite Execution
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:26 - ================================================================================
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:27 - Total Tests: 10
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:28 - Max Parallel: 1
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:29 - Retry Enabled: False
+2026-02-26 12:30:11 | INFO     | core.test_runner:run_test_suite:30 - ================================================================================
+2026-02-26 12:30:11 | INFO     | core.test_runner:_run_sequential:63 - Running tests sequentially...
+2026-02-26 12:30:11 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:30:11 | INFO     | core.test_runner:_run_sequential:68 - Test 1/10
+2026-02-26 12:30:11 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:30:11 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:30:11 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-001 - Super Admin - Show List of all Institutes
+2026-02-26 12:30:11 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.MEDIUM | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:30:11 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:30:11 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-001
+2026-02-26 12:30:34 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:30:34 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:30:34 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:30:34 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-001] Starting deterministic fallback flow
+2026-02-26 12:30:34 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-001] Description length: 366 characters
+2026-02-26 12:30:34 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-001] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:30:34 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:30:43 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=8734
+2026-02-26 12:30:43 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:30:44 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 2: playwright_fill -> username | status=passed | duration_ms=593
+2026-02-26 12:30:44 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:30:44 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 3: playwright_fill -> password | status=passed | duration_ms=548
+2026-02-26 12:30:44 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:30:45 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 4: playwright_click -> login_button | status=passed | duration_ms=1078
+2026-02-26 12:30:45 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-001] nav_institutes: trying selector 1/3 -> text=Institutes
+2026-02-26 12:30:45 | INFO     | browser.browser_manager:click:45 - Clicking: text=Institutes
+2026-02-26 12:30:49 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-001] nav_institutes: selector failed -> text=Institutes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Institutes")
+
+2026-02-26 12:30:49 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-001] nav_institutes: trying selector 2/3 -> a:has-text('Institutes')
+2026-02-26 12:30:49 | INFO     | browser.browser_manager:click:45 - Clicking: a:has-text('Institutes')
+2026-02-26 12:30:53 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-001] nav_institutes: selector failed -> a:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("a:has-text('Institutes')")
+
+2026-02-26 12:30:53 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-001] nav_institutes: trying selector 3/3 -> button:has-text('Institutes')
+2026-02-26 12:30:53 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Institutes')
+2026-02-26 12:30:57 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-001] nav_institutes: selector failed -> button:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:30:57 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 5: playwright_click -> institutes | status=skipped | duration_ms=12045
+2026-02-26 12:30:57 | ERROR    | core.test_engine:add_step:357 - [TC-001] Step error: Optional navigation not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:31:00 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 6: playwright_wait -> 3s | status=passed | duration_ms=3018
+2026-02-26 12:31:01 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_step_1_123100.png
+2026-02-26 12:31:01 | INFO     | core.test_engine:add_step:352 - [TC-001] Step 7: playwright_screenshot -> screenshots\TC-001_step_1_123100.png | status=passed | duration_ms=354
+2026-02-26 12:31:01 | ERROR    | core.test_engine:mark_description_step:346 - [TC-001] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:31:01 | ERROR    | core.test_engine:mark_description_step:348 - [TC-001] Description step g error: One or more steps failed
+2026-02-26 12:31:01 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-001] Deterministic fallback flow completed with 7 steps
+2026-02-26 12:31:01 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-001_final.png
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-001
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 50.37s
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 6/7 passed
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 85.7%
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can view the list of all institutes with accurate details displayed.
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched equivalent domain term: expected 'institutes' and found 'institution'
+2026-02-26 12:31:01 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:31:01 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:31:03 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:31:03 | INFO     | core.test_runner:_run_sequential:68 - Test 2/10
+2026-02-26 12:31:03 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:31:03 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:31:03 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-002 - Super Admin - Edit Institute Configuration
+2026-02-26 12:31:03 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:31:03 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:31:03 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-002
+2026-02-26 12:31:04 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:31:05 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:31:05 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:31:05 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-002] Starting deterministic fallback flow
+2026-02-26 12:31:05 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-002] Description length: 530 characters
+2026-02-26 12:31:05 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-002] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:31:05 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:31:10 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=5473
+2026-02-26 12:31:10 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:31:11 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 2: playwright_fill -> username | status=passed | duration_ms=580
+2026-02-26 12:31:11 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:31:11 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 3: playwright_fill -> password | status=passed | duration_ms=544
+2026-02-26 12:31:11 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:31:13 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 4: playwright_click -> login_button | status=passed | duration_ms=1058
+2026-02-26 12:31:13 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] nav_institutes: trying selector 1/3 -> text=Institutes
+2026-02-26 12:31:13 | INFO     | browser.browser_manager:click:45 - Clicking: text=Institutes
+2026-02-26 12:31:17 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] nav_institutes: selector failed -> text=Institutes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Institutes")
+
+2026-02-26 12:31:17 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] nav_institutes: trying selector 2/3 -> a:has-text('Institutes')
+2026-02-26 12:31:17 | INFO     | browser.browser_manager:click:45 - Clicking: a:has-text('Institutes')
+2026-02-26 12:31:21 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] nav_institutes: selector failed -> a:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("a:has-text('Institutes')")
+
+2026-02-26 12:31:21 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] nav_institutes: trying selector 3/3 -> button:has-text('Institutes')
+2026-02-26 12:31:21 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Institutes')
+2026-02-26 12:31:25 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] nav_institutes: selector failed -> button:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:31:25 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 5: playwright_click -> institutes | status=skipped | duration_ms=12051
+2026-02-26 12:31:25 | ERROR    | core.test_engine:add_step:357 - [TC-002] Step error: Optional navigation not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:31:25 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_add: trying selector 1/3 -> button:has-text('Add')
+2026-02-26 12:31:25 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Add')
+2026-02-26 12:31:29 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] action_add: selector failed -> button:has-text('Add') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Add')")
+
+2026-02-26 12:31:29 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_add: trying selector 2/3 -> text=Add
+2026-02-26 12:31:29 | INFO     | browser.browser_manager:click:45 - Clicking: text=Add
+2026-02-26 12:31:30 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-002] action_add: selector matched -> text=Add
+2026-02-26 12:31:30 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 6: playwright_click -> add_action | status=passed | duration_ms=5077
+2026-02-26 12:31:30 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_edit: trying selector 1/3 -> button:has-text('Edit')
+2026-02-26 12:31:30 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Edit')
+2026-02-26 12:31:34 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] action_edit: selector failed -> button:has-text('Edit') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Edit')")
+
+2026-02-26 12:31:34 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_edit: trying selector 2/3 -> text=Edit
+2026-02-26 12:31:34 | INFO     | browser.browser_manager:click:45 - Clicking: text=Edit
+2026-02-26 12:31:38 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] action_edit: selector failed -> text=Edit | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Edit")
+
+2026-02-26 12:31:38 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_edit: trying selector 3/3 -> [aria-label*='edit' i]
+2026-02-26 12:31:38 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='edit' i]
+2026-02-26 12:31:42 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] action_edit: selector failed -> [aria-label*='edit' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:31:42 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 7: playwright_click -> edit_action | status=skipped | duration_ms=12054
+2026-02-26 12:31:42 | ERROR    | core.test_engine:add_step:357 - [TC-002] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:31:42 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_save: trying selector 1/4 -> button:has-text('Save')
+2026-02-26 12:31:42 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Save')
+2026-02-26 12:31:43 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-002] action_save: selector matched -> button:has-text('Save')
+2026-02-26 12:31:43 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 8: playwright_click -> save_action | status=passed | duration_ms=1042
+2026-02-26 12:31:43 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:31:43 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:31:47 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:31:47 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:31:47 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:31:51 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-002] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:31:51 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-002] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:31:51 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:31:52 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-002] action_confirm: selector matched -> text=Confirm
+2026-02-26 12:31:52 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 9: playwright_click -> confirm_action | status=passed | duration_ms=9092
+2026-02-26 12:31:55 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 10: playwright_wait -> 3s | status=passed | duration_ms=3013
+2026-02-26 12:31:55 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-002_step_1_123155.png
+2026-02-26 12:31:55 | INFO     | core.test_engine:add_step:352 - [TC-002] Step 11: playwright_screenshot -> screenshots\TC-002_step_1_123155.png | status=passed | duration_ms=182
+2026-02-26 12:31:55 | ERROR    | core.test_engine:mark_description_step:346 - [TC-002] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:31:55 | ERROR    | core.test_engine:mark_description_step:348 - [TC-002] Description step g error: One or more steps failed
+2026-02-26 12:31:55 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-002] Deterministic fallback flow completed with 11 steps
+2026-02-26 12:31:55 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-002_final.png
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-002
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 52.10s
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 9/11 passed
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 81.8%
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can edit institute configurations, and the changes are saved and persist after reload.
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched equivalent domain term: expected 'institute' and found 'institution'
+2026-02-26 12:31:55 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:31:55 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:31:57 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:31:57 | INFO     | core.test_runner:_run_sequential:68 - Test 3/10
+2026-02-26 12:31:57 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:31:57 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:31:57 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-003 - Super Admin - Add/Edit Institution
+2026-02-26 12:31:57 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:31:57 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:31:57 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-003
+2026-02-26 12:31:58 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:31:59 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:31:59 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:31:59 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-003] Starting deterministic fallback flow
+2026-02-26 12:31:59 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-003] Description length: 590 characters
+2026-02-26 12:31:59 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-003] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:31:59 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:32:04 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=4461
+2026-02-26 12:32:04 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:32:04 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 2: playwright_fill -> username | status=passed | duration_ms=580
+2026-02-26 12:32:04 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:32:05 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 3: playwright_fill -> password | status=passed | duration_ms=544
+2026-02-26 12:32:05 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:32:06 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 4: playwright_click -> login_button | status=passed | duration_ms=1059
+2026-02-26 12:32:06 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] nav_institutes: trying selector 1/3 -> text=Institutes
+2026-02-26 12:32:06 | INFO     | browser.browser_manager:click:45 - Clicking: text=Institutes
+2026-02-26 12:32:10 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] nav_institutes: selector failed -> text=Institutes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Institutes")
+
+2026-02-26 12:32:10 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] nav_institutes: trying selector 2/3 -> a:has-text('Institutes')
+2026-02-26 12:32:10 | INFO     | browser.browser_manager:click:45 - Clicking: a:has-text('Institutes')
+2026-02-26 12:32:14 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] nav_institutes: selector failed -> a:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("a:has-text('Institutes')")
+
+2026-02-26 12:32:14 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] nav_institutes: trying selector 3/3 -> button:has-text('Institutes')
+2026-02-26 12:32:14 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Institutes')
+2026-02-26 12:32:18 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] nav_institutes: selector failed -> button:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:32:18 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 5: playwright_click -> institutes | status=skipped | duration_ms=12056
+2026-02-26 12:32:18 | ERROR    | core.test_engine:add_step:357 - [TC-003] Step error: Optional navigation not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:32:18 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_add: trying selector 1/3 -> button:has-text('Add')
+2026-02-26 12:32:18 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Add')
+2026-02-26 12:32:22 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] action_add: selector failed -> button:has-text('Add') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Add')")
+
+2026-02-26 12:32:22 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_add: trying selector 2/3 -> text=Add
+2026-02-26 12:32:22 | INFO     | browser.browser_manager:click:45 - Clicking: text=Add
+2026-02-26 12:32:23 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-003] action_add: selector matched -> text=Add
+2026-02-26 12:32:23 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 6: playwright_click -> add_action | status=passed | duration_ms=5109
+2026-02-26 12:32:23 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_edit: trying selector 1/3 -> button:has-text('Edit')
+2026-02-26 12:32:23 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Edit')
+2026-02-26 12:32:27 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] action_edit: selector failed -> button:has-text('Edit') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Edit')")
+
+2026-02-26 12:32:27 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_edit: trying selector 2/3 -> text=Edit
+2026-02-26 12:32:27 | INFO     | browser.browser_manager:click:45 - Clicking: text=Edit
+2026-02-26 12:32:31 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] action_edit: selector failed -> text=Edit | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Edit")
+
+2026-02-26 12:32:31 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_edit: trying selector 3/3 -> [aria-label*='edit' i]
+2026-02-26 12:32:31 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='edit' i]
+2026-02-26 12:32:35 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] action_edit: selector failed -> [aria-label*='edit' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:32:35 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 7: playwright_click -> edit_action | status=skipped | duration_ms=12061
+2026-02-26 12:32:35 | ERROR    | core.test_engine:add_step:357 - [TC-003] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:32:35 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_save: trying selector 1/4 -> button:has-text('Save')
+2026-02-26 12:32:35 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Save')
+2026-02-26 12:32:36 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-003] action_save: selector matched -> button:has-text('Save')
+2026-02-26 12:32:36 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 8: playwright_click -> save_action | status=passed | duration_ms=1047
+2026-02-26 12:32:36 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:32:36 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:32:40 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:32:40 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:32:40 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:32:44 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-003] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:32:44 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-003] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:32:44 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:32:45 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-003] action_confirm: selector matched -> text=Confirm
+2026-02-26 12:32:45 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 9: playwright_click -> confirm_action | status=passed | duration_ms=9084
+2026-02-26 12:32:48 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 10: playwright_wait -> 3s | status=passed | duration_ms=3012
+2026-02-26 12:32:48 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-003_step_1_123248.png
+2026-02-26 12:32:48 | INFO     | core.test_engine:add_step:352 - [TC-003] Step 11: playwright_screenshot -> screenshots\TC-003_step_1_123248.png | status=passed | duration_ms=219
+2026-02-26 12:32:48 | ERROR    | core.test_engine:mark_description_step:346 - [TC-003] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:32:48 | ERROR    | core.test_engine:mark_description_step:348 - [TC-003] Description step g error: One or more steps failed
+2026-02-26 12:32:48 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-003] Deterministic fallback flow completed with 11 steps
+2026-02-26 12:32:48 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-003_final.png
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-003
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 51.06s
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 9/11 passed
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 81.8%
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can add a new institution and edit its details successfully, with changes persisting after reload.
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched expected keywords in page/observations: super, admin, institution (3/9)
+2026-02-26 12:32:49 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:32:49 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:32:51 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:32:51 | INFO     | core.test_runner:_run_sequential:68 - Test 4/10
+2026-02-26 12:32:51 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:32:51 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:32:51 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-004 - Super Admin - Delete Institution
+2026-02-26 12:32:51 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:32:51 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:32:51 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-004
+2026-02-26 12:32:52 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:32:52 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:32:52 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:32:52 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-004] Starting deterministic fallback flow
+2026-02-26 12:32:52 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-004] Description length: 517 characters
+2026-02-26 12:32:52 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-004] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:32:52 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:32:57 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=4905
+2026-02-26 12:32:57 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:32:58 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 2: playwright_fill -> username | status=passed | duration_ms=582
+2026-02-26 12:32:58 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:32:58 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 3: playwright_fill -> password | status=passed | duration_ms=549
+2026-02-26 12:32:58 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:32:59 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 4: playwright_click -> login_button | status=passed | duration_ms=1062
+2026-02-26 12:32:59 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] nav_institutes: trying selector 1/3 -> text=Institutes
+2026-02-26 12:32:59 | INFO     | browser.browser_manager:click:45 - Clicking: text=Institutes
+2026-02-26 12:33:03 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] nav_institutes: selector failed -> text=Institutes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Institutes")
+
+2026-02-26 12:33:03 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] nav_institutes: trying selector 2/3 -> a:has-text('Institutes')
+2026-02-26 12:33:03 | INFO     | browser.browser_manager:click:45 - Clicking: a:has-text('Institutes')
+2026-02-26 12:33:07 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] nav_institutes: selector failed -> a:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("a:has-text('Institutes')")
+
+2026-02-26 12:33:07 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] nav_institutes: trying selector 3/3 -> button:has-text('Institutes')
+2026-02-26 12:33:07 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Institutes')
+2026-02-26 12:33:11 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] nav_institutes: selector failed -> button:has-text('Institutes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:33:11 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 5: playwright_click -> institutes | status=skipped | duration_ms=12029
+2026-02-26 12:33:11 | ERROR    | core.test_engine:add_step:357 - [TC-004] Step error: Optional navigation not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Institutes')")
+
+2026-02-26 12:33:11 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] action_delete: trying selector 1/3 -> button:has-text('Delete')
+2026-02-26 12:33:11 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Delete')
+2026-02-26 12:33:15 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] action_delete: selector failed -> button:has-text('Delete') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Delete')")
+
+2026-02-26 12:33:15 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] action_delete: trying selector 2/3 -> text=Delete
+2026-02-26 12:33:15 | INFO     | browser.browser_manager:click:45 - Clicking: text=Delete
+2026-02-26 12:33:16 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-004] action_delete: selector matched -> text=Delete
+2026-02-26 12:33:16 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 6: playwright_click -> delete_action | status=passed | duration_ms=5073
+2026-02-26 12:33:16 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:33:16 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:33:20 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:33:20 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:33:20 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:33:24 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:33:24 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:33:24 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:33:28 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] action_confirm: selector failed -> text=Confirm | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Confirm")
+
+2026-02-26 12:33:28 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-004] action_confirm: trying selector 4/4 -> text=Yes
+2026-02-26 12:33:28 | INFO     | browser.browser_manager:click:45 - Clicking: text=Yes
+2026-02-26 12:33:32 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-004] action_confirm: selector failed -> text=Yes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Yes")
+
+2026-02-26 12:33:32 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 7: playwright_click -> confirm_action | status=skipped | duration_ms=16042
+2026-02-26 12:33:32 | ERROR    | core.test_engine:add_step:357 - [TC-004] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Yes")
+
+2026-02-26 12:33:35 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 8: playwright_wait -> 3s | status=passed | duration_ms=3018
+2026-02-26 12:33:36 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-004_step_1_123335.png
+2026-02-26 12:33:36 | INFO     | core.test_engine:add_step:352 - [TC-004] Step 9: playwright_screenshot -> screenshots\TC-004_step_1_123335.png | status=passed | duration_ms=238
+2026-02-26 12:33:36 | ERROR    | core.test_engine:mark_description_step:346 - [TC-004] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:33:36 | ERROR    | core.test_engine:mark_description_step:348 - [TC-004] Description step g error: One or more steps failed
+2026-02-26 12:33:36 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-004] Deterministic fallback flow completed with 9 steps
+2026-02-26 12:33:36 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-004_final.png
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-004
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 45.26s
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 7/9 passed
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 77.8%
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can delete an institution; the institution no longer appears in the institutes list and a success confirmation message is displayed.
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched equivalent domain term: expected 'institutes' and found 'institution'
+2026-02-26 12:33:36 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:33:36 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:33:38 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:33:38 | INFO     | core.test_runner:_run_sequential:68 - Test 5/10
+2026-02-26 12:33:38 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:33:38 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:33:38 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-005 - Super Admin - Manage Role
+2026-02-26 12:33:38 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:33:38 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:33:38 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-005
+2026-02-26 12:33:39 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:33:40 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:33:40 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:33:40 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-005] Starting deterministic fallback flow
+2026-02-26 12:33:40 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-005] Description length: 501 characters
+2026-02-26 12:33:40 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-005] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:33:40 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:33:45 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=4934
+2026-02-26 12:33:45 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:33:45 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 2: playwright_fill -> username | status=passed | duration_ms=591
+2026-02-26 12:33:45 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:33:46 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 3: playwright_fill -> password | status=passed | duration_ms=545
+2026-02-26 12:33:46 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:33:47 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 4: playwright_click -> login_button | status=passed | duration_ms=1065
+2026-02-26 12:33:47 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_edit: trying selector 1/3 -> button:has-text('Edit')
+2026-02-26 12:33:47 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Edit')
+2026-02-26 12:33:51 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_edit: selector failed -> button:has-text('Edit') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Edit')")
+
+2026-02-26 12:33:51 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_edit: trying selector 2/3 -> text=Edit
+2026-02-26 12:33:51 | INFO     | browser.browser_manager:click:45 - Clicking: text=Edit
+2026-02-26 12:33:55 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_edit: selector failed -> text=Edit | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Edit")
+
+2026-02-26 12:33:55 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_edit: trying selector 3/3 -> [aria-label*='edit' i]
+2026-02-26 12:33:55 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='edit' i]
+2026-02-26 12:33:59 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_edit: selector failed -> [aria-label*='edit' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:33:59 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 5: playwright_click -> edit_action | status=skipped | duration_ms=12031
+2026-02-26 12:33:59 | ERROR    | core.test_engine:add_step:357 - [TC-005] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:33:59 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_save: trying selector 1/4 -> button:has-text('Save')
+2026-02-26 12:33:59 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Save')
+2026-02-26 12:34:03 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_save: selector failed -> button:has-text('Save') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Save')")
+
+2026-02-26 12:34:03 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_save: trying selector 2/4 -> text=Save
+2026-02-26 12:34:03 | INFO     | browser.browser_manager:click:45 - Clicking: text=Save
+2026-02-26 12:34:07 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_save: selector failed -> text=Save | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Save")
+
+2026-02-26 12:34:07 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_save: trying selector 3/4 -> button:has-text('Update')
+2026-02-26 12:34:07 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Update')
+2026-02-26 12:34:11 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_save: selector failed -> button:has-text('Update') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Update')")
+
+2026-02-26 12:34:11 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_save: trying selector 4/4 -> text=Update
+2026-02-26 12:34:11 | INFO     | browser.browser_manager:click:45 - Clicking: text=Update
+2026-02-26 12:34:15 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_save: selector failed -> text=Update | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Update")
+
+2026-02-26 12:34:15 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 6: playwright_click -> save_action | status=skipped | duration_ms=16058
+2026-02-26 12:34:15 | ERROR    | core.test_engine:add_step:357 - [TC-005] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Update")
+
+2026-02-26 12:34:15 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:34:15 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:34:19 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:34:19 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:34:19 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:34:23 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:34:23 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:34:23 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:34:27 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_confirm: selector failed -> text=Confirm | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Confirm")
+
+2026-02-26 12:34:27 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-005] action_confirm: trying selector 4/4 -> text=Yes
+2026-02-26 12:34:27 | INFO     | browser.browser_manager:click:45 - Clicking: text=Yes
+2026-02-26 12:34:31 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-005] action_confirm: selector failed -> text=Yes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Yes")
+
+2026-02-26 12:34:31 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 7: playwright_click -> confirm_action | status=skipped | duration_ms=16076
+2026-02-26 12:34:31 | ERROR    | core.test_engine:add_step:357 - [TC-005] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Yes")
+
+2026-02-26 12:34:34 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 8: playwright_wait -> 3s | status=passed | duration_ms=3019
+2026-02-26 12:34:34 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-005_step_1_123434.png
+2026-02-26 12:34:34 | INFO     | core.test_engine:add_step:352 - [TC-005] Step 9: playwright_screenshot -> screenshots\TC-005_step_1_123434.png | status=passed | duration_ms=202
+2026-02-26 12:34:34 | ERROR    | core.test_engine:mark_description_step:346 - [TC-005] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:34:34 | ERROR    | core.test_engine:mark_description_step:348 - [TC-005] Description step g error: One or more steps failed
+2026-02-26 12:34:34 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-005] Deterministic fallback flow completed with 9 steps
+2026-02-26 12:34:34 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-005_final.png
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-005
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:816 - Status: ❌ FAILED
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 56.30s
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 6/9 passed
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 66.7%
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ❌ FAILED
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can manage roles by editing their details and permissions, and the changes are saved successfully.
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Expected result not found in page or AI observations
+2026-02-26 12:34:34 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:34:35 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:34:37 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:34:37 | INFO     | core.test_runner:_run_sequential:68 - Test 6/10
+2026-02-26 12:34:37 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:34:37 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:34:37 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-006 - Super Admin - Show List of all Hospital Admin Users
+2026-02-26 12:34:37 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.MEDIUM | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:34:37 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:34:37 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-006
+2026-02-26 12:34:37 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:34:38 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:34:38 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:34:38 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-006] Starting deterministic fallback flow
+2026-02-26 12:34:38 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-006] Description length: 408 characters
+2026-02-26 12:34:38 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-006] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:34:38 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:34:44 | INFO     | core.test_engine:add_step:352 - [TC-006] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=6312
+2026-02-26 12:34:44 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:34:45 | INFO     | core.test_engine:add_step:352 - [TC-006] Step 2: playwright_fill -> username | status=passed | duration_ms=591
+2026-02-26 12:34:45 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:34:46 | INFO     | core.test_engine:add_step:352 - [TC-006] Step 3: playwright_fill -> password | status=passed | duration_ms=560
+2026-02-26 12:34:46 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:34:47 | INFO     | core.test_engine:add_step:352 - [TC-006] Step 4: playwright_click -> login_button | status=passed | duration_ms=1079
+2026-02-26 12:34:50 | INFO     | core.test_engine:add_step:352 - [TC-006] Step 5: playwright_wait -> 3s | status=passed | duration_ms=3013
+2026-02-26 12:34:50 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-006_step_1_123450.png
+2026-02-26 12:34:50 | INFO     | core.test_engine:add_step:352 - [TC-006] Step 6: playwright_screenshot -> screenshots\TC-006_step_1_123450.png | status=passed | duration_ms=238
+2026-02-26 12:34:50 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-006] Description step g: COMPLETED - Marked test passed only if all described steps passed
+2026-02-26 12:34:50 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-006] Deterministic fallback flow completed with 6 steps
+2026-02-26 12:34:50 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-006_final.png
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-006
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 13.54s
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 6/6 passed
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 100.0%
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can view the list of all hospital admin users with accurate details displayed.
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched expected keywords in page/observations: admin, hospital, users (3/7)
+2026-02-26 12:34:50 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:34:50 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:34:52 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:34:52 | INFO     | core.test_runner:_run_sequential:68 - Test 7/10
+2026-02-26 12:34:52 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:34:52 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:34:52 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-007 - Super Admin - Add/Edit Hospital Admin User
+2026-02-26 12:34:52 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:34:52 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:34:52 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-007
+2026-02-26 12:34:53 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:34:54 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:34:54 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:34:54 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-007] Starting deterministic fallback flow
+2026-02-26 12:34:54 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-007] Description length: 570 characters
+2026-02-26 12:34:54 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-007] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:34:54 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:35:02 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=8325
+2026-02-26 12:35:02 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:35:03 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 2: playwright_fill -> username | status=passed | duration_ms=593
+2026-02-26 12:35:03 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:35:03 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 3: playwright_fill -> password | status=passed | duration_ms=549
+2026-02-26 12:35:03 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:35:04 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 4: playwright_click -> login_button | status=passed | duration_ms=1064
+2026-02-26 12:35:04 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_add: trying selector 1/3 -> button:has-text('Add')
+2026-02-26 12:35:04 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Add')
+2026-02-26 12:35:08 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-007] action_add: selector failed -> button:has-text('Add') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Add')")
+
+2026-02-26 12:35:08 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_add: trying selector 2/3 -> text=Add
+2026-02-26 12:35:08 | INFO     | browser.browser_manager:click:45 - Clicking: text=Add
+2026-02-26 12:35:09 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-007] action_add: selector matched -> text=Add
+2026-02-26 12:35:09 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 5: playwright_click -> add_action | status=passed | duration_ms=5093
+2026-02-26 12:35:09 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_edit: trying selector 1/3 -> button:has-text('Edit')
+2026-02-26 12:35:09 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Edit')
+2026-02-26 12:35:13 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-007] action_edit: selector failed -> button:has-text('Edit') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Edit')")
+
+2026-02-26 12:35:13 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_edit: trying selector 2/3 -> text=Edit
+2026-02-26 12:35:13 | INFO     | browser.browser_manager:click:45 - Clicking: text=Edit
+2026-02-26 12:35:17 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-007] action_edit: selector failed -> text=Edit | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Edit")
+
+2026-02-26 12:35:17 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_edit: trying selector 3/3 -> [aria-label*='edit' i]
+2026-02-26 12:35:17 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='edit' i]
+2026-02-26 12:35:21 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-007] action_edit: selector failed -> [aria-label*='edit' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:35:21 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 6: playwright_click -> edit_action | status=skipped | duration_ms=12041
+2026-02-26 12:35:21 | ERROR    | core.test_engine:add_step:357 - [TC-007] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:35:21 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_save: trying selector 1/4 -> button:has-text('Save')
+2026-02-26 12:35:21 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Save')
+2026-02-26 12:35:23 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-007] action_save: selector matched -> button:has-text('Save')
+2026-02-26 12:35:23 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 7: playwright_click -> save_action | status=passed | duration_ms=1045
+2026-02-26 12:35:23 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:35:23 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:35:27 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-007] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:35:27 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:35:27 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:35:31 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-007] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:35:31 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-007] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:35:31 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:35:32 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-007] action_confirm: selector matched -> text=Confirm
+2026-02-26 12:35:32 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 8: playwright_click -> confirm_action | status=passed | duration_ms=9092
+2026-02-26 12:35:35 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 9: playwright_wait -> 3s | status=passed | duration_ms=3006
+2026-02-26 12:35:35 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-007_step_1_123535.png
+2026-02-26 12:35:35 | INFO     | core.test_engine:add_step:352 - [TC-007] Step 10: playwright_screenshot -> screenshots\TC-007_step_1_123535.png | status=passed | duration_ms=237
+2026-02-26 12:35:35 | ERROR    | core.test_engine:mark_description_step:346 - [TC-007] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:35:35 | ERROR    | core.test_engine:mark_description_step:348 - [TC-007] Description step g error: One or more steps failed
+2026-02-26 12:35:35 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-007] Deterministic fallback flow completed with 10 steps
+2026-02-26 12:35:35 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-007_final.png
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-007
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 42.79s
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 9/10 passed
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 90.0%
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can add a new hospital admin user and edit their details successfully, with changes persisting after reload.
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched expected keywords in page/observations: super, admin, hospital, user (4/10)
+2026-02-26 12:35:35 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:35:35 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:35:37 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:35:37 | INFO     | core.test_runner:_run_sequential:68 - Test 8/10
+2026-02-26 12:35:37 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:35:37 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:35:37 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-008 - Super Admin - Delete User
+2026-02-26 12:35:37 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:35:37 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:35:37 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-008
+2026-02-26 12:35:38 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:35:39 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:35:39 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:35:39 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-008] Starting deterministic fallback flow
+2026-02-26 12:35:39 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-008] Description length: 491 characters
+2026-02-26 12:35:39 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-008] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:35:39 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:35:44 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=4981
+2026-02-26 12:35:44 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:35:44 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 2: playwright_fill -> username | status=passed | duration_ms=582
+2026-02-26 12:35:44 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:35:45 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 3: playwright_fill -> password | status=passed | duration_ms=548
+2026-02-26 12:35:45 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:35:46 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 4: playwright_click -> login_button | status=passed | duration_ms=1050
+2026-02-26 12:35:46 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-008] action_delete: trying selector 1/3 -> button:has-text('Delete')
+2026-02-26 12:35:46 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Delete')
+2026-02-26 12:35:50 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-008] action_delete: selector failed -> button:has-text('Delete') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Delete')")
+
+2026-02-26 12:35:50 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-008] action_delete: trying selector 2/3 -> text=Delete
+2026-02-26 12:35:50 | INFO     | browser.browser_manager:click:45 - Clicking: text=Delete
+2026-02-26 12:35:51 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-008] action_delete: selector matched -> text=Delete
+2026-02-26 12:35:51 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 5: playwright_click -> delete_action | status=passed | duration_ms=5082
+2026-02-26 12:35:51 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-008] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:35:51 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:35:55 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-008] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:35:55 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-008] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:35:55 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:35:59 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-008] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:35:59 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-008] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:35:59 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:36:03 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-008] action_confirm: selector failed -> text=Confirm | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Confirm")
+
+2026-02-26 12:36:03 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-008] action_confirm: trying selector 4/4 -> text=Yes
+2026-02-26 12:36:03 | INFO     | browser.browser_manager:click:45 - Clicking: text=Yes
+2026-02-26 12:36:07 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-008] action_confirm: selector failed -> text=Yes | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Yes")
+
+2026-02-26 12:36:07 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 6: playwright_click -> confirm_action | status=skipped | duration_ms=16051
+2026-02-26 12:36:07 | ERROR    | core.test_engine:add_step:357 - [TC-008] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Yes")
+
+2026-02-26 12:36:10 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 7: playwright_wait -> 3s | status=passed | duration_ms=3012
+2026-02-26 12:36:10 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-008_step_1_123610.png
+2026-02-26 12:36:10 | INFO     | core.test_engine:add_step:352 - [TC-008] Step 8: playwright_screenshot -> screenshots\TC-008_step_1_123610.png | status=passed | duration_ms=218
+2026-02-26 12:36:10 | ERROR    | core.test_engine:mark_description_step:346 - [TC-008] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:36:10 | ERROR    | core.test_engine:mark_description_step:348 - [TC-008] Description step g error: One or more steps failed
+2026-02-26 12:36:10 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-008] Deterministic fallback flow completed with 8 steps
+2026-02-26 12:36:10 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-008_final.png
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-008
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 33.30s
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 7/8 passed
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 87.5%
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can delete a user; the user no longer appears in the users list and a success confirmation message is displayed.
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched expected keywords in page/observations: admin, delete, user, users (4/10)
+2026-02-26 12:36:10 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:36:11 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:36:13 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:36:13 | INFO     | core.test_runner:_run_sequential:68 - Test 9/10
+2026-02-26 12:36:13 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:36:13 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:36:13 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-009 - Super Admin - List of Services
+2026-02-26 12:36:13 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.MEDIUM | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:36:13 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:36:13 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-009
+2026-02-26 12:36:14 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:36:14 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:36:14 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:36:14 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-009] Starting deterministic fallback flow
+2026-02-26 12:36:14 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-009] Description length: 360 characters
+2026-02-26 12:36:14 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-009] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:36:14 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:36:19 | INFO     | core.test_engine:add_step:352 - [TC-009] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=4574
+2026-02-26 12:36:19 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:36:19 | INFO     | core.test_engine:add_step:352 - [TC-009] Step 2: playwright_fill -> username | status=passed | duration_ms=585
+2026-02-26 12:36:19 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:36:20 | INFO     | core.test_engine:add_step:352 - [TC-009] Step 3: playwright_fill -> password | status=passed | duration_ms=534
+2026-02-26 12:36:20 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:36:21 | INFO     | core.test_engine:add_step:352 - [TC-009] Step 4: playwright_click -> login_button | status=passed | duration_ms=1052
+2026-02-26 12:36:24 | INFO     | core.test_engine:add_step:352 - [TC-009] Step 5: playwright_wait -> 3s | status=passed | duration_ms=3008
+2026-02-26 12:36:24 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-009_step_1_123624.png
+2026-02-26 12:36:24 | INFO     | core.test_engine:add_step:352 - [TC-009] Step 6: playwright_screenshot -> screenshots\TC-009_step_1_123624.png | status=passed | duration_ms=267
+2026-02-26 12:36:24 | SUCCESS  | core.test_engine:mark_description_step:344 - [TC-009] Description step g: COMPLETED - Marked test passed only if all described steps passed
+2026-02-26 12:36:24 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-009] Deterministic fallback flow completed with 6 steps
+2026-02-26 12:36:24 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-009_final.png
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-009
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 11.79s
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 6/6 passed
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 100.0%
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can view the list of all services with accurate details displayed.
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched expected keywords in page/observations: admin, service (2/6)
+2026-02-26 12:36:24 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:36:25 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:36:27 | INFO     | core.test_runner:_run_sequential:67 - 
+################################################################################
+2026-02-26 12:36:27 | INFO     | core.test_runner:_run_sequential:68 - Test 10/10
+2026-02-26 12:36:27 | INFO     | core.test_runner:_run_sequential:69 - ################################################################################
+2026-02-26 12:36:27 | INFO     | core.test_engine:execute_test:33 - ================================================================================
+2026-02-26 12:36:27 | INFO     | core.test_engine:execute_test:34 - 🧪 Executing Test: TC-010 - Super Admin - Add/Edit Service
+2026-02-26 12:36:27 | INFO     | core.test_engine:execute_test:35 -    Priority: TestPriority.HIGH | Category: TestCategory.FUNCTIONALITY
+2026-02-26 12:36:27 | INFO     | core.test_engine:execute_test:38 - ================================================================================
+2026-02-26 12:36:27 | INFO     | browser.browser_manager:start:21 - Starting browser for test TC-010
+2026-02-26 12:36:28 | SUCCESS  | browser.browser_manager:start:35 - Browser started successfully
+2026-02-26 12:36:28 | INFO     | agents.copilot_agent:initialize_conversation:73 - Initialized conversation for test
+2026-02-26 12:36:28 | INFO     | core.test_engine:execute_test:62 - ⚡ Running deterministic flow directly (no multi-iteration AI loop).
+2026-02-26 12:36:28 | INFO     | core.test_engine:_run_fallback_flow:336 - [TC-010] Starting deterministic fallback flow
+2026-02-26 12:36:28 | INFO     | core.test_engine:_run_fallback_flow:337 - [TC-010] Description length: 580 characters
+2026-02-26 12:36:28 | INFO     | core.test_engine:_run_fallback_flow:375 - [TC-010] Parsed URL: https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:36:28 | INFO     | browser.browser_manager:navigate:39 - Navigating to https://dev2.heartnetnetindiademo.in/connect
+2026-02-26 12:36:33 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 1: playwright_navigate -> https://dev2.heartnetnetindiademo.in/connect | status=passed | duration_ms=4669
+2026-02-26 12:36:33 | INFO     | browser.browser_manager:fill:55 - Filling 'login_username' with 'i2iadmin'
+2026-02-26 12:36:34 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 2: playwright_fill -> username | status=passed | duration_ms=580
+2026-02-26 12:36:34 | INFO     | browser.browser_manager:fill:55 - Filling 'login_password' with 'i2iadmin'
+2026-02-26 12:36:34 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 3: playwright_fill -> password | status=passed | duration_ms=535
+2026-02-26 12:36:34 | INFO     | browser.browser_manager:click:45 - Clicking: login_button
+2026-02-26 12:36:35 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 4: playwright_click -> login_button | status=passed | duration_ms=1044
+2026-02-26 12:36:35 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_add: trying selector 1/3 -> button:has-text('Add')
+2026-02-26 12:36:35 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Add')
+2026-02-26 12:36:39 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-010] action_add: selector failed -> button:has-text('Add') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Add')")
+
+2026-02-26 12:36:39 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_add: trying selector 2/3 -> text=Add
+2026-02-26 12:36:39 | INFO     | browser.browser_manager:click:45 - Clicking: text=Add
+2026-02-26 12:36:40 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-010] action_add: selector matched -> text=Add
+2026-02-26 12:36:40 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 5: playwright_click -> add_action | status=passed | duration_ms=5080
+2026-02-26 12:36:40 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_edit: trying selector 1/3 -> button:has-text('Edit')
+2026-02-26 12:36:40 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Edit')
+2026-02-26 12:36:44 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-010] action_edit: selector failed -> button:has-text('Edit') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Edit')")
+
+2026-02-26 12:36:44 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_edit: trying selector 2/3 -> text=Edit
+2026-02-26 12:36:44 | INFO     | browser.browser_manager:click:45 - Clicking: text=Edit
+2026-02-26 12:36:48 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-010] action_edit: selector failed -> text=Edit | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("text=Edit")
+
+2026-02-26 12:36:48 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_edit: trying selector 3/3 -> [aria-label*='edit' i]
+2026-02-26 12:36:48 | INFO     | browser.browser_manager:click:45 - Clicking: [aria-label*='edit' i]
+2026-02-26 12:36:52 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-010] action_edit: selector failed -> [aria-label*='edit' i] | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:36:52 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 6: playwright_click -> edit_action | status=skipped | duration_ms=12037
+2026-02-26 12:36:52 | ERROR    | core.test_engine:add_step:357 - [TC-010] Step error: Optional action not found: Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("[aria-label*='edit' i]")
+
+2026-02-26 12:36:52 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_save: trying selector 1/4 -> button:has-text('Save')
+2026-02-26 12:36:52 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Save')
+2026-02-26 12:36:53 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-010] action_save: selector matched -> button:has-text('Save')
+2026-02-26 12:36:53 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 7: playwright_click -> save_action | status=passed | duration_ms=1062
+2026-02-26 12:36:53 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_confirm: trying selector 1/4 -> button:has-text('Confirm')
+2026-02-26 12:36:53 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Confirm')
+2026-02-26 12:36:57 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-010] action_confirm: selector failed -> button:has-text('Confirm') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Confirm')")
+
+2026-02-26 12:36:57 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_confirm: trying selector 2/4 -> button:has-text('Yes')
+2026-02-26 12:36:57 | INFO     | browser.browser_manager:click:45 - Clicking: button:has-text('Yes')
+2026-02-26 12:37:01 | WARNING  | core.test_engine:_try_click_selectors:699 - [TC-010] action_confirm: selector failed -> button:has-text('Yes') | Page.click: Timeout 4000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text('Yes')")
+
+2026-02-26 12:37:01 | INFO     | core.test_engine:_try_click_selectors:693 - [TC-010] action_confirm: trying selector 3/4 -> text=Confirm
+2026-02-26 12:37:01 | INFO     | browser.browser_manager:click:45 - Clicking: text=Confirm
+2026-02-26 12:37:02 | SUCCESS  | core.test_engine:_try_click_selectors:695 - [TC-010] action_confirm: selector matched -> text=Confirm
+2026-02-26 12:37:02 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 8: playwright_click -> confirm_action | status=passed | duration_ms=9104
+2026-02-26 12:37:05 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 9: playwright_wait -> 3s | status=passed | duration_ms=3021
+2026-02-26 12:37:06 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-010_step_1_123705.png
+2026-02-26 12:37:06 | INFO     | core.test_engine:add_step:352 - [TC-010] Step 10: playwright_screenshot -> screenshots\TC-010_step_1_123705.png | status=passed | duration_ms=196
+2026-02-26 12:37:06 | ERROR    | core.test_engine:mark_description_step:346 - [TC-010] Description step g: FAILED - Marked test passed only if all described steps passed
+2026-02-26 12:37:06 | ERROR    | core.test_engine:mark_description_step:348 - [TC-010] Description step g error: One or more steps failed
+2026-02-26 12:37:06 | INFO     | core.test_engine:_run_fallback_flow:585 - [TC-010] Deterministic fallback flow completed with 10 steps
+2026-02-26 12:37:06 | INFO     | browser.browser_manager:screenshot:78 - Screenshot saved: screenshots\TC-010_final.png
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:805 - 
+================================================================================
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:806 - 📊 Test Summary: TC-010
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:807 - ================================================================================
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:816 - Status: ✅ PASSED
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:817 - Duration: 39.25s
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:818 - Steps: 9/10 passed
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:819 - Success Rate: 90.0%
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:820 - Validation: ✅ PASSED
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:821 - Expected: Super Admin can add a new service and edit its details successfully, with changes persisting after reload.
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:822 - Actual: Matched expected keywords in page/observations: super, admin, service (3/9)
+2026-02-26 12:37:06 | INFO     | core.test_engine:_log_test_summary:827 - ================================================================================
+
+2026-02-26 12:37:06 | INFO     | browser.browser_manager:close:133 - Browser closed
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:230 - 
+================================================================================
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:231 - 📊 TEST SUITE SUMMARY
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:232 - ================================================================================
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:233 - Suite: Test Suite - 20260226_123011
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:234 - Duration: 417.38s
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:235 - --------------------------------------------------------------------------------
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:236 - Total Tests: 10
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:237 - ✅ Passed: 9 (90.0%)
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:238 - ❌ Failed: 1
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:239 - 💥 Errors: 0
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:240 - ⊘ Skipped: 0
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:241 - ================================================================================
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:244 - 
+📋 Individual Test Results:
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:245 - --------------------------------------------------------------------------------
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-001               | PASSED   |  50.37s | Steps: 6/7
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-002               | PASSED   |  52.10s | Steps: 9/11
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-003               | PASSED   |  51.06s | Steps: 9/11
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-004               | PASSED   |  45.26s | Steps: 7/9
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ❌ TC-005               | FAILED   |  56.30s | Steps: 6/9
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-006               | PASSED   |  13.54s | Steps: 6/6
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-007               | PASSED   |  42.79s | Steps: 9/10
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-008               | PASSED   |  33.30s | Steps: 7/8
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-009               | PASSED   |  11.79s | Steps: 6/6
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:256 - ✅ TC-010               | PASSED   |  39.25s | Steps: 9/10
+2026-02-26 12:37:08 | INFO     | core.test_runner:_log_suite_summary:263 - ================================================================================
+
+2026-02-26 12:37:08 | INFO     | reporters:generate_all_reports:22 - 📊 Generating test reports...
+2026-02-26 12:37:08 | INFO     | reporters.csv_reporter:generate_report:29 - 📄 Generating CSV report: test_results\test_results_123708_26022026.csv
+2026-02-26 12:37:08 | SUCCESS  | reporters.csv_reporter:generate_report:68 - ✅ CSV report generated: test_results\test_results_123708_26022026.csv
+2026-02-26 12:37:08 | INFO     | reporters.csv_reporter:generate_report:69 -    Total rows: 87
+2026-02-26 12:37:08 | INFO     | reporters.csv_reporter:generate_report:70 -    File size: 18.63 KB
+2026-02-26 12:37:08 | INFO     | reporters.html_reporter:generate_report:54 - 🎨 Generating HTML report: test_results\test_report_123708_26022026.html
+2026-02-26 12:37:09 | SUCCESS  | reporters.html_reporter:generate_report:84 - ✅ HTML report generated: test_results\test_report_123708_26022026.html
+2026-02-26 12:37:09 | INFO     | reporters.html_reporter:generate_report:85 -    File size: 3943.45 KB
+2026-02-26 12:37:09 | INFO     | reporters.html_reporter:generate_report:86 -    Open in browser: file://C:\Users\harsh\UITEST\test_results\test_report_123708_26022026.html
+2026-02-26 12:37:09 | INFO     | reporters.junit_reporter:generate_report:26 - 🧪 Generating JUnit report: test_results\junit_report_123709_26022026.xml
+2026-02-26 12:37:09 | SUCCESS  | reporters.junit_reporter:generate_report:67 - ✅ JUnit report generated: test_results\junit_report_123709_26022026.xml
+2026-02-26 12:37:09 | SUCCESS  | reporters:generate_all_reports:49 - ✅ Generated 3 report(s)
