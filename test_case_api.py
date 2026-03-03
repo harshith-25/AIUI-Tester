@@ -14,11 +14,13 @@ import os
 import re
 import urllib.error
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -29,6 +31,61 @@ OUTPUT_DIR = Path("generated_cases")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Test Case Generator API", version="2.0.0")
+
+# CORS – allow the frontend dev server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    # Browsers reject '*' with credentials; keep API broadly open for dev.
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ---------------------------------------------------------------------------
+# Project management router (code-split into project_api.py)
+# ---------------------------------------------------------------------------
+from project_api import EXECUTIONS, router as project_router, register_dependencies  # noqa: E402
+
+
+def _latest_execution() -> Optional[Dict[str, Any]]:
+    if not EXECUTIONS:
+        return None
+    latest_id, latest_rec = max(
+        EXECUTIONS.items(),
+        key=lambda item: item[1].get("started_at", ""),
+    )
+    return {"execution_id": latest_id, **latest_rec}
+
+
+@app.get("/status")
+@app.get("/api/status")
+def get_status(execution_id: Optional[str] = None):
+    now_iso = datetime.now().isoformat()
+    if execution_id:
+        rec = EXECUTIONS.get(execution_id)
+        if not rec:
+            return {
+                "status": "ok",
+                "timestamp": now_iso,
+                "execution": {
+                    "execution_id": execution_id,
+                    "status": "not_found",
+                    "message": "Execution ID not found",
+                },
+            }
+        return {
+            "status": "ok",
+            "timestamp": now_iso,
+            "execution": {"execution_id": execution_id, **rec},
+        }
+
+    return {
+        "status": "ok",
+        "timestamp": now_iso,
+        "executions_total": len(EXECUTIONS),
+        "latest_execution": _latest_execution(),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -738,7 +795,11 @@ def _build_fallback_description(
 
     steps_to_use = source_steps if source_steps else steps
     for step in steps_to_use:
-        filled = step.format(feature=feature, target_url=target_url)
+        # Protect against literal braces in spreadsheet text (e.g. JSON snippets).
+        try:
+            filled = step.format(feature=feature, target_url=target_url)
+        except (KeyError, ValueError):
+            filled = step.replace("{feature}", feature).replace("{target_url}", target_url)
         lines.append(f"{chr(letter)}. {filled}")
         letter += 1
 
@@ -1051,13 +1112,14 @@ def _normalize_cases(
                 "test_id": test_id,
                 "test_name": str(case.get("test_name") or f"Generated Test {i}").strip(),
                 "description": description,
-                "expected_result": (
-                    "verification"
-                    if auth_context and auth_context.get("mode") == "name_email_otp"
-                    else str(
-                    case.get("expected_result") or "Expected behavior is observed without errors."
-                    ).strip()
-                ),
+                "expected_result": str(
+                    case.get("expected_result")
+                    or (
+                        "Authentication/verification completes successfully and the expected post-login state is visible."
+                        if auth_context and auth_context.get("mode") == "name_email_otp"
+                        else "Expected behavior is observed without errors."
+                    )
+                ).strip(),
                 "priority": priority,
                 "category": category,
             }
@@ -1086,7 +1148,7 @@ def _write_csv(df: pd.DataFrame, out_path: Path) -> None:
 # Endpoint
 # ---------------------------------------------------------------------------
 
-@app.post("/generate-test-cases")
+@app.post("/api/generate-test-cases")
 def generate_test_cases(
     target_url: str = Form(..., description="Application URL where tests will run."),
     username: Optional[str] = Form(default=None, description="Optional login username for test steps."),
@@ -1110,7 +1172,17 @@ def generate_test_cases(
         raise HTTPException(status_code=400, detail="target_url must start with http:// or https://")
 
     # --- Read source data ---
-    df = _read_source(spreadsheet_url=spreadsheet_url, input_file=input_file, csv_path=csv_path)
+    if not (spreadsheet_url or input_file or csv_path):
+        # no external spreadsheet or file provided; allow a single prompt row
+        if user_prompt and user_prompt.strip():
+            df = pd.DataFrame([{"Description": user_prompt.strip()}])
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Provide a spreadsheet URL, csv_path, input_file, or a prompt in user_prompt.",
+            )
+    else:
+        df = _read_source(spreadsheet_url=spreadsheet_url, input_file=input_file, csv_path=csv_path)
     rows = _build_source_rows(df)
     if not rows:
         raise HTTPException(status_code=400, detail="Source data is empty after parsing.")
@@ -1160,3 +1232,91 @@ def generate_test_cases(
         "runner_command": f"python main.py -i {out_path.as_posix()} -y",
         "note": "Use the output_file path above as input to main.py.",
     }
+
+
+# ---------------------------------------------------------------------------
+# Run runner command endpoint
+# ---------------------------------------------------------------------------
+
+import subprocess
+import sys
+
+@app.post("/api/run-runner-command")
+async def run_runner_command(runner_command: str = Form(...)):
+    """Execute the runner command and return results."""
+    try:
+        # Extract the CSV path from the command
+        # Command format: "python main.py -i path/to/file.csv -y"
+        match = re.search(r'-i\s+"?([^"]+)"?', runner_command)
+        if not match:
+            raise HTTPException(status_code=400, detail="Invalid runner command format")
+        
+        csv_path = match.group(1)
+        csv_file = Path(csv_path)
+        
+        if not csv_file.exists():
+            raise HTTPException(status_code=404, detail=f"CSV file not found: {csv_path}")
+        
+        # Run the command with timeout
+        import platform
+        if platform.system() == "Windows":
+            # On Windows, use shell=True for proper command parsing
+            result = subprocess.run(
+                runner_command,
+                shell=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=300,  # 5 minute timeout
+                cwd=str(Path.cwd())
+            )
+        else:
+            # On Unix/Linux/Mac
+            result = subprocess.run(
+                runner_command.split(),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=300,
+                cwd=str(Path.cwd())
+            )
+        
+        if result.returncode != 0:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Runner execution failed: {result.stderr or result.stdout}"
+            )
+        
+        return {
+            "status": "ok",
+            "message": "Test execution completed successfully",
+            "stdout": result.stdout,
+            "stderr": result.stderr,
+            "csv_path": csv_path
+        }
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="Test execution timed out after 5 minutes")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to run runner command: {str(e)}")
+
+
+# ---------------------------------------------------------------------------
+# Register shared helpers with the project API module & mount router
+# ---------------------------------------------------------------------------
+
+register_dependencies(
+    output_dir=OUTPUT_DIR,
+    slugify_fn=_slugify_filename,
+    write_csv_fn=_write_csv,
+    infer_auth_ctx_fn=_infer_auth_context,
+    inspect_url_fn=_inspect_target_url,
+    generate_llm_fn=_generate_with_llm,
+    fallback_generate_fn=_fallback_generate,
+    normalize_cases_fn=_normalize_cases,
+    read_source_fn=_read_source,
+    build_source_rows_fn=_build_source_rows,
+)
+
+app.include_router(project_router)

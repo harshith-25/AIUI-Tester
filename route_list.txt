@@ -1,0 +1,15 @@
+['HEAD', 'GET'] /openapi.json
+['HEAD', 'GET'] /docs
+['HEAD', 'GET'] /docs/oauth2-redirect
+['HEAD', 'GET'] /redoc
+['POST'] /api/generate-test-cases
+['GET'] /api/projects
+['POST'] /api/projects
+['GET'] /api/projects/{project_id}
+['DELETE'] /api/projects/{project_id}
+['GET'] /api/projects/{project_id}/csv
+['POST'] /api/projects/{project_id}/run
+['GET'] /api/executions
+['GET'] /api/executions/{filename}
+['GET'] /api/projects/{project_id}/report
+['DELETE'] /api/projects/{project_id}/test-cases/{test_id}

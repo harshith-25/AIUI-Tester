@@ -1,4 +1,0 @@
-2026-02-26 12:29:47 | INFO     | __main__:_load_test_cases:110 - Loading test cases from: generated_from_sheet2.csv
-2026-02-26 12:29:47 | ERROR    | __main__:_load_test_cases:116 - CSV validation failed:
-2026-02-26 12:29:47 | ERROR    | __main__:_load_test_cases:118 -   - File not found: generated_from_sheet2.csv
-2026-02-26 12:29:47 | ERROR    | __main__:run:56 - No test cases to execute
