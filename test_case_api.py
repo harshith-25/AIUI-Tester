@@ -46,6 +46,10 @@ app.add_middleware(
 # Project management router (code-split into project_api.py)
 # ---------------------------------------------------------------------------
 from project_api import EXECUTIONS, router as project_router, register_dependencies  # noqa: E402
+from database import init_db  # noqa: E402
+
+# Initialise PostgreSQL tables (creates them if they don't exist)
+init_db()
 
 
 def _latest_execution() -> Optional[Dict[str, Any]]:

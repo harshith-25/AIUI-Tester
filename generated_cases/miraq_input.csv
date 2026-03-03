@@ -1,13 +1,13 @@
 "test_id","test_name","description","expected_result","priority","category"
-"TC-001","Widget Login - Successful Verification","Navigate to https://silfratech.in/miraq/v4/.
+"TC-001","Widget Login Verification","Navigate to https://silfratech.in/miraq/v4/.
 a. It will first ask for the name, give it as Harshith S.
 b. Later it will ask for email, give silfra.harshith@gmail.com.
 c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
 d. Confirm the widget shows successful verification or login-complete style confirmation text.
 e. Click on the widget icon located in the bottom right corner of the page.
 f. Click on the chat icon within the widget.
-g. Mark this complete case success only if all the steps are completed and passed.","The widget login process completes successfully, and a confirmation message indicating successful verification or login completion is displayed in the widget.","Critical","Smoke Test"
-"TC-002","Document Checking Flow - Validate Content","Navigate to https://silfratech.in/miraq/v4/.
+g. Mark this complete case success only if all the steps are completed and passed.","The user is successfully logged in via the widget, and a confirmation message indicating successful verification or login completion is displayed.","Critical","Smoke Test"
+"TC-002","Document Checking Flow","Navigate to https://silfratech.in/miraq/v4/.
 a. It will first ask for the name, give it as Harshith S.
 b. Later it will ask for email, give silfra.harshith@gmail.com.
 c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
@@ -22,8 +22,8 @@ k. Click on the Documents (folder) icon located in the bottom toolbar.
 l. Wait for the file list to load.
 m. Click on the 'Validate Content' button for the first file in the list.
 n. Wait for the validation process to complete and verify that a success message is displayed.
-o. Mark this complete case success only if all the steps are completed and passed.","The document validation process completes successfully, and a success message is displayed after validating the content of the first file.","High","Functional"
-"TC-003","IntentClassifier Check - Ask Question","Navigate to https://silfratech.in/miraq/v4/.
+o. Mark this complete case success only if all the steps are completed and passed.","The document validation process completes successfully, and a success message is displayed.","High","Functional"
+"TC-003","IntentClassifier Check","Navigate to https://silfratech.in/miraq/v4/.
 a. It will first ask for the name, give it as Harshith S.
 b. Later it will ask for email, give silfra.harshith@gmail.com.
 c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
@@ -31,7 +31,7 @@ d. Confirm the widget shows successful verification or login-complete style conf
 e. Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents.
 f. Click on the widget icon located in the bottom right corner of the page.
 g. Click on the chat icon within the widget.
-h. Click on the chat icon located to the left of the Documents icon in the bottom toolbar.
+h. Click on the chat icon located to the left of the Documents icon in the widget toolbar.
 i. Type the question 'Who are you?' in the chat input field and press Enter.
-j. Wait for the response from the IntentClassifier and verify that it provides an appropriate and accurate reply to the question.
-k. Mark this complete case success only if all the steps are completed and passed.","The IntentClassifier responds accurately to the question 'Who are you?' with an appropriate reply, confirming its functionality.","High","Functional"
+j. Wait for the response from the IntentClassifier and verify that it provides a valid and accurate reply.
+k. Mark this complete case success only if all the steps are completed and passed.","The IntentClassifier responds accurately to the question 'Who are you?' with a valid and relevant reply.","Medium","Functionality Test"
