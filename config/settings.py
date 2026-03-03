@@ -1,13 +1,17 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional, List
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class Settings(BaseSettings):
     """Application configuration with environment variable support"""
     
     # API Keys
-    github_token: str
+    github_token: Optional[str] = None
     
     # Browser settings
     browser_headless: bool = False
@@ -41,10 +45,11 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     log_to_file: bool = True
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
     
     def setup_directories(self):
         """Create necessary directories"""
