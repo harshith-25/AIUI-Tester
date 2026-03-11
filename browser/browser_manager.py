@@ -25,9 +25,16 @@ class BrowserManager:
             headless=settings.browser_headless,
             slow_mo=settings.browser_slow_mo
         )
+        
+        # Pre-create video dir — Playwright requires the directory to exist before context creation
+        video_dir = None
+        if not settings.browser_headless:
+            video_dir = settings.results_dir / self.test_id / "videos"
+            video_dir.mkdir(parents=True, exist_ok=True)
+        
         self.context = await self.browser.new_context(
             viewport={'width': 1920, 'height': 1080},
-            record_video_dir=str(settings.results_dir / self.test_id / "videos") if not settings.browser_headless else None
+            record_video_dir=str(video_dir) if video_dir else None
         )
         self.page = await self.context.new_page()
         self.page.set_default_timeout(settings.browser_timeout)
@@ -121,6 +128,11 @@ class BrowserManager:
         
         return smart_selectors.get(selector, selector)
     
+    async def press_key(self, key: str):
+        """Press a keyboard key"""
+        log.info(f"Pressing key: {key}")
+        await self.page.keyboard.press(key)
+
     async def close(self):
         """Close browser"""
         if self.context:

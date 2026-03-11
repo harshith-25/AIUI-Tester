@@ -45,7 +45,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 # Project management router (code-split into project_api.py)
 # ---------------------------------------------------------------------------
-from project_api import EXECUTIONS, router as project_router, register_dependencies  # noqa: E402
+from project_api import EXECUTIONS, router as project_router, register_dependencies, _sanitize_execution  # noqa: E402
 from database import init_db  # noqa: E402
 
 # Initialise PostgreSQL tables (creates them if they don't exist)
@@ -59,7 +59,7 @@ def _latest_execution() -> Optional[Dict[str, Any]]:
         EXECUTIONS.items(),
         key=lambda item: item[1].get("started_at", ""),
     )
-    return {"execution_id": latest_id, **latest_rec}
+    return {"execution_id": latest_id, **_sanitize_execution(latest_rec)}
 
 
 @app.get("/status")
@@ -81,7 +81,7 @@ def get_status(execution_id: Optional[str] = None):
         return {
             "status": "ok",
             "timestamp": now_iso,
-            "execution": {"execution_id": execution_id, **rec},
+            "execution": {"execution_id": execution_id, **_sanitize_execution(rec)},
         }
 
     return {

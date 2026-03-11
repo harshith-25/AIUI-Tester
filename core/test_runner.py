@@ -18,7 +18,7 @@ class TestRunner:
         self.test_engine = TestEngine()
         self.retry_handler = RetryHandler()
     
-    async def run_test_suite(self, test_cases: List[TestCase]) -> TestSuiteResult:
+    async def run_test_suite(self, test_cases: List[TestCase], browser_queues: dict = None) -> TestSuiteResult:
         """Run complete test suite with parallel execution"""
         
         log.info("="*80)
@@ -27,15 +27,17 @@ class TestRunner:
         log.info(f"Total Tests: {len(test_cases)}")
         log.info(f"Max Parallel: {settings.max_parallel_tests}")
         log.info(f"Retry Enabled: {settings.retry_failed_tests}")
+        if browser_queues:
+            log.info("Mode: Remote Browser (Chrome Extension)")
         log.info("="*80)
         
         start_time = datetime.now()
         
-        # Execute tests with parallelization
-        if settings.max_parallel_tests > 1:
-            test_results = await self._run_parallel(test_cases)
+        # Remote browser only supports sequential (single tab)
+        if browser_queues or settings.max_parallel_tests <= 1:
+            test_results = await self._run_sequential(test_cases, browser_queues=browser_queues)
         else:
-            test_results = await self._run_sequential(test_cases)
+            test_results = await self._run_parallel(test_cases)
         
         # Retry failed tests if enabled
         if settings.retry_failed_tests:
@@ -58,7 +60,7 @@ class TestRunner:
         
         return suite_result
     
-    async def _run_sequential(self, test_cases: List[TestCase]) -> List[TestResult]:
+    async def _run_sequential(self, test_cases: List[TestCase], browser_queues: dict = None) -> List[TestResult]:
         """Run tests sequentially"""
         log.info("Running tests sequentially...")
         
@@ -68,7 +70,9 @@ class TestRunner:
             log.info(f"Test {i}/{len(test_cases)}")
             log.info(f"{'#'*80}")
             
-            result = await self.test_engine.execute_test(test_case)
+            result = await self.test_engine.execute_test(
+                test_case, browser_queues=browser_queues
+            )
             results.append(result)
             
             # Small delay between tests

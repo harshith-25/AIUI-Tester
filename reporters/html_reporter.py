@@ -10,7 +10,6 @@ from models.test_result import TestResult, TestSuiteResult, TestStatus
 from utils.logger import log
 from config.settings import settings
 
-
 class HTMLReporter:
     """Generate beautiful HTML reports with charts and visualizations"""
     

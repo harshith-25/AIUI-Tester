@@ -24,7 +24,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 import pandas as pd
-from fastapi import APIRouter, HTTPException, Form, File, UploadFile
+from fastapi import APIRouter, HTTPException, Form, File, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 
@@ -102,6 +102,12 @@ EXECUTIONS: dict = {}
 
 def _mark_execution(exec_id: str, **kwargs):
     EXECUTIONS.setdefault(exec_id, {}).update(kwargs)
+
+
+def _sanitize_execution(rec: dict) -> dict:
+    """Return a JSON-safe copy of an execution record (strip queues, etc.)."""
+    skip_keys = {"command_queue", "response_queue"}
+    return {k: v for k, v in rec.items() if k not in skip_keys}
 
 
 @router.get("/projects")
@@ -324,13 +330,31 @@ async def run_project_tests(
             db.close()
 
     exec_id = uuid.uuid4().hex[:8]
-    _mark_execution(exec_id, status="queued", project_id=project_id, csv_path=csv_path, started_at=datetime.now().isoformat(), progress=0)
+    # Create async queues for remote browser communication
+    command_queue = asyncio.Queue()
+    response_queue = asyncio.Queue()
+    _mark_execution(
+        exec_id,
+        status="queued",
+        project_id=project_id,
+        csv_path=csv_path,
+        started_at=datetime.now().isoformat(),
+        progress=0,
+        command_queue=command_queue,
+        response_queue=response_queue,
+    )
+
+    browser_queues = {
+        "command_queue": command_queue,
+        "response_queue": response_queue,
+    }
 
     async def _background_run(
         execution_id: str,
         proj_id: str,
         csv_p: Optional[str],
         split: bool,
+        bq: dict,
     ):
         try:
             _mark_execution(execution_id, status="running", progress=5)
@@ -377,7 +401,7 @@ async def run_project_tests(
             if split and len(test_cases) > 1:
                 # run each test case separately
                 for idx, case in enumerate(test_cases, start=1):
-                    single_suite = await runner.run_test_suite([case])
+                    single_suite = await runner.run_test_suite([case], browser_queues=bq)
                     stats = ResultAggregator.get_statistics(single_suite)
                     analysis = ResultAggregator.get_failure_analysis(single_suite)
                     reports = ReporterFactory.generate_all_reports(single_suite, statistics=stats, failure_analysis=analysis)
@@ -399,7 +423,7 @@ async def run_project_tests(
                 )
             else:
                 # single combined run
-                suite_result = await runner.run_test_suite(test_cases)
+                suite_result = await runner.run_test_suite(test_cases, browser_queues=bq)
                 stats = ResultAggregator.get_statistics(suite_result)
                 analysis = ResultAggregator.get_failure_analysis(suite_result)
                 reports = ReporterFactory.generate_all_reports(suite_result, statistics=stats, failure_analysis=analysis)
@@ -421,14 +445,67 @@ async def run_project_tests(
 
     # Schedule background task
     try:
-        import asyncio
-        asyncio.create_task(_background_run(exec_id, project_id, csv_path, split_cases))
+        asyncio.create_task(_background_run(exec_id, project_id, csv_path, split_cases, browser_queues))
     except Exception:
         # Fallback: run in thread pool
         loop = asyncio.get_event_loop()
-        loop.create_task(_background_run(exec_id, project_id, csv_path, split_cases))
+        loop.create_task(_background_run(exec_id, project_id, csv_path, split_cases, browser_queues))
 
     return {"status": "started", "execution_id": exec_id}
+
+
+@router.websocket("/ws/browser/{execution_id}")
+async def browser_ws(ws: WebSocket, execution_id: str):
+    """
+    WebSocket relay between the backend's RemoteBrowserManager queues and
+    the frontend's BrowserBridge → Chrome Extension.
+
+    Flow:
+      1. RemoteBrowserManager puts a command on command_queue
+      2. This handler reads it and sends it over WebSocket
+      3. BrowserBridge forwards it to the Chrome Extension
+      4. Extension executes it and sends the result back
+      5. BrowserBridge sends the result over WebSocket
+      6. This handler puts it on response_queue
+      7. RemoteBrowserManager reads the response
+    """
+    await ws.accept()
+    rec = EXECUTIONS.get(execution_id)
+    if not rec or "command_queue" not in rec:
+        await ws.send_json({"error": "No browser queues for this execution"})
+        await ws.close()
+        return
+
+    cmd_q: asyncio.Queue = rec["command_queue"]
+    resp_q: asyncio.Queue = rec["response_queue"]
+
+    try:
+        while True:
+            # Wait for the next command from RemoteBrowserManager
+            try:
+                command = await asyncio.wait_for(cmd_q.get(), timeout=5.0)
+            except asyncio.TimeoutError:
+                # No command yet — send a keep-alive ping so the browser
+                # doesn't close the socket.  BrowserBridge silently absorbs
+                # these pings.
+                try:
+                    await ws.send_json({"action": "ping"})
+                except Exception:
+                    break
+                continue
+
+            # Forward command to the frontend
+            await ws.send_json(command)
+
+            # Wait for the extension's result from the frontend
+            result = await ws.receive_json()
+
+            # Put the result on the response queue for RemoteBrowserManager
+            await resp_q.put(result)
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        pass
 
 
 
@@ -459,8 +536,8 @@ def get_execution_status(execution_id: str):
     rec = EXECUTIONS.get(execution_id)
     if not rec:
         raise HTTPException(status_code=404, detail="Execution not found")
-    # Return a copy to avoid accidental mutation
-    return dict(rec)
+    # Return a sanitized copy (strips non-serializable queue objects)
+    return _sanitize_execution(rec)
 
 
 @router.get("/executions/{execution_id}/reports")

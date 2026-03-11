@@ -58,6 +58,9 @@ class TestResult(BaseModel):
     # Error details
     error_type: Optional[str] = None
     error_stack_trace: Optional[str] = None
+
+    # Video recording — populated by RemoteBrowserManager.stop_video()
+    video_path: Optional[str] = None
     
     @property
     def success_rate(self) -> float:

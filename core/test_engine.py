@@ -10,6 +10,7 @@ from models.test_result import TestResult, StepResult, TestStatus
 from agents.copilot_agent import CopilotAgent
 from agents.tool_executor import ToolExecutor
 from browser.browser_manager import BrowserManager
+from browser.remote_browser_manager import RemoteBrowserManager
 from utils.logger import log
 from config.settings import settings
 
@@ -27,8 +28,14 @@ class TestEngine:
     def __init__(self):
         self.tools = self._get_playwright_tools()
     
-    async def execute_test(self, test_case: TestCase, retry_count: int = 0) -> TestResult:
-        """Execute a single test case"""
+    async def execute_test(self, test_case: TestCase, retry_count: int = 0, browser_queues: dict = None) -> TestResult:
+        """Execute a single test case
+        
+        Args:
+            browser_queues: Optional dict with 'command_queue' and 'response_queue'
+                           asyncio.Queue instances for remote browser execution.
+                           When provided, uses RemoteBrowserManager instead of BrowserManager.
+        """
         
         log.info(f"{'='*80}")
         log.info(f"🧪 Executing Test: {test_case.test_id} - {test_case.test_name}")
@@ -39,11 +46,26 @@ class TestEngine:
         
         start_time = datetime.now()
         browser_manager = None
+        video_path: Optional[str] = None
         
         try:
-            # Initialize components
-            browser_manager = BrowserManager(test_case.test_id)
+            # Initialize components — use remote browser if queues are provided
+            if browser_queues:
+                log.info("Using RemoteBrowserManager (Chrome Extension)")
+                browser_manager = RemoteBrowserManager(
+                    test_case.test_id,
+                    command_queue=browser_queues["command_queue"],
+                    response_queue=browser_queues["response_queue"],
+                )
+            else:
+                browser_manager = BrowserManager(test_case.test_id)
             await browser_manager.start()
+
+            # Begin video recording immediately after the browser/tab is ready.
+            # Only RemoteBrowserManager supports this; BrowserManager.start_video()
+            # does not exist, so we guard with hasattr to keep both paths working.
+            if hasattr(browser_manager, "start_video"):
+                await browser_manager.start_video()
             
             tool_executor = ToolExecutor(browser_manager)
             copilot_agent = CopilotAgent()
@@ -174,7 +196,8 @@ class TestEngine:
                 screenshots=[final_screenshot] if final_screenshot else [],
                 ai_observations=copilot_agent.get_conversation_summary(),
                 retry_count=retry_count,
-                is_retry=retry_count > 0
+                is_retry=retry_count > 0,
+                video_path=video_path,
             )
             
             # Log summary
@@ -208,13 +231,36 @@ class TestEngine:
                 error_type=type(e).__name__,
                 error_stack_trace=traceback.format_exc(),
                 retry_count=retry_count,
-                is_retry=retry_count > 0
+                is_retry=retry_count > 0,
+                video_path=video_path,
             )
             
             return test_result
         
         finally:
             if browser_manager:
+                # Stop video recording before closing the tab so the extension
+                # can still access the stream.  video_path is written back into
+                # the already-constructed test_result if one was returned.
+                if hasattr(browser_manager, "stop_video"):
+                    try:
+                        saved_path = await browser_manager.stop_video()
+                        if saved_path:
+                            video_path = saved_path
+                            # Patch the path into the result object that was
+                            # already built above (both happy-path and error-path
+                            # branches set video_path=video_path at construction
+                            # time using the local variable, so we update it here
+                            # if the local variable was None when the result was
+                            # constructed — i.e., the finally block ran after the
+                            # result object was already created).
+                            try:
+                                test_result.video_path = saved_path  # type: ignore[name-defined]
+                            except Exception:
+                                pass  # test_result may not be defined if start() itself threw
+                    except Exception as e:
+                        log.warning(f"Error stopping video recording: {e}")
+
                 try:
                     await browser_manager.close()
                 except Exception as e:
@@ -1098,7 +1144,7 @@ class TestEngine:
                 await browser_manager.click("chat_send_button")
             except Exception:
                 # OTP step may temporarily disable/replace send button; Enter still sends from textarea.
-                await browser_manager.page.keyboard.press("Enter")
+                await browser_manager.press_key("Enter")
             await browser_manager.wait(1.0)
             return True, None, (time.time() - start) * 1000
         except Exception as e:
@@ -1137,6 +1183,8 @@ class TestEngine:
         log.info(f"Validation: {'✅ PASSED' if result.validation_passed else '❌ FAILED'}")
         log.info(f"Expected: {result.expected_result}")
         log.info(f"Actual: {result.actual_result}")
+        if result.video_path:
+            log.info(f"Video: {result.video_path}")
         
         if result.error_type:
             log.error(f"Error Type: {result.error_type}")
