@@ -167,6 +167,15 @@ class TestEngine:
                 description=test_case.description,
                 step_results=step_results,
             )
+            
+            # Extract specific failure reason from steps if any
+            step_failure_reason = ""
+            if failed_steps > 0:
+                first_failed = next((s for s in step_results if s.status == TestStatus.FAILED), None)
+                if first_failed:
+                    step_error = first_failed.error_message or "Unknown error"
+                    step_failure_reason = f"Step {first_failed.step_number} ({first_failed.action}) failed: {step_error}"
+
             if failed_steps == 0 and (
                 validation_passed
                 or (widget_flow and has_real_execution and required_actions_ok)
@@ -174,8 +183,18 @@ class TestEngine:
                 overall_status = TestStatus.PASSED
             else:
                 overall_status = TestStatus.FAILED
+                
+                # Build specific and on-point actual result message
+                failure_parts = []
+                if not validation_passed and not (widget_flow and has_real_execution and required_actions_ok):
+                    failure_parts.append("Validation failed (Expected result not found in UI/logs)")
+                if step_failure_reason:
+                    failure_parts.append(step_failure_reason)
                 if required_reason:
-                    actual_result = f"{actual_result} | Required action check failed: {required_reason}"
+                    failure_parts.append(f"Required action check failed: {required_reason}")
+                
+                if failure_parts:
+                    actual_result = " | ".join(failure_parts)
             
             # Create test result
             test_result = TestResult(

@@ -256,7 +256,13 @@ class HTMLReporter:
 
             test_videos: list[str] = []
             embedded_videos: list[dict] = []
-            for video in discovered_videos.get(test.test_id, []):
+            
+            # Use explicit video_path if available or fallback to discovered videos
+            all_videos = list(discovered_videos.get(test.test_id, []))
+            if getattr(test, "video_path", None):
+                all_videos.append(str(test.video_path))
+
+            for video in all_videos:
                 src = self._resolve_media_source(video)
                 if not src:
                     continue

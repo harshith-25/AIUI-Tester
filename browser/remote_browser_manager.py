@@ -59,7 +59,7 @@ class RemoteBrowserManager:
     async def start(self):
         """Ask the extension to open a new test tab."""
         log.info(f"Starting remote browser for test {self.test_id}")
-        await self._send_command("start_browser")
+        await self._send_command("start_browser", timeout=20)
         log.success("Remote browser started successfully")
 
     async def navigate(self, url: str):
@@ -128,31 +128,23 @@ class RemoteBrowserManager:
     async def start_video(self) -> None:
         """
         Tell the Chrome Extension to begin recording the active tab.
-
-        The extension pipes chrome.tabCapture → MediaRecorder inside an
-        offscreen document.  We simply fire the command and confirm the
-        extension acknowledged it; actual recording runs in the browser.
+        Recording is best-effort — failure does not abort the test run.
         """
         log.info(f"[RemoteBrowser] Starting video recording for test {self.test_id}")
         try:
-            await self._send_command("start_video")
+            await self._send_command("start_video", timeout=40)
             log.success("[RemoteBrowser] Video recording started")
         except Exception as e:
-            # Recording is best-effort — a missing permission or unsupported
-            # browser should not abort the whole test run.
             log.warning(f"[RemoteBrowser] Could not start video recording (non-fatal): {e}")
 
     async def stop_video(self) -> Optional[str]:
         """
-        Tell the Chrome Extension to stop recording and return the video.
-
-        The extension finalises the MediaRecorder, base64-encodes the .webm
-        blob, and sends it back as ``response["video"]``.  We decode it and
-        save it next to the screenshots.
+        Tell the Chrome Extension to stop recording.
+        The extension returns the WebM as base64 in response["video"].
+        We decode and save it alongside screenshots.
 
         Returns:
-            Absolute path to the saved .webm file, or None if recording was
-            never started / the extension returned no data.
+            Absolute path to the saved .webm file, or None on failure.
         """
         log.info(f"[RemoteBrowser] Stopping video recording for test {self.test_id}")
         try:
@@ -169,12 +161,9 @@ class RemoteBrowserManager:
             log.warning("[RemoteBrowser] Extension returned no video data")
             return None
 
-        # Persist next to screenshots using a deterministic filename
+        # Save to videos_dir (falls back to screenshots_dir if not configured)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         video_name = f"{self.test_id}_{timestamp}.webm"
-
-        # Re-use the screenshots directory so the HTML reporter can find it
-        # easily; fall back to cwd if settings does not expose videos_dir.
         base_dir: Path = getattr(settings, "videos_dir", None) or settings.screenshots_dir
         video_path = base_dir / video_name
         video_path.parent.mkdir(parents=True, exist_ok=True)
@@ -188,13 +177,12 @@ class RemoteBrowserManager:
             return None
 
     # ------------------------------------------------------------------
-    # Selector resolution — same map as BrowserManager
+    # Selector resolution
     # ------------------------------------------------------------------
 
     def _resolve_selector(self, selector: str) -> str:
         """Resolve smart selector to actual CSS selector."""
         smart_selectors = {
-            # Login
             "login_username": 'input[type="text"]:first-of-type',
             "login_password": 'input[type="password"]:first-of-type',
             "login_button": "button.loginuserbutton",
@@ -202,13 +190,11 @@ class RemoteBrowserManager:
             "chat_start_button": "#silfra-chat-widget-container .xpert-home-action-icon",
             "chat_input": "#silfra-chat-widget-container textarea.xpert-chat-input",
             "chat_send_button": "#silfra-chat-widget-container button.xpert-send-btn",
-            # Navigation
             "admin_button": 'button:has(img[alt="Admin"])',
             "add_button": 'p:has-text("Add")',
             "save_button": 'button:has-text("Save")',
             "submit_button": 'button:has-text("Submit")',
             "cancel_button": 'button:has-text("Cancel")',
-            # Form fields
             "institutionname": "#institutionname",
             "username": "#username",
             "password": "#password",
