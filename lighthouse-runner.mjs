@@ -36,7 +36,7 @@ async function run() {
     // Launch headless Chrome
     chrome = await chromeLauncher.launch({
       chromeFlags: [
-        '--headless',
+        '--headless=new',
         '--no-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
@@ -51,11 +51,12 @@ async function run() {
       onlyCategories: categories,
       port: chrome.port,
       settings: {
-        maxWaitForLoad: 60000,
+        maxWaitForLoad: 90000,
         skipAudits: ['full-page-screenshot', 'screenshot-thumbnails', 'final-screenshot'],
         screenEmulation: { disabled: true },
         formFactor: 'desktop',
-        throttlingMethod: 'provided', // Use server's full speed
+        throttlingMethod: 'provided',
+        disableStorageReset: true,
       },
     };
 

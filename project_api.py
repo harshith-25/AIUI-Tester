@@ -853,6 +853,7 @@ async def run_lighthouse(body: LighthouseRunRequest):
 
             cmd = [
                 node_bin,
+                "--max-old-space-size=4096",
                 str(runner_script),
                 url,
                 str(LIGHTHOUSE_REPORTS_DIR),
