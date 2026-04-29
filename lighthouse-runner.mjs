@@ -50,6 +50,13 @@ async function run() {
       output: ['json', 'html'],
       onlyCategories: categories,
       port: chrome.port,
+      settings: {
+        maxWaitForLoad: 60000,
+        skipAudits: ['full-page-screenshot', 'screenshot-thumbnails', 'final-screenshot'],
+        screenEmulation: { disabled: true },
+        formFactor: 'desktop',
+        throttlingMethod: 'provided', // Use server's full speed
+      },
     };
 
     const result = await lighthouse(url, options);
