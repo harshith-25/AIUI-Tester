@@ -76,8 +76,14 @@ async function run() {
           'third-parties-insight',
           'viewport-insight'
         ],
-        screenEmulation: { disabled: true },
         formFactor: 'desktop',
+        screenEmulation: {
+          mobile: false,
+          width: 1920,
+          height: 1080,
+          deviceScaleFactor: 1,
+          disabled: false,
+        },
         throttlingMethod: 'provided',
         disableStorageReset: true,
       },
