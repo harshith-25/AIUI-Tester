@@ -847,8 +847,12 @@ async def run_lighthouse(body: LighthouseRunRequest):
 
             # ── Step 2: Lighthouse audit ───────────────────────────────
             _mark_execution(execution_id, progress=30)
+
+            import shutil
+            node_bin = shutil.which("node") or "node"
+
             cmd = [
-                "node",
+                node_bin,
                 str(runner_script),
                 url,
                 str(LIGHTHOUSE_REPORTS_DIR),
@@ -857,23 +861,71 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 "best-practices",
             ]
 
-            proc = await loop.run_in_executor(
-                None,
-                lambda: subprocess.run(
+            # Build environment: inherit current env + ensure CHROME_PATH is set
+            import os as _os
+            sub_env = _os.environ.copy()
+            if "CHROME_PATH" not in sub_env:
+                # Try to auto-detect chromium/chrome location
+                for candidate in [
+                    "/usr/bin/google-chrome-stable",
+                    "/usr/bin/google-chrome",
+                    "/usr/bin/chromium-browser",
+                    "/usr/bin/chromium",
+                    "/snap/bin/chromium",
+                ]:
+                    if Path(candidate).exists():
+                        sub_env["CHROME_PATH"] = candidate
+                        break
+
+            print(f"[Lighthouse] Running: {' '.join(cmd)}")
+            print(f"[Lighthouse] CHROME_PATH={sub_env.get('CHROME_PATH', '(not set)')}")
+            print(f"[Lighthouse] CWD={Path(__file__).parent}")
+
+            def _run_lighthouse_subprocess():
+                """Run lighthouse in a subprocess with proper timeout handling."""
+                process = subprocess.Popen(
                     cmd,
-                    capture_output=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                     text=True,
                     encoding="utf-8",
                     errors="replace",
-                    timeout=180,
                     cwd=str(Path(__file__).parent),
+                    env=sub_env,
                 )
-            )
+                try:
+                    stdout, stderr = process.communicate(timeout=180)
+                    return {"returncode": process.returncode, "stdout": stdout, "stderr": stderr}
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    stdout, stderr = process.communicate()
+                    return {"returncode": -1, "stdout": stdout or "", "stderr": stderr or "", "timed_out": True}
+
+            result = await loop.run_in_executor(None, _run_lighthouse_subprocess)
+
+            if result.get("timed_out"):
+                err_detail = result.get("stderr", "").strip()[:500]
+                print(f"[Lighthouse] TIMEOUT - stderr: {err_detail}")
+                _mark_execution(
+                    execution_id,
+                    status="failed",
+                    progress=100,
+                    message=f"Lighthouse audit timed out after 180 seconds. stderr: {err_detail}",
+                    finished_at=datetime.now().isoformat(),
+                )
+                return
 
             _mark_execution(execution_id, progress=85)
 
-            if proc.returncode != 0:
-                error_msg = proc.stderr.strip() if proc.stderr else "Lighthouse process failed"
+            proc_stdout = result["stdout"].strip() if result["stdout"] else ""
+            proc_stderr = result["stderr"].strip() if result["stderr"] else ""
+
+            print(f"[Lighthouse] returncode={result['returncode']}")
+            if proc_stderr:
+                print(f"[Lighthouse] stderr: {proc_stderr[:500]}")
+
+            if result["returncode"] != 0:
+                error_msg = proc_stderr or "Lighthouse process failed"
                 try:
                     error_data = json.loads(error_msg)
                     error_msg = error_data.get("message", error_msg)
@@ -889,15 +941,14 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 return
 
             # Parse Lighthouse JSON summary
-            stdout_text = proc.stdout.strip() if proc.stdout else ""
             try:
-                summary = json.loads(stdout_text)
+                summary = json.loads(proc_stdout)
             except (json.JSONDecodeError, ValueError):
                 _mark_execution(
                     execution_id,
                     status="failed",
                     progress=100,
-                    message=f"Failed to parse Lighthouse output: {stdout_text[:300]}",
+                    message=f"Failed to parse Lighthouse output: {proc_stdout[:300]}",
                     finished_at=datetime.now().isoformat(),
                 )
                 return
@@ -930,15 +981,6 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 score=summary.get("score"),
                 metrics=summary.get("metrics", {}),
                 categories=summary.get("categories", {}),
-                finished_at=datetime.now().isoformat(),
-            )
-
-        except subprocess.TimeoutExpired:
-            _mark_execution(
-                execution_id,
-                status="failed",
-                progress=100,
-                message="Lighthouse audit timed out after 180 seconds",
                 finished_at=datetime.now().isoformat(),
             )
         except Exception as e:
