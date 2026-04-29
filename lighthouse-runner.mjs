@@ -1,8 +1,8 @@
 /**
  * Lighthouse Runner — Standalone Node.js script
- * 
+ *
  * Usage: node lighthouse-runner.mjs <url> <outputDir> <reportId> [categories...]
- * 
+ *
  * Runs a real Google Lighthouse audit using headless Chrome and writes
  * both JSON and HTML reports to the output directory.
  * Prints a JSON summary to stdout for the calling process to parse.
@@ -13,7 +13,7 @@ import * as chromeLauncher from 'chrome-launcher';
 import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-const [,, url, outputDir, reportId, ...categoryArgs] = process.argv;
+const [, , url, outputDir, reportId, ...categoryArgs] = process.argv;
 
 if (!url || !outputDir || !reportId) {
   process.stderr.write(JSON.stringify({
@@ -30,16 +30,44 @@ const categories = categoryArgs.length > 0
 async function run() {
   let chrome;
   try {
-    // Ensure output directory exists
     mkdirSync(outputDir, { recursive: true });
 
-    // Launch headless Chrome
     chrome = await chromeLauncher.launch({
       chromeFlags: [
         '--headless',
         '--no-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
+        '--disable-software-rasterizer',
+        '--disable-extensions',
+        '--disable-background-networking',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-breakpad',
+        '--disable-client-side-phishing-detection',
+        '--disable-component-update',
+        '--disable-default-apps',
+        '--disable-domain-reliability',
+        '--disable-features=AudioServiceOutOfProcess',
+        '--disable-hang-monitor',
+        '--disable-ipc-flooding-protection',
+        '--disable-popup-blocking',
+        '--disable-prompt-on-repost',
+        '--disable-renderer-backgrounding',
+        '--disable-sync',
+        '--disable-translate',
+        '--force-color-profile=srgb',
+        '--hide-scrollbars',
+        '--ignore-gpu-blocklist',
+        '--metrics-recording-only',
+        '--mute-audio',
+        '--no-first-run',
+        '--no-default-browser-check',
+        '--no-pings',
+        '--no-zygote',
+        '--safebrowsing-disable-auto-update',
+        '--use-gl=swiftshader',
+        '--js-flags=--max-old-space-size=512',
       ]
     });
 
@@ -56,7 +84,10 @@ async function run() {
           height: 940,
           deviceScaleFactor: 1,
           disabled: false,
-        }
+        },
+        maxWaitForLoad: 45000,
+        maxWaitForFcp: 30000,
+        throttlingMethod: 'simulate',
       },
     };
 
@@ -68,11 +99,9 @@ async function run() {
 
     const [jsonReport, htmlReport] = result.report;
 
-    // Write report files
     writeFileSync(join(outputDir, `${reportId}.report.json`), jsonReport);
     writeFileSync(join(outputDir, `${reportId}.report.html`), htmlReport);
 
-    // Build summary for stdout
     const lhr = result.lhr;
     const summary = {
       status: 'success',
@@ -82,13 +111,11 @@ async function run() {
       categories: {},
     };
 
-    // Performance score
     const perfScore = lhr.categories?.performance?.score;
     if (perfScore !== null && perfScore !== undefined) {
       summary.score = Math.round(perfScore * 100);
     }
 
-    // Extract audit metrics
     const metricAudits = {
       'first-contentful-paint': 'fcp',
       'largest-contentful-paint': 'lcp',
@@ -110,9 +137,6 @@ async function run() {
       }
     }
 
-    // Extract Full Page Load Time from Lighthouse's own navigation timing.
-    // lhr.audits.metrics.details.items[0] contains observedLoad (loadEventEnd)
-    // which is the real "Full Page Load Time" as measured by the browser.
     try {
       const metricsItems = lhr.audits?.['metrics']?.details?.items;
       if (metricsItems && metricsItems.length > 0) {
@@ -126,11 +150,8 @@ async function run() {
           };
         }
       }
-    } catch (_) {
-      // Non-critical — if observedLoad is missing, skip it
-    }
+    } catch (_) { }
 
-    // Extract category scores
     for (const [catId, cat] of Object.entries(lhr.categories || {})) {
       summary.categories[catId] = {
         score: cat.score !== null && cat.score !== undefined ? Math.round(cat.score * 100) : null,
@@ -150,9 +171,7 @@ async function run() {
     if (chrome) {
       try {
         await chrome.kill();
-      } catch (_) {
-        // Ignore cleanup errors (Windows EPERM on temp dir is non-critical)
-      }
+      } catch (_) { }
     }
   }
 }
