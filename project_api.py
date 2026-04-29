@@ -722,7 +722,7 @@ def delete_test_case(project_id: str, test_id: str):
     finally:
         db.close()
 
-LIGHTHOUSE_REPORTS_DIR = Path("bulk_lighthouse_reports")
+LIGHTHOUSE_REPORTS_DIR = Path(__file__).parent / "bulk_lighthouse_reports"
 
 
 class LighthouseRunRequest(BaseModel):
@@ -925,7 +925,11 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 print(f"[Lighthouse] stderr: {proc_stderr[:500]}")
 
             if result["returncode"] != 0:
-                error_msg = proc_stderr or "Lighthouse process failed"
+                error_msg = proc_stderr or proc_stdout or "Lighthouse process failed"
+                print(f"[Lighthouse] FAILED (rc={result['returncode']})")
+                if proc_stdout: print(f"[Lighthouse] stdout: {proc_stdout[:500]}")
+                if proc_stderr: print(f"[Lighthouse] stderr: {proc_stderr[:500]}")
+                
                 try:
                     error_data = json.loads(error_msg)
                     error_msg = error_data.get("message", error_msg)
