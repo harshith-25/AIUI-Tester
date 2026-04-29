@@ -42,6 +42,7 @@ async function run() {
         '--disable-dev-shm-usage',
         '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         '--disable-blink-features=AutomationControlled',
+        '--js-flags="--max-old-space-size=4096"',
       ]
     });
 
@@ -52,7 +53,29 @@ async function run() {
       port: chrome.port,
       settings: {
         maxWaitForLoad: 90000,
-        skipAudits: ['full-page-screenshot', 'screenshot-thumbnails', 'final-screenshot'],
+        skipAudits: [
+          'full-page-screenshot', 
+          'screenshot-thumbnails', 
+          'final-screenshot',
+          'largest-contentful-paint-element', 
+          'layout-shifts', 
+          'lcp-lazy-loaded', 
+          'non-composited-animations', 
+          'prioritize-lcp-image',
+          'cls-culprits-insight',
+          'document-latency-insight',
+          'dom-size-insight',
+          'font-display-insight',
+          'forced-reflow-insight',
+          'image-delivery-insight',
+          'inp-breakdown-insight',
+          'lcp-breakdown-insight',
+          'lcp-discovery-insight',
+          'network-dependency-tree-insight',
+          'render-blocking-insight',
+          'third-parties-insight',
+          'viewport-insight'
+        ],
         screenEmulation: { disabled: true },
         formFactor: 'desktop',
         throttlingMethod: 'provided',
