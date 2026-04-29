@@ -17,14 +17,27 @@ class Settings(BaseSettings):
     # AI Model settings
     ai_model: str = "gpt-4o"
     ai_temperature: float = 0.1
-    ai_max_tokens: int = 2000
-    ai_max_iterations: int = 10
+    ai_max_tokens: int = 8192
+    ai_max_iterations: int = 50
+    
+    # Conversation management
+    ai_conversation_max_messages: int = 40  # sliding window size
+    dom_snapshot_max_depth: int = 6         # how deep to walk DOM
+    dom_snapshot_before_action: bool = True  # inject DOM snapshot before each AI step
     
     # Test execution settings
     max_parallel_tests: int = 3
     retry_failed_tests: bool = True
-    max_retries: int = 2
+    max_retries: int = 1
     retry_delay: int = 5
+
+    # Optional default credentials for login pages when a test description
+    # does not provide explicit username/password.
+    default_login_username: Optional[str] = None
+    default_login_password: Optional[str] = None
+    default_login_email: Optional[str] = None
+    default_login_otp: Optional[str] = None
+    default_login_name: Optional[str] = None
     
     # Paths
     test_cases_path: Path = Path("test_cases.csv")

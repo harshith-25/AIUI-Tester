@@ -1,11 +1,10 @@
 .venv
 .env
 
-generated_cases
 
-logs
+logs/
 
-screenshots
+screenshots/
 
 test_results
 
@@ -17,4 +16,8 @@ __pycache__
 *.pyd
 .Python
 build/
+generated_cases/
 dist/
+lighthouse_reports/
+bulk_lighthouse_reports/
+node_modules/

@@ -32,23 +32,17 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Test Case Generator API", version="2.0.0")
 
-# CORS – allow the frontend dev server
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    # Browsers reject '*' with credentials; keep API broadly open for dev.
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------------------------------------------------------------------------
-# Project management router (code-split into project_api.py)
-# ---------------------------------------------------------------------------
 from project_api import EXECUTIONS, router as project_router, register_dependencies, _sanitize_execution  # noqa: E402
 from database import init_db  # noqa: E402
 
-# Initialise PostgreSQL tables (creates them if they don't exist)
 init_db()
 
 
@@ -168,8 +162,6 @@ def _build_source_rows(df: pd.DataFrame, max_rows: int = 200) -> List[Dict[str, 
         return re.sub(r"[^a-z0-9]+", "", name.lower())
 
     def _promote_header_if_embedded(source_df: pd.DataFrame) -> pd.DataFrame:
-        # Many Google Sheets exports with merged cells arrive as Unnamed columns.
-        # If row content looks like headers, promote that row to actual header.
         if not any(str(col).lower().startswith("unnamed:") for col in source_df.columns):
             return source_df
 
@@ -180,7 +172,6 @@ def _build_source_rows(df: pd.DataFrame, max_rows: int = 200) -> List[Dict[str, 
                 body = source_df.iloc[idx + 1 :].copy()
                 header = [v if v else f"col_{i}" for i, v in enumerate(row_values)]
 
-                # Deduplicate header names while preserving order.
                 seen: Dict[str, int] = {}
                 final_header: List[str] = []
                 for h in header:
@@ -239,7 +230,7 @@ def _build_source_rows(df: pd.DataFrame, max_rows: int = 200) -> List[Dict[str, 
         item = {k: v for k, v in raw_item.items() if v}
         if item:
             role_val = item.get("Role", "")
-            if role_val in {"”", '"', "''", "ditto", "same"}:
+            if role_val in {"\u201c", '"', "''", "ditto", "same"}:
                 role_val = last_role
             if role_val:
                 last_role = role_val
@@ -305,12 +296,28 @@ def _extract_credential_like_value(text: str, label: str) -> Optional[str]:
     return value if value else None
 
 
+# ---------------------------------------------------------------------------
+# FIX 1: Robust auth context — always prefer explicitly passed username/password
+# ---------------------------------------------------------------------------
+
 def _infer_auth_context(
     rows: List[Dict[str, Any]],
     username: Optional[str],
     password: Optional[str],
 ) -> Dict[str, Optional[str]]:
-    """Infer whether flow is username/password or widget name/email/otp."""
+    """
+    Build a complete auth context.
+
+    Priority order for each credential field:
+      1. Explicitly passed username / password form params  ← HIGHEST PRIORITY
+      2. Extracted from spreadsheet descriptions
+      3. Sensible fallback placeholders                     ← LOWEST PRIORITY
+
+    This guarantees that if the caller supplies username/password they are ALWAYS
+    embedded in every generated test step — the original code had a bug where the
+    extracted values could silently overwrite the caller-supplied ones when the
+    cleaned string was empty.
+    """
     descriptions: List[str] = []
     for row in rows:
         for key in ("Description", "description", "Feature", "feature", "Name", "name", "title"):
@@ -320,66 +327,120 @@ def _infer_auth_context(
     blob = "\n".join(descriptions)
     blob_l = blob.lower()
 
+    # --- Extract supplementary fields from the spreadsheet text ---
     email_match = re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", blob)
     otp_match = re.search(
         r"\botp\b(?:[^\n]*?(?:as|is|:|give\s+(?:it\s+)?as))?\s*['\"]?(\d{4,8})['\"]?",
         blob,
         flags=re.IGNORECASE,
     )
-
     extracted_username = _extract_credential_like_value(blob, "username")
     extracted_password = _extract_credential_like_value(blob, "password")
     extracted_name = _extract_credential_like_value(blob, "name")
 
-    def _as_text(value: Any) -> str:
-        return value.strip() if isinstance(value, str) else ""
+    def _as_clean(value: Any) -> str:
+        """Return stripped non-empty string or empty string."""
+        return value.strip() if isinstance(value, str) and value.strip() else ""
 
-    auth_username = (_as_text(username) or extracted_username or "").strip() or None
-    auth_password = (_as_text(password) or extracted_password or "").strip() or None
-    auth_name = (extracted_name or "").strip() or None
-    auth_email = email_match.group(0).strip() if email_match else None
-    auth_otp = otp_match.group(1).strip() if otp_match else None
+    # FIX: caller-supplied values win — only fall back to extracted values when
+    # the caller supplied nothing.
+    final_username: Optional[str] = (
+        _as_clean(username) or _as_clean(extracted_username) or None
+    )
+    final_password: Optional[str] = (
+        _as_clean(password) or _as_clean(extracted_password) or None
+    )
+    final_name: Optional[str] = _as_clean(extracted_name) or None
+    final_email: Optional[str] = (
+        email_match.group(0).strip() if email_match else None
+    )
+    final_otp: Optional[str] = (
+        otp_match.group(1).strip() if otp_match else None
+    )
 
+    # Determine auth mode
     has_widget_auth = ("otp" in blob_l) or ("email" in blob_l and "name" in blob_l)
-    mode = "name_email_otp" if has_widget_auth else "username_password"
-    if not has_widget_auth and not auth_username and not auth_password:
+    has_standard_auth = bool(final_username or final_password)
+
+    if not has_widget_auth and not has_standard_auth:
         mode = "none"
+    elif has_widget_auth and not has_standard_auth:
+        mode = "widget"
+    else:
+        mode = "standard"
 
     return {
         "mode": mode,
-        "name": auth_name,
-        "email": auth_email,
-        "otp": auth_otp,
-        "username": auth_username,
-        "password": auth_password,
+        "name": final_name,
+        "email": final_email,
+        "otp": final_otp,
+        "username": final_username,
+        "password": final_password,
     }
 
 
+# ---------------------------------------------------------------------------
+# FIX 2: _build_auth_steps — always produce concrete, non-empty steps
+# ---------------------------------------------------------------------------
+
 def _build_auth_steps(auth_context: Dict[str, Optional[str]]) -> List[str]:
-    mode = auth_context.get("mode")
-    if mode == "name_email_otp":
-        name_val = auth_context.get("name") or "<enter_name>"
-        email_val = auth_context.get("email") or "<enter_email>"
-        otp_val = auth_context.get("otp") or "<enter_otp>"
-        return [
-            f"It will first ask for the name, give it as {name_val}.",
-            f"Later it will ask for email, give {email_val}.",
-            f"Then it will ask for OTP, give it as {otp_val}, submit, and wait for response.",
-            "Confirm the widget shows successful verification or login-complete style confirmation text.",
-        ]
-    if mode == "username_password":
-        user_val = auth_context.get("username") or "<enter_username>"
-        pass_val = auth_context.get("password") or "<enter_password>"
-        return [
-            f"Enter username as {user_val}.",
-            f"Enter password as {pass_val}.",
-            "Click the Login button and wait for the dashboard to load.",
-        ]
+    """
+    Return a deterministic ordered list of concrete auth steps.
+
+    Rules:
+    - If mode == "none" → single generic fallback step.
+    - Otherwise, ALWAYS emit credential steps with literal values (or
+      safe angle-bracket placeholders when values are absent so the LLM
+      never outputs raw empty strings or Python-None literals).
+    - username/password step is emitted whenever at least one value exists.
+    - widget fields (name, email, otp) are emitted when present.
+    - A final "submit" step is always appended when there are credential steps.
+    """
+    mode = auth_context.get("mode", "none")
+
+    if mode == "none":
+        return ["Complete the app authentication flow and wait for post-login state."]
+
+    def _val(key: str, placeholder: str) -> str:
+        v = auth_context.get(key)
+        return str(v).strip() if v and str(v).strip() else placeholder
+
+    steps: List[str] = []
+
+    # --- Widget / OTP auth fields ---
+    name_val = auth_context.get("name")
+    email_val = auth_context.get("email")
+    otp_val = auth_context.get("otp")
+
+    if name_val:
+        steps.append(f"Enter name as {name_val}.")
+    if email_val:
+        steps.append(f"Enter email as {email_val}.")
+    if otp_val:
+        steps.append(f"Enter OTP as {otp_val}.")
+
+    # --- Standard username / password fields ---
+    username = auth_context.get("username")
+    password = auth_context.get("password")
+
+    # FIX: always produce steps for username/password when the mode is standard,
+    # using safe placeholders instead of silently skipping
+    if mode == "standard" or username or password:
+        u_val = str(username).strip() if username and str(username).strip() else "<enter_username>"
+        p_val = str(password).strip() if password and str(password).strip() else "<enter_password>"
+        steps.append(f"Enter username as {u_val}.")
+        steps.append(f"Enter password as {p_val}.")
+
+    if steps:
+        steps.append("Click the Login button and wait for the dashboard/home screen to load.")
+        return steps
+
+    # Ultimate fallback — should be unreachable but defensive
     return ["Complete the app authentication flow and wait for post-login state."]
 
 
 # ---------------------------------------------------------------------------
-# The core prompt — designed to produce the same quality as a senior QA engineer
+# The core prompt
 # ---------------------------------------------------------------------------
 
 def _build_llm_prompt(
@@ -405,9 +466,26 @@ def _build_llm_prompt(
         else ""
     )
 
-    auth_mode = str(auth_context.get("mode") or "none")
     auth_steps = _build_auth_steps(auth_context)
     auth_instruction = "\n".join(f"  {chr(97 + i)}. {step}" for i, step in enumerate(auth_steps))
+    next_letter = chr(97 + len(auth_steps))
+
+    # --- FIX 3: Embed resolved credential values directly in the prompt so the
+    #     LLM cannot hallucinate different credentials or use stale placeholders ---
+    username = auth_context.get("username")
+    password = auth_context.get("password")
+    cred_hint = ""
+    if username or password:
+        u_display = username if username else "<enter_username>"
+        p_display = password if password else "<enter_password>"
+        cred_hint = (
+            f"\n\nCREDENTIAL REMINDER — use EXACTLY these values in every login step:\n"
+            f"  Username: {u_display}\n"
+            f"  Password: {p_display}\n"
+            f"Do NOT substitute, invent, or omit them."
+        )
+
+    auth_mode = str(auth_context.get("mode") or "none")
     page_hint = (
         f"URL probe: reachable={url_probe.get('reachable')}, "
         f"status_code={url_probe.get('status_code')}, "
@@ -423,7 +501,7 @@ Your output must be a JSON object with exactly this shape:
 Each test case object must have these exact keys:
   test_id, test_name, description, expected_result, priority, category
 
-=== STRICT RULES FOR EVERY FIELD ===
+=== STRICT RULES FOR EVERY FIELD ==={cred_hint}
 
 test_id:
   Format: TC-001, TC-002, TC-003 ... (sequential, zero-padded to 3 digits)
@@ -437,9 +515,8 @@ description:
 
   "Navigate to {target_url}.
 {auth_instruction}
-  d. [Next actionable step specific to this feature — e.g. Navigate to the Institutes section from the main menu.]
-  e. [Next step...]
-  f. [Next step...]
+  {next_letter}. [Next actionable step specific to this feature]
+  {chr(ord(next_letter)+1)}. [Next step...]
   ... continue with as many lettered steps as needed ..."
 
   Rules for description steps:
@@ -451,15 +528,15 @@ description:
   - For list/view flows: include navigating to section, waiting for load, verifying column headers and data.
   - For toggle/config flows: include changing the setting, saving, verifying the state change, optionally reverting.
   - For audit/log flows: include navigating to sub-section, verifying log columns (user, timestamp, action), and testing filters.
-  - For password/auth flows: include current password entry, new password entry, confirmation, and login verification with new credentials.
-  - Never invent placeholders like <valid_username> or <valid_password>. Use exact values from source rows when present.
+  - For password/auth flows: include current password entry, new password entry, confirmation, and login verification.
+  - CRITICAL: Never replace the auth steps above with generic text. They are pre-filled and must appear exactly.
   - Auth mode for this request is: {auth_mode}. Respect it for all test cases.
   - NEVER write generic steps like "Perform required input actions" or "Open the relevant module".
   - Minimum 6 steps, maximum 12 steps per test case.
 
 expected_result:
   A clear, specific success statement. What does success look like for THIS test case?
-  Must mention the specific feature outcome (e.g. "The institution is removed from the list and a success toast is displayed.")
+  Must mention the specific feature outcome.
   NEVER write generic outcomes like "Expected UI behavior is correct."
 
 priority:
@@ -468,28 +545,6 @@ priority:
 
 category:
   One of: Smoke Test, Regression, Functional, Functionality Test, Integration, End-to-End, Security
-
-=== QUALITY REFERENCE — match this exact style ===
-
-Example test case for "Delete Institution":
-{{
-  "test_id": "TC-005",
-  "test_name": "Super Admin - Delete Institution",
-  "description": "Navigate to {target_url}.\\na. Enter username as <example_username>.\\nb. Enter password as <example_password>.\\nc. Click the Login button and wait for the dashboard to load.\\nd. Navigate to the Institutes section from the main menu.\\ne. Select an existing institution from the list.\\nf. Click the Delete button or icon for that institution.\\ng. Wait for the confirmation dialog to appear and click Confirm or Yes.\\nh. Verify the institution is removed from the list.\\ni. Confirm a success toast or message is shown.",
-  "expected_result": "Super Admin can delete an institution; the institution no longer appears in the institutes list and a success confirmation message is displayed.",
-  "priority": "High",
-  "category": "Functionality Test"
-}}
-
-Example test case for "Audit Trails Login Sessions":
-{{
-  "test_id": "TC-015",
-  "test_name": "Super Admin - Audit Trails Login Sessions",
-  "description": "Navigate to {target_url}.\\na. Enter username as <example_username>.\\nb. Enter password as <example_password>.\\nc. Click the Login button and wait for the dashboard to load.\\nd. Navigate to Audit Trails from the admin menu.\\ne. Click on the Login Sessions sub-section.\\nf. Wait for the session logs to load.\\ng. Verify the list shows user names, timestamps, IP addresses, and session statuses.\\nh. Apply a date filter and verify the results update to show only entries within that range.\\ni. Apply a user filter and verify only that user's sessions are shown.",
-  "expected_result": "Super Admin can view all login session audit logs with accurate user, timestamp, and IP details; date and user filters work correctly and return relevant results.",
-  "priority": "High",
-  "category": "Security"
-}}
 
 Live page context:
 {page_hint}
@@ -546,11 +601,25 @@ def _generate_with_llm(
         user_prompt=user_prompt,
     )
 
+    # FIX 4: Embed credential values in the system prompt too, so even
+    # multi-turn model reasoning cannot forget them.
+    username = auth_context.get("username")
+    password = auth_context.get("password")
+    cred_system_hint = ""
+    if username or password:
+        u = username or "<enter_username>"
+        p = password or "<enter_password>"
+        cred_system_hint = (
+            f" IMPORTANT: Every test case description MUST include a step "
+            f"'Enter username as {u}.' and a step 'Enter password as {p}.' "
+            f"immediately after navigating to the URL. Never omit or alter these values."
+        )
+
     system_base = (
         "You are a senior QA engineer. You output ONLY valid JSON. "
         "No markdown, no prose, no code fences. "
-        "Every test case description must have specific, actionable, numbered UI steps - "
-        "never generic placeholders."
+        "Every test case description must have specific, actionable, lettered UI steps — "
+        f"never generic placeholders.{cred_system_hint}"
     )
     if user_prompt and user_prompt.strip():
         system_base += (
@@ -560,26 +629,21 @@ def _generate_with_llm(
 
     resp = client.chat.completions.create(
         model=model,
-        temperature=0.1,  # low temperature = consistent, structured output
+        temperature=0.1,
         max_tokens=16000,
         messages=[
-            {
-                "role": "system",
-                "content": system_base,
-            },
+            {"role": "system", "content": system_base},
             {"role": "user", "content": prompt},
         ],
     )
     text = (resp.choices[0].message.content or "").strip()
 
-    # Strip accidental markdown fences
     text = re.sub(r"^```(?:json)?\s*", "", text)
     text = re.sub(r"\s*```$", "", text)
 
     try:
         payload = json.loads(text)
     except json.JSONDecodeError:
-        # Last resort: find the JSON object
         m = re.search(r"\{.*\}", text, flags=re.DOTALL)
         if not m:
             raise ValueError(f"Model returned non-JSON output: {text[:300]}")
@@ -592,10 +656,9 @@ def _generate_with_llm(
 
 
 # ---------------------------------------------------------------------------
-# Fallback: context-aware test case generation (no LLM)
+# Fallback templates
 # ---------------------------------------------------------------------------
 
-# Generic fallback templates; app-specific steps should come from spreadsheet descriptions.
 _STEP_TEMPLATES: Dict[str, List[str]] = {
     "list": [
         "Open the target module for {feature}.",
@@ -626,9 +689,9 @@ _STEP_TEMPLATES: Dict[str, List[str]] = {
         "Verify success confirmation is visible.",
     ],
     "auth": [
-        "Complete the authentication flow for {feature}.",
-        "Verify login/verification success state appears.",
-        "Confirm post-login navigation is available.",
+        "Verify post-login navigation is available.",
+        "Confirm the expected dashboard or home screen is shown.",
+        "Check that user profile/role indicators are correct.",
     ],
     "config": [
         "Open configuration/settings for {feature}.",
@@ -759,14 +822,20 @@ def _build_fallback_description(
     template_key: str,
     source_description: Optional[str] = None,
 ) -> str:
-    steps = _STEP_TEMPLATES.get(template_key, _STEP_TEMPLATES["generic"])
+    """
+    FIX 5: Always inject concrete auth steps (with real credential values)
+    before any feature-specific steps, regardless of template_key.
+    """
     lines = [f"Navigate to {target_url}."]
     letter = ord("a")
 
+    # Always inject auth steps with real values
     auth_steps = _build_auth_steps(auth_context)
     for s in auth_steps:
         lines.append(f"{chr(letter)}. {s}")
         letter += 1
+
+    steps = _STEP_TEMPLATES.get(template_key, _STEP_TEMPLATES["generic"])
 
     source_steps: List[str] = []
     if source_description:
@@ -781,17 +850,21 @@ def _build_fallback_description(
             cl = c.lower()
             if cl.startswith("navigate to"):
                 continue
+            # Skip any step that looks like an auth step — we already emitted them above
             if any(
                 k in cl
                 for k in [
-                    "enter username as",
-                    "enter password as",
+                    "enter username",
+                    "enter password",
                     "login button",
                     "ask for the name",
                     "ask for email",
                     "ask for otp",
-                    "successful verification",
-                    "login-complete style confirmation",
+                    "enter the name",
+                    "enter the email",
+                    "enter the otp",
+                    "complete the login",
+                    "complete the app auth",
                 ]
             ):
                 continue
@@ -799,7 +872,6 @@ def _build_fallback_description(
 
     steps_to_use = source_steps if source_steps else steps
     for step in steps_to_use:
-        # Protect against literal braces in spreadsheet text (e.g. JSON snippets).
         try:
             filled = step.format(feature=feature, target_url=target_url)
         except (KeyError, ValueError):
@@ -849,10 +921,6 @@ def _fallback_generate(
     role_filter: Optional[str],
     max_cases: int,
 ) -> List[Dict[str, str]]:
-    """
-    Context-aware fallback that generates specific test cases from source row data.
-    Much better than generic placeholders — uses feature-specific step templates.
-    """
     cases: List[Dict[str, str]] = []
     counter = 1
     has_role_column = any((row.get("Role", "") or "").strip() for row in rows)
@@ -861,9 +929,8 @@ def _fallback_generate(
         if counter > max_cases:
             break
 
-        # Try to extract a meaningful feature name from the row
         role = (row.get("Role", "") or "").strip()
-        if role in {"”", '"', "''", "ditto", "same"}:
+        if role in {"\u201c", '"', "''", "ditto", "same"}:
             role = ""
 
         if has_role_column and not role:
@@ -878,7 +945,6 @@ def _fallback_generate(
                 source_description = val
                 break
 
-        # If role_filter is set, skip rows that don't match
         if role_filter:
             if role_filter.lower() not in role.lower():
                 continue
@@ -955,6 +1021,7 @@ def _normalize_cases(
     target_url: str,
     auth_context: Optional[Dict[str, Optional[str]]] = None,
 ) -> pd.DataFrame:
+
     def _format_lettered_steps(description_text: str) -> str:
         lines = [line.strip() for line in description_text.splitlines() if line.strip()]
         if not lines:
@@ -973,112 +1040,69 @@ def _normalize_cases(
         numbered = [f"{chr(97 + i)}. {step}" for i, step in enumerate(cleaned_steps[:26])]
         return "\n".join([head] + numbered) if numbered else head
 
-    def _sanitize_auth_placeholders(description_text: str) -> str:
+    # ---------------------------------------------------------------------------
+    # FIX 6: Post-process normalisation — guarantee credentials appear in output
+    # ---------------------------------------------------------------------------
+
+    def _ensure_auth_steps_present(description_text: str) -> str:
+        """
+        After the LLM/fallback generates the description, scan for missing
+        credential lines and inject them immediately after the Navigate line
+        if they're absent.  This is a final safety net.
+        """
         if not auth_context:
             return description_text
-        mode = auth_context.get("mode")
-        desc = description_text
-        replacements = {
-            "<valid_username>": auth_context.get("username") or "<enter_username>",
-            "<valid_password>": auth_context.get("password") or "<enter_password>",
+
+        username = auth_context.get("username")
+        password = auth_context.get("password")
+
+        if not username and not password:
+            return description_text
+
+        lines = description_text.splitlines()
+        nav_line = lines[0] if lines else f"Navigate to {target_url}."
+        rest = lines[1:]
+
+        # Strip existing lettered steps so we can re-letter cleanly
+        step_bodies: List[str] = []
+        for raw in rest:
+            body = re.sub(r"^[a-zA-Z]\.\s*", "", raw.strip()).strip()
+            if body:
+                step_bodies.append(body)
+
+        # Check if credentials are already present (case-insensitive)
+        blob = " ".join(step_bodies).lower()
+        needs_username = username and ("enter username" not in blob)
+        needs_password = password and ("enter password" not in blob)
+        has_login_click = "click the login" in blob or "login button" in blob
+
+        # Build canonical auth block
+        canonical_auth = _build_auth_steps(auth_context)
+
+        if not (needs_username or needs_password):
+            # Nothing missing — just re-letter for consistency
+            return _format_lettered_steps(description_text)
+
+        # Separate pre-auth steps (shouldn't exist, but be safe) and post-auth steps
+        auth_keywords = {
+            "enter username", "enter password", "enter name", "enter email",
+            "enter otp", "click the login", "login button", "wait for the dashboard",
+            "wait for the home", "authentication flow",
         }
-        for old, new in replacements.items():
-            desc = desc.replace(old, str(new))
 
-        if mode == "name_email_otp":
-            def _extract_widget_value(field: str, fallback: str) -> str:
-                patterns = {
-                    "name": [
-                        r"name[^\n]*?give it as\s*([^\n,]+)",
-                        r"name[^\n]*?as\s*([^\n,]+)",
-                    ],
-                    "email": [
-                        r"email[^\n]*?give(?:\s+it)?\s+as\s*([^\n,]+)",
-                        r"email[^\n]*?as\s*([^\n,]+)",
-                        r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})",
-                    ],
-                    "otp": [
-                        r"otp[^\n]*?give(?:\s+it)?\s+as\s*([0-9]{4,8})",
-                        r"otp[^\n]*?as\s*([0-9]{4,8})",
-                    ],
-                }
-                for pat in patterns[field]:
-                    match = re.search(pat, desc, flags=re.IGNORECASE)
-                    if match:
-                        value = match.group(1).strip(" '\".,")
-                        value = re.sub(r"\s+in the\s+.+$", "", value, flags=re.IGNORECASE)
-                        value = re.sub(r"\s+field.*$", "", value, flags=re.IGNORECASE)
-                        value = re.sub(r"\s+and wait.*$", "", value, flags=re.IGNORECASE)
-                        return value.strip(" '\".,")
-                return fallback
+        non_auth_steps: List[str] = []
+        for body in step_bodies:
+            bl = body.lower()
+            if any(kw in bl for kw in auth_keywords):
+                continue  # remove stale/incorrect auth step
+            non_auth_steps.append(body)
 
-            name_val = _extract_widget_value("name", str(auth_context.get("name") or "<enter_name>"))
-            email_val = _extract_widget_value("email", str(auth_context.get("email") or "<enter_email>"))
-            otp_val = _extract_widget_value("otp", str(auth_context.get("otp") or "<enter_otp>"))
-
-            lines = [line.strip() for line in desc.splitlines() if line.strip()]
-            non_auth_steps: List[str] = []
-            for raw_line in lines[1:]:
-                step = re.sub(r"^[a-zA-Z]\.\s*", "", raw_line).strip()
-                sl = step.lower()
-                if any(
-                    phrase in sl
-                    for phrase in [
-                        "enter username",
-                        "enter password",
-                        "click the login button",
-                        "ask for the name",
-                        "ask for email",
-                        "ask for otp",
-                        "enter the name",
-                        "enter the email",
-                        "enter the otp",
-                        "complete the login process",
-                    ]
-                ):
-                    continue
-                if "successful verification" in sl and "after verification" not in sl:
-                    continue
-                if "documents folder icon" in sl or "validate content button" in sl:
-                    continue
-                non_auth_steps.append(step)
-
-            normalized_followups: List[str] = []
-            lower_desc = desc.lower()
-            if (
-                "back action" in lower_desc
-                or "in-widget back" in lower_desc
-                or ("back" in lower_desc and "widget" in lower_desc)
-            ):
-                normalized_followups.append(
-                    "After verification, perform the post-login navigation: use the in-widget back action to move out of the current conversation panel."
-                )
-            if "documents" in lower_desc or "folder icon" in lower_desc:
-                normalized_followups.append(
-                    "Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents."
-                )
-            if "validate content" in lower_desc:
-                normalized_followups.append(
-                    "Wait until the file list is visible, then click Validate Content for the first file only."
-                )
-
-            canonical_steps = [
-                f"It will first ask for the name, give it as {name_val}.",
-                f"Later it will ask for email, give {email_val}.",
-                f"Then it will ask for otp give it as {otp_val}, and submit and wait for response and then do next step.",
-                "Confirm the widget shows successful verification or login-complete style confirmation text.",
-            ]
-
-            merged_steps: List[str] = []
-            for step in canonical_steps + normalized_followups + non_auth_steps:
-                if step and step not in merged_steps:
-                    merged_steps.append(step)
-
-            merged_steps.append("Mark this complete case success only if all the steps are completed and passed.")
-            desc = f"Navigate to {target_url}.\n" + "\n".join(
-                f"{chr(97 + idx)}. {step}" for idx, step in enumerate(merged_steps[:26])
-            )
-        return _format_lettered_steps(desc)
+        # Reconstruct: nav → auth steps → feature steps
+        all_steps = canonical_auth + non_auth_steps
+        new_lines = [nav_line] + [
+            f"{chr(97 + i)}. {s}" for i, s in enumerate(all_steps[:26])
+        ]
+        return "\n".join(new_lines)
 
     normalized: List[Dict[str, str]] = []
     for i, case in enumerate(cases, start=1):
@@ -1089,10 +1113,12 @@ def _normalize_cases(
         description = str(case.get("description") or "").strip()
         if not description:
             description = f"Navigate to {target_url}. Perform the described UI flow and validate results."
-        # Ensure it starts with the target URL
         if not description.lower().startswith("navigate to"):
             description = f"Navigate to {target_url}.\n{description}"
-        description = _sanitize_auth_placeholders(description)
+
+        # Apply the auth-guarantee pass
+        description = _ensure_auth_steps_present(description)
+        description = _format_lettered_steps(description)
 
         priority = str(case.get("priority") or "Medium").strip().title()
         if priority not in {"Critical", "High", "Medium", "Low"}:
@@ -1100,13 +1126,8 @@ def _normalize_cases(
 
         category = str(case.get("category") or "Functional").strip()
         allowed_categories = {
-            "Smoke Test",
-            "Regression",
-            "Functionality Test",
-            "Functional",
-            "Integration",
-            "End-to-End",
-            "Security",
+            "Smoke Test", "Regression", "Functionality Test", "Functional",
+            "Integration", "End-to-End", "Security",
         }
         if category not in allowed_categories:
             category = "Functional"
@@ -1117,12 +1138,7 @@ def _normalize_cases(
                 "test_name": str(case.get("test_name") or f"Generated Test {i}").strip(),
                 "description": description,
                 "expected_result": str(
-                    case.get("expected_result")
-                    or (
-                        "Authentication/verification completes successfully and the expected post-login state is visible."
-                        if auth_context and auth_context.get("mode") == "name_email_otp"
-                        else "Expected behavior is observed without errors."
-                    )
+                    case.get("expected_result") or "Expected behavior is observed without errors."
                 ).strip(),
                 "priority": priority,
                 "category": category,
@@ -1136,7 +1152,6 @@ def _normalize_cases(
 
 
 def _write_csv(df: pd.DataFrame, out_path: Path) -> None:
-    """Write CSV with proper quoting so multi-line descriptions survive."""
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
@@ -1171,13 +1186,10 @@ def generate_test_cases(
     max_cases: int = Form(default=50, description="Maximum number of test cases to generate (1–200)."),
     input_file: Optional[UploadFile] = File(default=None),
 ) -> Dict[str, Any]:
-    # --- Validate target URL ---
     if not target_url.startswith(("http://", "https://")):
         raise HTTPException(status_code=400, detail="target_url must start with http:// or https://")
 
-    # --- Read source data ---
     if not (spreadsheet_url or input_file or csv_path):
-        # no external spreadsheet or file provided; allow a single prompt row
         if user_prompt and user_prompt.strip():
             df = pd.DataFrame([{"Description": user_prompt.strip()}])
         else:
@@ -1187,15 +1199,15 @@ def generate_test_cases(
             )
     else:
         df = _read_source(spreadsheet_url=spreadsheet_url, input_file=input_file, csv_path=csv_path)
+
     rows = _build_source_rows(df)
     if not rows:
         raise HTTPException(status_code=400, detail="Source data is empty after parsing.")
+
     auth_context = _infer_auth_context(rows=rows, username=username, password=password)
     url_probe = _inspect_target_url(target_url)
-
     max_cases = max(1, min(max_cases, 200))
 
-    # --- Generate test cases (LLM first, fallback second) ---
     generation_mode = "llm"
     try:
         generated_cases = _generate_with_llm(
@@ -1208,7 +1220,6 @@ def generate_test_cases(
             user_prompt=user_prompt,
         )
     except Exception as llm_error:
-        # Log the error so operators can see why LLM failed
         print(f"[WARN] LLM generation failed ({llm_error}), switching to context-aware fallback.")
         generation_mode = "fallback"
         generated_cases = _fallback_generate(
@@ -1219,7 +1230,6 @@ def generate_test_cases(
             max_cases=max_cases,
         )
 
-    # --- Normalise & write ---
     out_df = _normalize_cases(generated_cases, target_url=target_url, auth_context=auth_context)
     safe_name = _slugify_filename(output_filename)
     out_path = OUTPUT_DIR / safe_name
@@ -1249,22 +1259,18 @@ import sys
 async def run_runner_command(runner_command: str = Form(...)):
     """Execute the runner command and return results."""
     try:
-        # Extract the CSV path from the command
-        # Command format: "python main.py -i path/to/file.csv -y"
         match = re.search(r'-i\s+"?([^"]+)"?', runner_command)
         if not match:
             raise HTTPException(status_code=400, detail="Invalid runner command format")
-        
+
         csv_path = match.group(1)
         csv_file = Path(csv_path)
-        
+
         if not csv_file.exists():
             raise HTTPException(status_code=404, detail=f"CSV file not found: {csv_path}")
-        
-        # Run the command with timeout
+
         import platform
         if platform.system() == "Windows":
-            # On Windows, use shell=True for proper command parsing
             result = subprocess.run(
                 runner_command,
                 shell=True,
@@ -1272,11 +1278,10 @@ async def run_runner_command(runner_command: str = Form(...)):
                 text=True,
                 encoding="utf-8",
                 errors="replace",
-                timeout=300,  # 5 minute timeout
-                cwd=str(Path.cwd())
+                timeout=300,
+                cwd=str(Path.cwd()),
             )
         else:
-            # On Unix/Linux/Mac
             result = subprocess.run(
                 runner_command.split(),
                 capture_output=True,
@@ -1284,21 +1289,21 @@ async def run_runner_command(runner_command: str = Form(...)):
                 encoding="utf-8",
                 errors="replace",
                 timeout=300,
-                cwd=str(Path.cwd())
+                cwd=str(Path.cwd()),
             )
-        
+
         if result.returncode != 0:
             raise HTTPException(
                 status_code=500,
-                detail=f"Runner execution failed: {result.stderr or result.stdout}"
+                detail=f"Runner execution failed: {result.stderr or result.stdout}",
             )
-        
+
         return {
             "status": "ok",
             "message": "Test execution completed successfully",
             "stdout": result.stdout,
             "stderr": result.stderr,
-            "csv_path": csv_path
+            "csv_path": csv_path,
         }
     except subprocess.TimeoutExpired:
         raise HTTPException(status_code=504, detail="Test execution timed out after 5 minutes")
@@ -1307,7 +1312,7 @@ async def run_runner_command(runner_command: str = Form(...)):
 
 
 # ---------------------------------------------------------------------------
-# Register shared helpers with the project API module & mount router
+# Register shared helpers
 # ---------------------------------------------------------------------------
 
 register_dependencies(

@@ -1,0 +1,9 @@
+{
+  "name": "uitest-lighthouse-runner",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.6.0"
+  }
+}

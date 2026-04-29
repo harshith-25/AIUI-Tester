@@ -1,19 +1,6 @@
-"test_id","test_name","description","expected_result","priority","category"
-"TC-001","Widget - Login Verification","Navigate to https://silfratech.in/miraq/v4/.
-a. It will first ask for the name, give it as Harshith S.
-b. Later it will ask for email, give silfra.harshith@gmail.com.
-c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
-d. Confirm the widget shows successful verification or login-complete style confirmation text.
-e. Click the Submit button and wait for the response.
-f. Mark this complete case success only if all the steps are completed and passed.","verification","Critical","Smoke Test"
-"TC-002","Widget - Validate Content in Documents Folder","Navigate to https://silfratech.in/miraq/v4/.
-a. It will first ask for the name, give it as Harshith S.
-b. Later it will ask for email, give silfra.harshith@gmail.com.
-c. Then it will ask for otp give it as 123456, and submit and wait for response and then do next step.
-d. Confirm the widget shows successful verification or login-complete style confirmation text.
-e. After verification, perform the post-login navigation: use the in-widget back action to move out of the current conversation panel.
-f. Then click the folder icon (Documents) in the bottom widget toolbar, next to the chat icon, and open Documents.
-g. Wait until the file list is visible, then click Validate Content for the first file only.
-h. Wait for the file list to load within the Documents folder.
-i. Wait for the validation process to complete and verify that a success message is displayed.
-j. Mark this complete case success only if all the steps are completed and passed.","verification","High","Functionality Test"
+TC No.,Description,Priority,Severity
+TC-001,"Navigate to https://silfratech.in/miraq-expense-claim, and in the users click on Priya Mehta and then in Legacy and MiraQ option choose MiraQ and then click on 'I want to claim expense' and wait for a second and then add something similar to this 'On 2 March 2026 spent 800 on cab to airport, Ate lunch of 200 today then yesterday booked a cab for 500, Two days ago spent 300 on fuel and day before yesterday hotel 1200, Fuel for bike 500, parking charges 100' and then wait for second and click on the skip button in next chat message and in the chat input type 'confirm' and click on send button",High,Critical
+TC-002,"Navigate to https://silfratech.in/miraq-expense-claim, and in the users click on Priya Mehta and then in Legacy and MiraQ option choose MiraQ and then click on 'I want to claim expense' and wait for a second and then add something similar to this 'On 5 March 2026 spent 1200 on flight tickets, Had dinner costing 350 and breakfast 150, Yesterday spent 400 on local transport and 250 on snacks, Three days ago hotel booking was 2000 and fuel cost 600' and then wait for a second and click on the skip button in next chat message and in the chat input type 'confirm' and click on send button",High,Critical
+TC-003,"Navigate to https://silfratech.in/miraq-expense-claim, and in the users click on Priya Mehta and then in Legacy and MiraQ option choose MiraQ and then click on 'I want to claim expense' and wait for a second and then add something similar to this 'On 10 March 2026 spent 700 on office supplies, Paid 300 for lunch meeting and 200 for parking, Yesterday spent 900 on client dinner and 150 on coffee, Two days ago spent 450 on fuel and 800 on cab rides' and then wait for a second and click on the skip button in next chat message and in the chat input type 'confirm' and click on send button",High,Critical
+TC-004,"Navigate to https://silfratech.in/miraq-expense-claim, and in the users click on Rajesh Kumar who is manager and click on 'I want to approve a claim' and Approve first one you get in the list",High,High
+TC-005,"Navigate to https://silfratech.in/miraq-expense-claim, and in the users click on Rajesh Kumar who is manager and click on 'Show pending claims' and click on the Reject button of the first claim",High,High

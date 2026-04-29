@@ -722,6 +722,346 @@ def delete_test_case(project_id: str, test_id: str):
     finally:
         db.close()
 
+LIGHTHOUSE_REPORTS_DIR = Path("bulk_lighthouse_reports")
+
+
+class LighthouseRunRequest(BaseModel):
+    url: str
+
+
+@router.post("/lighthouse/run")
+async def run_lighthouse(body: LighthouseRunRequest):
+    """
+    Start a Lighthouse audit + real browser page-load measurement.
+
+    Uses RemoteBrowserManager (same flow as /projects/{id}/run) to open
+    the user's Chrome via the extension, navigate to the URL, extract
+    performance.timing, then runs the Lighthouse Node.js subprocess
+    and merges the page-load metrics into the final report.
+
+    The frontend must connect a BrowserBridge WebSocket to
+    ``/ws/browser/{execution_id}`` so commands relay to the extension.
+    """
+    if not body.url.strip():
+        raise HTTPException(status_code=400, detail="URL is required")
+
+    exec_id = uuid.uuid4().hex[:8]
+    report_id = exec_id
+
+    # Create async queues — same pattern as run_project_tests
+    command_queue = asyncio.Queue()
+    response_queue = asyncio.Queue()
+
+    _mark_execution(
+        exec_id,
+        status="queued",
+        type="lighthouse",
+        url=body.url.strip(),
+        started_at=datetime.now().isoformat(),
+        progress=0,
+        report_id=report_id,
+        command_queue=command_queue,
+        response_queue=response_queue,
+    )
+
+    async def _lighthouse_background(execution_id: str, url: str, rid: str):
+        """Background: open browser via Chrome Extension, measure load, run Lighthouse."""
+        from browser.remote_browser_manager import RemoteBrowserManager
+
+        rec = EXECUTIONS.get(execution_id)
+        cmd_q = rec["command_queue"]
+        resp_q = rec["response_queue"]
+
+        browser = RemoteBrowserManager(
+            test_id=rid,
+            command_queue=cmd_q,
+            response_queue=resp_q,
+        )
+
+        page_load_result = {}
+
+        try:
+            _mark_execution(execution_id, status="running", progress=5)
+
+            LIGHTHOUSE_REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+            runner_script = Path(__file__).parent / "lighthouse-runner.mjs"
+            loop = asyncio.get_event_loop()
+
+            # ── Step 1: Open browser via extension & measure page load ──
+            _mark_execution(execution_id, progress=10)
+            await browser.start()
+
+            _mark_execution(execution_id, progress=15)
+            await browser.navigate(url)
+
+            # Wait for page to fully settle
+            await browser.wait(3)
+
+            # Extract performance timing from the real browser
+            _mark_execution(execution_id, progress=20)
+            try:
+                timings = await browser.evaluate_js("""
+                    (() => {
+                        const nav = performance.getEntriesByType('navigation')[0];
+                        if (nav) {
+                            return JSON.stringify({
+                                pageLoadTimeMs: Math.round(nav.loadEventEnd - nav.startTime),
+                                domContentLoadedMs: Math.round(nav.domContentLoadedEventEnd - nav.startTime),
+                                domInteractiveMs: Math.round(nav.domInteractive - nav.startTime),
+                                responseTimeMs: Math.round(nav.responseEnd - nav.requestStart),
+                                resourceCount: performance.getEntriesByType('resource').length
+                            });
+                        }
+                        const t = performance.timing;
+                        return JSON.stringify({
+                            pageLoadTimeMs: t.loadEventEnd > 0 ? (t.loadEventEnd - t.navigationStart) : null,
+                            domContentLoadedMs: t.domContentLoadedEventEnd > 0 ? (t.domContentLoadedEventEnd - t.navigationStart) : null,
+                            domInteractiveMs: t.domInteractive > 0 ? (t.domInteractive - t.navigationStart) : null,
+                            responseTimeMs: t.responseEnd > 0 ? (t.responseEnd - t.requestStart) : null,
+                            resourceCount: performance.getEntriesByType('resource').length
+                        });
+                    })()
+                """)
+                if timings:
+                    if isinstance(timings, str):
+                        page_load_result = json.loads(timings)
+                    elif isinstance(timings, dict):
+                        page_load_result = timings
+            except Exception as e:
+                print(f"[Lighthouse] Failed to extract timings from extension browser: {e}")
+
+            # Close the extension browser
+            try:
+                await browser.close()
+            except Exception:
+                pass
+
+            page_load_ms = page_load_result.get("pageLoadTimeMs")
+
+            # ── Step 2: Lighthouse audit ───────────────────────────────
+            _mark_execution(execution_id, progress=30)
+            cmd = [
+                "node",
+                str(runner_script),
+                url,
+                str(LIGHTHOUSE_REPORTS_DIR),
+                rid,
+                "performance",
+                "best-practices",
+            ]
+
+            proc = await loop.run_in_executor(
+                None,
+                lambda: subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=180,
+                    cwd=str(Path(__file__).parent),
+                )
+            )
+
+            _mark_execution(execution_id, progress=85)
+
+            if proc.returncode != 0:
+                error_msg = proc.stderr.strip() if proc.stderr else "Lighthouse process failed"
+                try:
+                    error_data = json.loads(error_msg)
+                    error_msg = error_data.get("message", error_msg)
+                except (json.JSONDecodeError, ValueError):
+                    pass
+                _mark_execution(
+                    execution_id,
+                    status="failed",
+                    progress=100,
+                    message=error_msg,
+                    finished_at=datetime.now().isoformat(),
+                )
+                return
+
+            # Parse Lighthouse JSON summary
+            stdout_text = proc.stdout.strip() if proc.stdout else ""
+            try:
+                summary = json.loads(stdout_text)
+            except (json.JSONDecodeError, ValueError):
+                _mark_execution(
+                    execution_id,
+                    status="failed",
+                    progress=100,
+                    message=f"Failed to parse Lighthouse output: {stdout_text[:300]}",
+                    finished_at=datetime.now().isoformat(),
+                )
+                return
+
+            # ── Step 3: Merge extension browser page-load metrics ──────
+            if "metrics" not in summary:
+                summary["metrics"] = {}
+
+            if page_load_ms is not None and page_load_ms > 0:
+                summary["metrics"]["pageLoadTime"] = {
+                    "value": page_load_ms,
+                    "displayValue": f"{round(page_load_ms / 1000, 2)} s",
+                    "score": None,
+                }
+
+            for extra_key in ["domContentLoadedMs", "domInteractiveMs", "resourceCount"]:
+                val = page_load_result.get(extra_key)
+                if val is not None:
+                    summary["metrics"][extra_key] = {
+                        "value": val,
+                        "displayValue": f"{round(val / 1000, 2)} s" if extra_key != "resourceCount" else str(val),
+                        "score": None,
+                    }
+
+            _mark_execution(
+                execution_id,
+                status="completed",
+                progress=100,
+                report_id=rid,
+                score=summary.get("score"),
+                metrics=summary.get("metrics", {}),
+                categories=summary.get("categories", {}),
+                finished_at=datetime.now().isoformat(),
+            )
+
+        except subprocess.TimeoutExpired:
+            _mark_execution(
+                execution_id,
+                status="failed",
+                progress=100,
+                message="Lighthouse audit timed out after 180 seconds",
+                finished_at=datetime.now().isoformat(),
+            )
+        except Exception as e:
+            import traceback
+            err_str = traceback.format_exc()
+            print("Lighthouse background error:", err_str)
+            _mark_execution(
+                execution_id,
+                status="failed",
+                progress=100,
+                message=repr(e) + "\n" + err_str,
+                finished_at=datetime.now().isoformat(),
+            )
+
+    asyncio.create_task(_lighthouse_background(exec_id, body.url.strip(), report_id))
+    return {"status": "started", "execution_id": exec_id, "report_id": report_id}
+
+
+
+
+@router.get("/lighthouse/report/{report_id}")
+def get_lighthouse_html_report(report_id: str):
+    """Serve the Lighthouse HTML report — identical to Chrome DevTools output."""
+    # Sanitize report_id to prevent path traversal
+    safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
+    file_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.report.html"
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Lighthouse report not found")
+    return FileResponse(path=str(file_path), media_type="text/html")
+
+
+@router.get("/lighthouse/json/{report_id}")
+def get_lighthouse_json_report(report_id: str):
+    """Serve the raw Lighthouse JSON result (LHR)."""
+    safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
+    file_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.report.json"
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Lighthouse JSON report not found")
+    return FileResponse(path=str(file_path), media_type="application/json")
+
+
+@router.post("/lighthouse/page-load")
+async def measure_page_load(url: str = Form(...)):
+    """Measure the exact time it takes to fully load all elements on a page."""
+    try:
+        from playwright.async_api import async_playwright
+        import time
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
+            start_time = time.time()
+            # networkidle ensures all dynamic elements and resources have finished loading
+            await page.goto(url, wait_until="networkidle", timeout=60000)
+            end_time = time.time()
+            await browser.close()
+            return {"status": "ok", "pageLoadTimeMs": int((end_time - start_time) * 1000)}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.get("/lighthouse/history")
+def get_lighthouse_history():
+    """List all past Lighthouse reports."""
+    if not LIGHTHOUSE_REPORTS_DIR.exists():
+        return []
+    
+    reports = []
+    for file in LIGHTHOUSE_REPORTS_DIR.glob("*.report.json"):
+        try:
+            with open(file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            
+            url = data.get("finalUrl") or data.get("requestedUrl") or "Unknown URL"
+            perf_score = None
+            if "categories" in data and "performance" in data["categories"]:
+                s = data["categories"]["performance"].get("score")
+                if s is not None:
+                    perf_score = int(s * 100)
+            
+            metrics = {}
+            audits = data.get("audits", {})
+            metric_map = {
+                'first-contentful-paint': 'fcp',
+                'largest-contentful-paint': 'lcp',
+                'cumulative-layout-shift': 'cls',
+                'total-blocking-time': 'tbt',
+                'speed-index': 'si',
+                'interactive': 'tti',
+                'server-response-time': 'ttfb',
+            }
+            for audit_id, key in metric_map.items():
+                if audit_id in audits:
+                    audit = audits[audit_id]
+                    metrics[key] = {
+                        "value": audit.get("numericValue"),
+                        "displayValue": audit.get("displayValue", ""),
+                        "score": audit.get("score")
+                    }
+            
+            # Extract Full Page Load Time from observedLoad in metrics audit
+            try:
+                metrics_items = audits.get("metrics", {}).get("details", {}).get("items", [])
+                if metrics_items:
+                    observed_load = metrics_items[0].get("observedLoad")
+                    if observed_load is not None:
+                        metrics["pageLoadTime"] = {
+                            "value": round(observed_load),
+                            "displayValue": f"{round(observed_load / 1000, 1)} s",
+                            "score": None
+                        }
+            except Exception:
+                pass
+                    
+            report_id = file.name.replace(".report.json", "")
+            timestamp = datetime.fromtimestamp(file.stat().st_mtime).isoformat()
+            
+            reports.append({
+                "url": url,
+                "score": perf_score,
+                "reportId": report_id,
+                "metrics": metrics,
+                "timestamp": timestamp
+            })
+        except Exception:
+            continue
+            
+    reports.sort(key=lambda x: x["timestamp"], reverse=True)
+    return reports
+
+
 @router.post("/projects/{project_id}/import-test-cases")
 def import_test_cases(project_id: str, csv_path: str = Form(...)):
     """Import test cases from a CSV file into the project database."""

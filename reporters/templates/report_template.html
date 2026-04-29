@@ -177,16 +177,6 @@
         .collapsible:hover {
             background: #f3f4f6;
         }
-
-        .results-table td, .results-table th {
-            vertical-align: middle;
-        }
-
-        .results-table .col-long {
-            max-width: 340px;
-            white-space: normal;
-            word-break: break-word;
-        }
         
         @media print {
             .no-print {
@@ -343,54 +333,6 @@
         <!-- Test Results -->
         <div class="stat-card">
             <h5 class="mb-3"><i class="fas fa-list"></i> Test Results Details</h5>
-
-            <!-- Consolidated Table -->
-            <div class="table-responsive mb-4">
-                <table class="table table-sm table-striped table-hover results-table">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Test ID</th>
-                            <th>Test Name</th>
-                            <th>Status</th>
-                            <th>Duration</th>
-                            <th>Steps</th>
-                            <th>Validation</th>
-                            <th>Expected Result</th>
-                            <th>Actual Result</th>
-                            <th>Retries</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for test in suite.test_results %}
-                        <tr data-status="{{ test.status.value }}">
-                            <td><code>{{ test.test_id }}</code></td>
-                            <td>{{ test.test_name }}</td>
-                            <td>
-                                <span class="badge bg-{{ test.status|status_color }}">
-                                    {{ test.status.value.upper() }}
-                                </span>
-                            </td>
-                            <td>{{ test.duration_seconds|format_duration }}</td>
-                            <td>{{ test.passed_steps }}/{{ test.total_steps }}</td>
-                            <td>
-                                {% if test.validation_passed %}
-                                <span class="badge bg-success">Passed</span>
-                                {% else %}
-                                <span class="badge bg-danger">Failed</span>
-                                {% endif %}
-                            </td>
-                            <td class="col-long">{{ test.expected_result }}</td>
-                            <td class="col-long">{{ test.actual_result }}</td>
-                            <td>{{ test.retry_count }}</td>
-                            <td>{{ test.start_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                            <td>{{ test.end_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
             
             <!-- Filter Buttons -->
             <div class="btn-group mb-3 no-print" role="group">
@@ -474,7 +416,36 @@
                         </div>
                     </div>
                     
-                    <!-- Steps Details (Collapsible) -->
+                    <!-- Failure Reason (prominently visible for failed/error tests) -->
+                    {% if test.status.value in ['failed', 'error'] %}
+                    <div class="mb-3">
+                        <div class="alert alert-danger" style="border-left: 5px solid #dc3545;">
+                            <h6 class="alert-heading mb-2">
+                                <i class="fas fa-exclamation-circle"></i> Why This Test Failed
+                            </h6>
+                            {% set failed_steps = [] %}
+                            {% for step in test.step_results %}
+                                {% if step.status.value == 'failed' and step.error_message %}
+                                    {% if failed_steps.append(step) %}{% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if failed_steps %}
+                                {% for step in failed_steps %}
+                                <div class="mb-2 p-2" style="background: rgba(255,255,255,0.5); border-radius: 4px;">
+                                    <strong>Step {{ step.step_number }} ({{ step.action }}){% if step.target %} &rarr; <code>{{ step.target }}</code>{% endif %}:</strong>
+                                    <div class="mt-1" style="font-size: 0.9em;">{{ step.error_message }}</div>
+                                </div>
+                                {% endfor %}
+                            {% elif test.actual_result %}
+                                <div style="font-size: 0.9em;">{{ test.actual_result }}</div>
+                            {% else %}
+                                <div style="font-size: 0.9em;">No specific failure details available.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Steps Details (Auto-expanded for failed tests, collapsed for passed) -->
                     {% if test.step_results %}
                     <div class="collapsible" data-bs-toggle="collapse" data-bs-target="#steps-{{ loop.index }}">
                         <h6 class="mb-2">
@@ -482,14 +453,14 @@
                             Step Details ({{ test.step_results|length }})
                         </h6>
                     </div>
-                    <div class="collapse" id="steps-{{ loop.index }}">
+                    <div class="collapse {% if test.status.value in ['failed', 'error'] %}show{% endif %}" id="steps-{{ loop.index }}">
                         {% for step in test.step_results %}
                         <div class="step-item {{ step.status.value }}">
                             <div>
                                 <strong>Step {{ step.step_number }}:</strong>
                                 {{ step.action }}
                                 {% if step.target %}
-                                → <code>{{ step.target }}</code>
+                                &rarr; <code>{{ step.target }}</code>
                                 {% endif %}
                                 {% if step.value %}
                                 = "{{ step.value }}"
@@ -691,7 +662,6 @@
         // Filter tests
         function filterTests(status) {
             const cards = document.querySelectorAll('.test-card');
-            const rows = document.querySelectorAll('.results-table tbody tr');
             const buttons = document.querySelectorAll('.btn-group button');
             
             // Update active button
@@ -706,15 +676,6 @@
                     card.style.display = 'none';
                 }
             });
-
-            // Filter table rows
-            rows.forEach(row => {
-                if (status === 'all' || row.dataset.status === status) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
         }
         
         // Resolve asset path for both:
@@ -722,11 +683,11 @@
         // 2) report opened from project root (/index.html via Live Server)
         function resolveAssetPath(path) {
             if (!path) return path;
-            const normalized = String(path).replace(/\\/g, '/');
+            const normalized = String(path).replace(/\/g, '/');
             if (/^(https?:|file:|data:|\/)/i.test(normalized)) {
                 return normalized;
             }
-            const pagePath = window.location.pathname.replace(/\\/g, '/').toLowerCase();
+            const pagePath = window.location.pathname.replace(/\/g, '/').toLowerCase();
             if (pagePath.includes('/test_results/')) {
                 return normalized;
             }

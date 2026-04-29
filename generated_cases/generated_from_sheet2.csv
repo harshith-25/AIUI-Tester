@@ -71,8 +71,8 @@ i. Confirm the new user appears in the list.
 j. Edit the newly added user and modify their details.
 k. Save the changes and verify they persist after reload.","Super Admin can add a new hospital admin user and edit their details successfully, with changes persisting after reload.","High","Functionality Test"
 "TC-008","Super Admin - Delete User","Navigate to https://dev2.heartnetnetindiademo.in/connect.
-a. Enter username as i2iadmin.
-b. Enter password as i2iadmin.
+a. Enter username as admini2i.
+b. Enter password as admini2i.
 c. Click the Login button and wait for the dashboard to load.
 d. Navigate to the Users section from the main menu.
 e. Select an existing user from the list.
