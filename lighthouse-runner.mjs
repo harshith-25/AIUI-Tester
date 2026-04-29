@@ -43,6 +43,8 @@ async function run() {
         '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         '--disable-blink-features=AutomationControlled',
         '--js-flags="--max-old-space-size=4096"',
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--disk-cache-size=1',
       ]
     });
 
@@ -74,7 +76,16 @@ async function run() {
           'network-dependency-tree-insight',
           'render-blocking-insight',
           'third-parties-insight',
-          'viewport-insight'
+          'viewport-insight',
+          'optimized-images',
+          'uses-text-compression',
+          'unminified-css',
+          'unused-css-rules',
+          'render-blocking-resources',
+          'bf-cache',
+          'image-size-responsive',
+          'offscreen-images',
+          'uses-responsive-images'
         ],
         formFactor: 'desktop',
         screenEmulation: {
