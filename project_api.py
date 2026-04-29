@@ -787,54 +787,61 @@ async def run_lighthouse(body: LighthouseRunRequest):
             runner_script = Path(__file__).parent / "lighthouse-runner.mjs"
             loop = asyncio.get_event_loop()
 
-            # ── Step 1: Open browser via extension & measure page load ──
+            # ── Step 1 (Optional): Open browser via extension & measure page load ──
+            # If the Chrome Extension WebSocket is not connected, skip this step
+            # gracefully and rely solely on Lighthouse's own metrics.
             _mark_execution(execution_id, progress=10)
-            await browser.start()
-
-            _mark_execution(execution_id, progress=15)
-            await browser.navigate(url)
-
-            # Wait for page to fully settle
-            await browser.wait(3)
-
-            # Extract performance timing from the real browser
-            _mark_execution(execution_id, progress=20)
             try:
-                timings = await browser.evaluate_js("""
-                    (() => {
-                        const nav = performance.getEntriesByType('navigation')[0];
-                        if (nav) {
+                await browser.start()
+
+                _mark_execution(execution_id, progress=15)
+                await browser.navigate(url)
+
+                # Wait for page to fully settle
+                await browser.wait(3)
+
+                # Extract performance timing from the real browser
+                _mark_execution(execution_id, progress=20)
+                try:
+                    timings = await browser.evaluate_js("""
+                        (() => {
+                            const nav = performance.getEntriesByType('navigation')[0];
+                            if (nav) {
+                                return JSON.stringify({
+                                    pageLoadTimeMs: Math.round(nav.loadEventEnd - nav.startTime),
+                                    domContentLoadedMs: Math.round(nav.domContentLoadedEventEnd - nav.startTime),
+                                    domInteractiveMs: Math.round(nav.domInteractive - nav.startTime),
+                                    responseTimeMs: Math.round(nav.responseEnd - nav.requestStart),
+                                    resourceCount: performance.getEntriesByType('resource').length
+                                });
+                            }
+                            const t = performance.timing;
                             return JSON.stringify({
-                                pageLoadTimeMs: Math.round(nav.loadEventEnd - nav.startTime),
-                                domContentLoadedMs: Math.round(nav.domContentLoadedEventEnd - nav.startTime),
-                                domInteractiveMs: Math.round(nav.domInteractive - nav.startTime),
-                                responseTimeMs: Math.round(nav.responseEnd - nav.requestStart),
+                                pageLoadTimeMs: t.loadEventEnd > 0 ? (t.loadEventEnd - t.navigationStart) : null,
+                                domContentLoadedMs: t.domContentLoadedEventEnd > 0 ? (t.domContentLoadedEventEnd - t.navigationStart) : null,
+                                domInteractiveMs: t.domInteractive > 0 ? (t.domInteractive - t.navigationStart) : null,
+                                responseTimeMs: t.responseEnd > 0 ? (t.responseEnd - t.requestStart) : null,
                                 resourceCount: performance.getEntriesByType('resource').length
                             });
-                        }
-                        const t = performance.timing;
-                        return JSON.stringify({
-                            pageLoadTimeMs: t.loadEventEnd > 0 ? (t.loadEventEnd - t.navigationStart) : null,
-                            domContentLoadedMs: t.domContentLoadedEventEnd > 0 ? (t.domContentLoadedEventEnd - t.navigationStart) : null,
-                            domInteractiveMs: t.domInteractive > 0 ? (t.domInteractive - t.navigationStart) : null,
-                            responseTimeMs: t.responseEnd > 0 ? (t.responseEnd - t.requestStart) : null,
-                            resourceCount: performance.getEntriesByType('resource').length
-                        });
-                    })()
-                """)
-                if timings:
-                    if isinstance(timings, str):
-                        page_load_result = json.loads(timings)
-                    elif isinstance(timings, dict):
-                        page_load_result = timings
-            except Exception as e:
-                print(f"[Lighthouse] Failed to extract timings from extension browser: {e}")
+                        })()
+                    """)
+                    if timings:
+                        if isinstance(timings, str):
+                            page_load_result = json.loads(timings)
+                        elif isinstance(timings, dict):
+                            page_load_result = timings
+                except Exception as e:
+                    print(f"[Lighthouse] Failed to extract timings from extension browser: {e}")
 
-            # Close the extension browser
-            try:
-                await browser.close()
-            except Exception:
-                pass
+                # Close the extension browser
+                try:
+                    await browser.close()
+                except Exception:
+                    pass
+
+            except Exception as ext_err:
+                print(f"[Lighthouse] Chrome Extension not connected, skipping real-browser metrics: {ext_err}")
+                _mark_execution(execution_id, progress=25)
 
             page_load_ms = page_load_result.get("pageLoadTimeMs")
 

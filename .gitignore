@@ -8,6 +8,9 @@ screenshots/
 
 test_results
 
+__pycache__/
+*.pyc
+
 projects_db.json
 
 __pycache__
