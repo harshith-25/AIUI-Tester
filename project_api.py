@@ -894,7 +894,7 @@ async def run_lighthouse(body: LighthouseRunRequest):
                     env=sub_env,
                 )
                 try:
-                    stdout, stderr = process.communicate(timeout=180)
+                    stdout, stderr = process.communicate(timeout=300)
                     return {"returncode": process.returncode, "stdout": stdout, "stderr": stderr}
                 except subprocess.TimeoutExpired:
                     process.kill()
@@ -904,13 +904,16 @@ async def run_lighthouse(body: LighthouseRunRequest):
             result = await loop.run_in_executor(None, _run_lighthouse_subprocess)
 
             if result.get("timed_out"):
+                out_detail = result.get("stdout", "").strip()[:500]
                 err_detail = result.get("stderr", "").strip()[:500]
-                print(f"[Lighthouse] TIMEOUT - stderr: {err_detail}")
+                print(f"[Lighthouse] TIMEOUT (300s)")
+                print(f"[Lighthouse] Partial stdout: {out_detail}")
+                print(f"[Lighthouse] Partial stderr: {err_detail}")
                 _mark_execution(
                     execution_id,
                     status="failed",
                     progress=100,
-                    message=f"Lighthouse audit timed out after 180 seconds. stderr: {err_detail}",
+                    message=f"Lighthouse audit timed out after 300 seconds. Partial stderr: {err_detail}",
                     finished_at=datetime.now().isoformat(),
                 )
                 return

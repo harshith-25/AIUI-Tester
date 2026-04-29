@@ -44,7 +44,7 @@ async function run() {
     });
 
     const options = {
-      logLevel: 'error',
+      logLevel: 'info',
       output: ['json', 'html'],
       onlyCategories: categories,
       port: chrome.port,
