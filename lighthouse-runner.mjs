@@ -40,9 +40,6 @@ async function run() {
         '--no-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
-        '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        '--disable-blink-features=AutomationControlled',
-        '--js-flags="--max-old-space-size=4096"',
       ]
     });
 
@@ -52,49 +49,14 @@ async function run() {
       onlyCategories: categories,
       port: chrome.port,
       settings: {
-        maxWaitForLoad: 90000,
-        skipAudits: [
-          'full-page-screenshot', 
-          'screenshot-thumbnails', 
-          'final-screenshot',
-          'largest-contentful-paint-element', 
-          'layout-shifts', 
-          'lcp-lazy-loaded', 
-          'non-composited-animations', 
-          'prioritize-lcp-image',
-          'cls-culprits-insight',
-          'document-latency-insight',
-          'dom-size-insight',
-          'font-display-insight',
-          'forced-reflow-insight',
-          'image-delivery-insight',
-          'inp-breakdown-insight',
-          'lcp-breakdown-insight',
-          'lcp-discovery-insight',
-          'network-dependency-tree-insight',
-          'render-blocking-insight',
-          'third-parties-insight',
-          'viewport-insight',
-          'optimized-images',
-          'uses-text-compression',
-          'unminified-css',
-          'unused-css-rules',
-          'render-blocking-resources',
-          'bf-cache',
-          'image-size-responsive',
-          'offscreen-images',
-          'uses-responsive-images'
-        ],
         formFactor: 'desktop',
         screenEmulation: {
           mobile: false,
-          width: 1920,
-          height: 1080,
+          width: 1350,
+          height: 940,
           deviceScaleFactor: 1,
           disabled: false,
-        },
-        throttlingMethod: 'provided',
-        disableStorageReset: true,
+        }
       },
     };
 

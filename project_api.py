@@ -895,7 +895,7 @@ async def run_lighthouse(body: LighthouseRunRequest):
                     env=sub_env,
                 )
                 try:
-                    stdout, stderr = process.communicate(timeout=300)
+                    stdout, stderr = process.communicate(timeout=3000)
                     return {"returncode": process.returncode, "stdout": stdout, "stderr": stderr}
                 except subprocess.TimeoutExpired:
                     process.kill()
