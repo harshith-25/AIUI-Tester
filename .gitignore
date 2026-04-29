@@ -22,5 +22,5 @@ build/
 generated_cases/
 dist/
 lighthouse_reports/
-bulk_lighthouse_reports/
+# bulk_lighthouse_reports/
 node_modules/
