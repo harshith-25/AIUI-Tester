@@ -442,8 +442,8 @@ async def run_project_tests(
 
 @router.websocket("/ws/browser/{execution_id}")
 async def browser_ws(ws: WebSocket, execution_id: str):
-    """WebSocket relay between RemoteBrowserManager queues and the frontend."""
     await ws.accept()
+
     rec = EXECUTIONS.get(execution_id)
     if not rec or "command_queue" not in rec:
         await ws.send_json({"error": "No browser queues for this execution"})
@@ -453,26 +453,31 @@ async def browser_ws(ws: WebSocket, execution_id: str):
     cmd_q: asyncio.Queue = rec["command_queue"]
     resp_q: asyncio.Queue = rec["response_queue"]
 
+    print("✅ WS connected:", execution_id)
+
     try:
         while True:
+            # 1️⃣ Send command if exists
             try:
                 command = await asyncio.wait_for(cmd_q.get(), timeout=5.0)
+                await ws.send_json(command)
             except asyncio.TimeoutError:
-                try:
-                    await ws.send_json({"action": "ping"})
-                except Exception:
-                    break
-                continue
+                # 2️⃣ Send ping to keep connection alive
+                await ws.send_json({"type": "ping"})
 
-            await ws.send_json(command)
-            result = await ws.receive_json()
-            await resp_q.put(result)
+            # 3️⃣ Try receiving response (NON-BLOCKING SAFE)
+            try:
+                result = await asyncio.wait_for(ws.receive_json(), timeout=5.0)
+                await resp_q.put(result)
+            except asyncio.TimeoutError:
+                # No response → OK, continue loop
+                pass
+
     except WebSocketDisconnect:
-        pass
-    except Exception:
-        pass
+        print("❌ WS disconnected:", execution_id)
 
-
+    except Exception as e:
+        print("❌ WS error:", str(e))
 
 @router.get("/executions")
 def list_executions():
