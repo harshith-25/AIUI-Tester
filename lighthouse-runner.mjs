@@ -511,12 +511,10 @@ async function run() {
     }));
     process.exitCode = 1;
   } finally {
-    // Always kill Chrome — runs even on error paths
     if (chrome) {
       try { await chrome.kill(); } catch (_) { /* ignore */ }
     }
   }
-  process.exit(0);
 }
 
 run();
