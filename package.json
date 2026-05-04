@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "chrome-launcher": "^1.1.2",
+    "chrome-remote-interface": "^0.34.0",
     "lighthouse": "^12.6.0"
   }
 }

@@ -1,0 +1,14 @@
+URL,Status Code,MIME Type,Error Type
+https://new.conceptsurfaces.com/wp-content/uploads/2025/12/Concept-Surfaces_PETUNIA_Breeze-Flat.tif,200,image/tiff,Slow Resource (30.8s to fully load)
+https://new.conceptsurfaces.com/wp-content/uploads/2025/12/Concept-Surfaces_PETUNIA_Breeze-Flat_reflective.tif,200,image/tiff,Slow Resource (30.3s to fully load)
+https://new.conceptsurfaces.com/wp-content/uploads/2025/12/Concept-Surfaces_PETUNIA_Frost-Flat.tif,200,image/tiff,Slow Resource (30.6s to fully load)
+blob:https://new.conceptsurfaces.com/2ec4ad71-4e4b-4fc7-b589-b5f77ce27f6b,timeout,Script,"No Response (31s, server never responded)"
+https://www.youtube.com/embed/rSVJkN3927A,200,text/html,"Download Incomplete (25s elapsed, body not received)"
+https://www.google.com/recaptcha/api2/anchor?ar=1&k=6Ld7LXIsAAAAAEHt1uL9yTXKZL38FvQs2_4oSXEu&co=aHR0cHM6Ly9uZXcuY29uY2VwdHN1cmZhY2VzLmNvbTo0NDM.&hl=en&v=gTpTIWhbKpxADzTzkcabhXN4&size=invisible&anchor-ms=20000&execute-ms=30000&cb=o5lwyw9r9rob,200,text/html,"Download Incomplete (20s elapsed, body not received)"
+https://new.conceptsurfaces.com/wp-content/uploads/2025/11/FolataFieldCanva-1-scaled-1-300x300.jpg,timeout,Image,"No Response (16s, server never responded)"
+https://new.conceptsurfaces.com/wp-content/uploads/2025/11/EraFieldCanva-1-scaled-1-300x300.jpg,timeout,Image,"No Response (16s, server never responded)"
+https://www.google.com/recaptcha/api2/clr?k=6Ld7LXIsAAAAAEHt1uL9yTXKZL38FvQs2_4oSXEu,failed,unknown,net::ERR_CONNECTION_CLOSED
+https://new.conceptsurfaces.com/wp-admin/admin-ajax.php,timeout,XHR,"No Response (7s, server never responded)"
+https://www.google.com/recaptcha/api2/webworker.js?hl=en&v=gTpTIWhbKpxADzTzkcabhXN4,-1,unknown,Incomplete Load (detected by Lighthouse)
+https://www.gstatic.com/recaptcha/api2/logo_48.png,-1,unknown,Incomplete Load (detected by Lighthouse)
+https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBHMdazQ.woff2,-1,unknown,Incomplete Load (detected by Lighthouse)

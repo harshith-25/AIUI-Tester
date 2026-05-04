@@ -981,6 +981,14 @@ async def run_lighthouse(body: LighthouseRunRequest):
                         "score": None,
                     }
 
+            # ── Step 4: Process failed requests ──────────────────────
+            failed_requests = summary.get("failedRequests", [])
+            failed_csv_path = None
+            if failed_requests:
+                csv_file = LIGHTHOUSE_REPORTS_DIR / f"{rid}.failed-requests.csv"
+                if csv_file.exists():
+                    failed_csv_path = str(csv_file.name)
+
             _mark_execution(
                 execution_id,
                 status="completed",
@@ -989,6 +997,9 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 score=summary.get("score"),
                 metrics=summary.get("metrics", {}),
                 categories=summary.get("categories", {}),
+                failed_requests=failed_requests,
+                failed_requests_csv=failed_csv_path,
+                failed_requests_count=len(failed_requests),
                 finished_at=datetime.now().isoformat(),
             )
         except Exception as e:
@@ -1028,6 +1039,35 @@ def get_lighthouse_json_report(report_id: str):
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="Lighthouse JSON report not found")
     return FileResponse(path=str(file_path), media_type="application/json")
+
+
+@router.get("/lighthouse/failed-requests/{report_id}")
+def get_lighthouse_failed_requests(report_id: str):
+    """Return the list of failed/broken requests for a Lighthouse report as JSON."""
+    safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
+    csv_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.failed-requests.csv"
+    if not csv_path.exists():
+        return {"failedRequests": [], "count": 0}
+    try:
+        df = pd.read_csv(csv_path)
+        records = df.to_dict(orient="records")
+        return {"failedRequests": records, "count": len(records)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to parse CSV: {str(e)}")
+
+
+@router.get("/lighthouse/failed-requests/{report_id}/csv")
+def download_lighthouse_failed_csv(report_id: str):
+    """Download the failed-requests CSV for a Lighthouse report."""
+    safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
+    csv_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.failed-requests.csv"
+    if not csv_path.exists():
+        raise HTTPException(status_code=404, detail="No failed requests CSV found for this report")
+    return FileResponse(
+        path=str(csv_path),
+        media_type="text/csv",
+        filename=f"failed_requests_{safe_id}.csv",
+    )
 
 
 @router.post("/lighthouse/page-load")
@@ -1105,12 +1145,25 @@ def get_lighthouse_history():
             report_id = file.name.replace(".report.json", "")
             timestamp = datetime.fromtimestamp(file.stat().st_mtime).isoformat()
             
+            # Check for associated failed-requests CSV
+            failed_csv = LIGHTHOUSE_REPORTS_DIR / f"{report_id}.failed-requests.csv"
+            failed_count = 0
+            has_failed_csv = failed_csv.exists()
+            if has_failed_csv:
+                try:
+                    with open(failed_csv, "r", encoding="utf-8") as fc:
+                        failed_count = max(0, sum(1 for _ in fc) - 1)  # subtract header
+                except Exception:
+                    pass
+
             reports.append({
                 "url": url,
                 "score": perf_score,
                 "reportId": report_id,
                 "metrics": metrics,
-                "timestamp": timestamp
+                "timestamp": timestamp,
+                "failedRequestsCount": failed_count,
+                "hasFailedRequestsCsv": has_failed_csv,
             })
         except Exception:
             continue
