@@ -146,6 +146,8 @@ async function run() {
           endTimeMs: null,
           errorText: null,
           blockedReason: null,
+          contentLength: 0,
+          receivedLength: 0,
         });
       });
 
@@ -156,6 +158,15 @@ async function run() {
         entry.statusCode = response.status;
         entry.mimeType = response.mimeType || 'unknown';
         entry.responseTimeMs = Date.now();
+        
+        // Capture content-length if present
+        const cl = response.headers?.['content-length'] || response.headers?.['Content-Length'];
+        if (cl) entry.contentLength = parseInt(cl, 10);
+      });
+
+      Network.dataReceived(({ requestId, dataLength }) => {
+        const entry = requests.get(requestId);
+        if (entry) entry.receivedLength += dataLength;
       });
 
       Network.loadingFinished(({ requestId, encodedDataLength }) => {
@@ -262,6 +273,7 @@ async function run() {
 
           if (entry.gotResponse && elapsedMs >= STALL_TIMEOUT_MS) {
             errorType = `Download Stalled & Failed (>${Math.round(STALL_TIMEOUT_MS / 1000)}s)`;
+            statusCode = 'timeout';
           }
 
           failedRequests.push({
@@ -294,16 +306,21 @@ async function run() {
           continue;
         }
 
-        // Case 3: Headers received but body never completed
-        if (entry.gotResponse && !entry.finished && !entry.failed) {
+        // Case 3: Headers received but body never completed or partial
+        const isPartial = entry.finished && entry.contentLength > 0 && entry.receivedLength < entry.contentLength;
+        if ((entry.gotResponse && !entry.finished && !entry.failed) || isPartial) {
           const downloadMs = nowMs - entry.responseTimeMs;
+          const isStalled = downloadMs >= STALL_TIMEOUT_MS;
+          
+          let err = `Download Incomplete (${Math.round(downloadMs / 1000)}s elapsed, body not received)`;
+          if (isStalled) err = `Download Stalled (>${Math.round(STALL_TIMEOUT_MS / 1000)}s, body never completed)`;
+          if (isPartial) err = `Partial Download (Received ${entry.receivedLength} of ${entry.contentLength} bytes)`;
+
           failedRequests.push({
             url: entry.url,
-            statusCode: String(entry.statusCode || 'stalled'),
+            statusCode: isStalled ? 'timeout' : 'failed',
             mimeType: entry.mimeType,
-            errorType: downloadMs >= STALL_TIMEOUT_MS
-              ? `Download Stalled (>${Math.round(STALL_TIMEOUT_MS / 1000)}s, body never completed)`
-              : `Download Incomplete (${Math.round(downloadMs / 1000)}s elapsed, body not received)`,
+            errorType: err,
           });
           continue;
         }
@@ -369,7 +386,7 @@ async function run() {
         if (item.finished === false) {
           failedRequests.push({
             url: reqUrl,
-            statusCode: String(status || 'incomplete'),
+            statusCode: (status === -1) ? 'failed' : String(status || 'incomplete'),
             mimeType: item.mimeType || 'unknown',
             errorType: 'Incomplete Load (detected by Lighthouse)',
           });
