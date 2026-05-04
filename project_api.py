@@ -301,10 +301,6 @@ async def run_project_tests(
     """
     Start a background test run and return an execution id. Poll the execution
     status via `/api/executions/{execution_id}/status`.
-
-    If ``split_cases`` is True the runner will execute each test case in
-    isolation, generating a separate report per case. The execution record
-    will include all report file names.
     """
     import uuid
     from core.test_runner import TestRunner
@@ -330,7 +326,6 @@ async def run_project_tests(
             db.close()
 
     exec_id = uuid.uuid4().hex[:8]
-    # Create async queues for remote browser communication
     command_queue = asyncio.Queue()
     response_queue = asyncio.Queue()
     _mark_execution(
@@ -399,30 +394,24 @@ async def run_project_tests(
             overall_stats = {"total": 0, "passed": 0, "failed": 0, "duration": 0, "pass_rate": 0}
 
             if split and len(test_cases) > 1:
-                # run each test case separately
                 for idx, case in enumerate(test_cases, start=1):
                     single_suite = await runner.run_test_suite([case], browser_queues=bq)
                     stats = ResultAggregator.get_statistics(single_suite)
                     analysis = ResultAggregator.get_failure_analysis(single_suite)
                     reports = ReporterFactory.generate_all_reports(single_suite, statistics=stats, failure_analysis=analysis)
                     if reports:
-                        # just take first report file
                         all_reports[f"case_{case.test_id}"] = str(list(reports.values())[0].name)
 
-                    # update overall counters
                     overall_stats["total"] += stats.get("total", 0)
                     overall_stats["passed"] += stats.get("passed", 0)
                     overall_stats["failed"] += stats.get("failed", 0)
                     overall_stats["duration"] += stats.get("duration", 0)
-                    # progress update
                     _mark_execution(execution_id, progress=20 + int(60 * idx / len(test_cases)))
-                # compute pass_rate
                 overall_stats["pass_rate"] = (
                     (overall_stats["passed"] / overall_stats["total"] * 100)
                     if overall_stats["total"] > 0 else 0
                 )
             else:
-                # single combined run
                 suite_result = await runner.run_test_suite(test_cases, browser_queues=bq)
                 stats = ResultAggregator.get_statistics(suite_result)
                 analysis = ResultAggregator.get_failure_analysis(suite_result)
@@ -431,7 +420,6 @@ async def run_project_tests(
                     all_reports.update({k: str(v.name) for k, v in reports.items()})
                 overall_stats = stats
 
-            # finalize
             _mark_execution(
                 execution_id,
                 status="completed",
@@ -443,11 +431,9 @@ async def run_project_tests(
         except Exception as e:
             _mark_execution(execution_id, status="failed", progress=100, message=str(e), finished_at=datetime.now().isoformat())
 
-    # Schedule background task
     try:
         asyncio.create_task(_background_run(exec_id, project_id, csv_path, split_cases, browser_queues))
     except Exception:
-        # Fallback: run in thread pool
         loop = asyncio.get_event_loop()
         loop.create_task(_background_run(exec_id, project_id, csv_path, split_cases, browser_queues))
 
@@ -456,19 +442,7 @@ async def run_project_tests(
 
 @router.websocket("/ws/browser/{execution_id}")
 async def browser_ws(ws: WebSocket, execution_id: str):
-    """
-    WebSocket relay between the backend's RemoteBrowserManager queues and
-    the frontend's BrowserBridge → Chrome Extension.
-
-    Flow:
-      1. RemoteBrowserManager puts a command on command_queue
-      2. This handler reads it and sends it over WebSocket
-      3. BrowserBridge forwards it to the Chrome Extension
-      4. Extension executes it and sends the result back
-      5. BrowserBridge sends the result over WebSocket
-      6. This handler puts it on response_queue
-      7. RemoteBrowserManager reads the response
-    """
+    """WebSocket relay between RemoteBrowserManager queues and the frontend."""
     await ws.accept()
     rec = EXECUTIONS.get(execution_id)
     if not rec or "command_queue" not in rec:
@@ -481,26 +455,17 @@ async def browser_ws(ws: WebSocket, execution_id: str):
 
     try:
         while True:
-            # Wait for the next command from RemoteBrowserManager
             try:
                 command = await asyncio.wait_for(cmd_q.get(), timeout=5.0)
             except asyncio.TimeoutError:
-                # No command yet — send a keep-alive ping so the browser
-                # doesn't close the socket.  BrowserBridge silently absorbs
-                # these pings.
                 try:
                     await ws.send_json({"action": "ping"})
                 except Exception:
                     break
                 continue
 
-            # Forward command to the frontend
             await ws.send_json(command)
-
-            # Wait for the extension's result from the frontend
             result = await ws.receive_json()
-
-            # Put the result on the response queue for RemoteBrowserManager
             await resp_q.put(result)
     except WebSocketDisconnect:
         pass
@@ -516,7 +481,6 @@ def list_executions():
         return []
 
     reports = []
-    # Match test_report_*.html
     for file in REPORTS_DIR.glob("test_report_*.html"):
         mtime = file.stat().st_mtime
         reports.append({
@@ -525,7 +489,6 @@ def list_executions():
             "size_kb": round(file.stat().st_size / 1024, 2)
         })
 
-    # Sort by newest first
     reports.sort(key=lambda x: x["created_at"], reverse=True)
     return reports
 
@@ -536,7 +499,6 @@ def get_execution_status(execution_id: str):
     rec = EXECUTIONS.get(execution_id)
     if not rec:
         raise HTTPException(status_code=404, detail="Execution not found")
-    # Return a sanitized copy (strips non-serializable queue objects)
     return _sanitize_execution(rec)
 
 
@@ -548,7 +510,6 @@ def get_execution_reports(execution_id: str):
     if rec.get("status") != "completed":
         raise HTTPException(status_code=400, detail="Execution not completed yet")
     reports = rec.get("reports") or {}
-    # Convert filenames to accessible URLs
     urls = {k: str((REPORTS_DIR / v).name) for k, v in reports.items()} if reports else {}
     return {"reports": urls}
 
@@ -577,11 +538,9 @@ def download_project_report(project_id: str):
         project_name = proj.name
         created_at = proj.created_at.isoformat() if proj.created_at else ""
 
-        # Attempt to find the latest rich HTML report in test_results that contains this project's tests
         if test_cases and REPORTS_DIR.exists():
             test_ids = {tc.get("test_id") for tc in test_cases if tc.get("test_id")}
 
-            # Get all reports sorted by newest first
             all_reports = sorted(
                 REPORTS_DIR.glob("test_report_*.html"),
                 key=lambda f: f.stat().st_mtime,
@@ -591,7 +550,6 @@ def download_project_report(project_id: str):
             for report_file in all_reports:
                 try:
                     content = report_file.read_text(encoding="utf-8")
-                    # Simple heuristic: check if at least one of our test IDs is mentioned in the report
                     if any(tid in content for tid in test_ids):
                         return FileResponse(
                             path=str(report_file),
@@ -601,9 +559,6 @@ def download_project_report(project_id: str):
                 except Exception:
                     continue
 
-        # Fallback to dynamic summary report
-
-        # Count by priority / category
         priority_counts: Dict[str, int] = {}
         category_counts: Dict[str, int] = {}
         for tc in test_cases:
@@ -733,14 +688,6 @@ class LighthouseRunRequest(BaseModel):
 async def run_lighthouse(body: LighthouseRunRequest):
     """
     Start a Lighthouse audit + real browser page-load measurement.
-
-    Uses RemoteBrowserManager (same flow as /projects/{id}/run) to open
-    the user's Chrome via the extension, navigate to the URL, extract
-    performance.timing, then runs the Lighthouse Node.js subprocess
-    and merges the page-load metrics into the final report.
-
-    The frontend must connect a BrowserBridge WebSocket to
-    ``/ws/browser/{execution_id}`` so commands relay to the extension.
     """
     if not body.url.strip():
         raise HTTPException(status_code=400, detail="URL is required")
@@ -748,7 +695,6 @@ async def run_lighthouse(body: LighthouseRunRequest):
     exec_id = uuid.uuid4().hex[:8]
     report_id = exec_id
 
-    # Create async queues — same pattern as run_project_tests
     command_queue = asyncio.Queue()
     response_queue = asyncio.Queue()
 
@@ -765,7 +711,6 @@ async def run_lighthouse(body: LighthouseRunRequest):
     )
 
     async def _lighthouse_background(execution_id: str, url: str, rid: str):
-        """Background: open browser via Chrome Extension, measure load, run Lighthouse."""
         from browser.remote_browser_manager import RemoteBrowserManager
 
         rec = EXECUTIONS.get(execution_id)
@@ -788,19 +733,13 @@ async def run_lighthouse(body: LighthouseRunRequest):
             loop = asyncio.get_event_loop()
 
             # ── Step 1 (Optional): Open browser via extension & measure page load ──
-            # If the Chrome Extension WebSocket is not connected, skip this step
-            # gracefully and rely solely on Lighthouse's own metrics.
             _mark_execution(execution_id, progress=10)
             try:
                 await browser.start()
-
                 _mark_execution(execution_id, progress=15)
                 await browser.navigate(url)
-
-                # Wait for page to fully settle
                 await browser.wait(3)
 
-                # Extract performance timing from the real browser
                 _mark_execution(execution_id, progress=20)
                 try:
                     timings = await browser.evaluate_js("""
@@ -833,7 +772,6 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 except Exception as e:
                     print(f"[Lighthouse] Failed to extract timings from extension browser: {e}")
 
-                # Close the extension browser
                 try:
                     await browser.close()
                 except Exception:
@@ -862,11 +800,9 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 "best-practices",
             ]
 
-            # Build environment: inherit current env + ensure CHROME_PATH is set
             import os as _os
             sub_env = _os.environ.copy()
             if "CHROME_PATH" not in sub_env:
-                # Try to auto-detect chromium/chrome location
                 for candidate in [
                     "/usr/bin/google-chrome-stable",
                     "/usr/bin/google-chrome",
@@ -883,7 +819,6 @@ async def run_lighthouse(body: LighthouseRunRequest):
             print(f"[Lighthouse] CWD={Path(__file__).parent}")
 
             def _run_lighthouse_subprocess():
-                """Run lighthouse in a subprocess with proper timeout handling."""
                 process = subprocess.Popen(
                     cmd,
                     stdout=subprocess.PIPE,
@@ -905,11 +840,7 @@ async def run_lighthouse(body: LighthouseRunRequest):
             result = await loop.run_in_executor(None, _run_lighthouse_subprocess)
 
             if result.get("timed_out"):
-                out_detail = result.get("stdout", "").strip()[:500]
                 err_detail = result.get("stderr", "").strip()[:500]
-                print(f"[Lighthouse] TIMEOUT (300s)")
-                print(f"[Lighthouse] Partial stdout: {out_detail}")
-                print(f"[Lighthouse] Partial stderr: {err_detail}")
                 _mark_execution(
                     execution_id,
                     status="failed",
@@ -930,10 +861,6 @@ async def run_lighthouse(body: LighthouseRunRequest):
 
             if result["returncode"] != 0:
                 error_msg = proc_stderr or proc_stdout or "Lighthouse process failed"
-                print(f"[Lighthouse] FAILED (rc={result['returncode']})")
-                if proc_stdout: print(f"[Lighthouse] stdout: {proc_stdout[:500]}")
-                if proc_stderr: print(f"[Lighthouse] stderr: {proc_stderr[:500]}")
-                
                 try:
                     error_data = json.loads(error_msg)
                     error_msg = error_data.get("message", error_msg)
@@ -981,13 +908,21 @@ async def run_lighthouse(body: LighthouseRunRequest):
                         "score": None,
                     }
 
-            # ── Step 4: Process failed requests ──────────────────────
-            failed_requests = summary.get("failedRequests", [])
-            failed_csv_path = None
-            if failed_requests:
-                csv_file = LIGHTHOUSE_REPORTS_DIR / f"{rid}.failed-requests.csv"
-                if csv_file.exists():
-                    failed_csv_path = str(csv_file.name)
+            # ── Step 4: Resolve failed requests ───────────────────────
+            # The runner now deduplicates before writing the CSV, so the
+            # in-memory list and the CSV file are always consistent.
+            # We trust the runner's list rather than re-reading the CSV.
+            failed_requests: list = summary.get("failedRequests", [])
+            csv_written: bool = summary.get("failedRequestsCsvWritten", False)
+
+            # Determine the CSV filename only if the runner confirms it wrote one.
+            # Store just the filename (not a full path) so all callers can
+            # construct the full path themselves using LIGHTHOUSE_REPORTS_DIR.
+            failed_csv_filename: Optional[str] = None
+            if csv_written:
+                candidate = LIGHTHOUSE_REPORTS_DIR / f"{rid}.failed-requests.csv"
+                if candidate.exists():
+                    failed_csv_filename = candidate.name
 
             _mark_execution(
                 execution_id,
@@ -997,9 +932,12 @@ async def run_lighthouse(body: LighthouseRunRequest):
                 score=summary.get("score"),
                 metrics=summary.get("metrics", {}),
                 categories=summary.get("categories", {}),
+                # Single source of truth: always use the runner's deduplicated list
                 failed_requests=failed_requests,
-                failed_requests_csv=failed_csv_path,
                 failed_requests_count=len(failed_requests),
+                # CSV metadata — filename only, never a full path
+                failed_requests_csv=failed_csv_filename,
+                failed_requests_csv_written=csv_written,
                 finished_at=datetime.now().isoformat(),
             )
         except Exception as e:
@@ -1018,12 +956,9 @@ async def run_lighthouse(body: LighthouseRunRequest):
     return {"status": "started", "execution_id": exec_id, "report_id": report_id}
 
 
-
-
 @router.get("/lighthouse/report/{report_id}")
 def get_lighthouse_html_report(report_id: str):
-    """Serve the Lighthouse HTML report — identical to Chrome DevTools output."""
-    # Sanitize report_id to prevent path traversal
+    """Serve the Lighthouse HTML report."""
     safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
     file_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.report.html"
     if not file_path.exists():
@@ -1043,13 +978,38 @@ def get_lighthouse_json_report(report_id: str):
 
 @router.get("/lighthouse/failed-requests/{report_id}")
 def get_lighthouse_failed_requests(report_id: str):
-    """Return the list of failed/broken requests for a Lighthouse report as JSON."""
+    """
+    Return the list of failed/broken requests for a Lighthouse report as JSON.
+
+    Source priority:
+      1. In-memory execution record (always consistent with the CSV, deduplicated
+         by the runner before both were written).
+      2. On-disk CSV fallback (for reports from a previous server session where
+         the in-memory record no longer exists).
+    """
     safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
+
+    # 1. Try the in-memory record first — it is always consistent with the CSV.
+    for rec in EXECUTIONS.values():
+        if rec.get("report_id") == safe_id and "failed_requests" in rec:
+            requests = rec["failed_requests"]
+            return {"failedRequests": requests, "count": len(requests)}
+
+    # 2. Fall back to the CSV on disk (e.g. after a server restart).
     csv_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.failed-requests.csv"
     if not csv_path.exists():
         return {"failedRequests": [], "count": 0}
+
     try:
         df = pd.read_csv(csv_path)
+        # Normalise column names to camelCase for API consistency
+        col_map = {
+            "URL": "url",
+            "Status Code": "statusCode",
+            "MIME Type": "mimeType",
+            "Error Type": "errorType",
+        }
+        df.rename(columns=col_map, inplace=True)
         records = df.to_dict(orient="records")
         return {"failedRequests": records, "count": len(records)}
     except Exception as e:
@@ -1058,15 +1018,66 @@ def get_lighthouse_failed_requests(report_id: str):
 
 @router.get("/lighthouse/failed-requests/{report_id}/csv")
 def download_lighthouse_failed_csv(report_id: str):
-    """Download the failed-requests CSV for a Lighthouse report."""
+    """
+    Download the failed-requests CSV for a Lighthouse report.
+
+    If the on-disk CSV is missing but we have an in-memory record, regenerate
+    it on the fly so the download always works.
+    """
+    import csv
+    import io as _io
+
     safe_id = re.sub(r"[^a-zA-Z0-9_-]", "", report_id)
     csv_path = LIGHTHOUSE_REPORTS_DIR / f"{safe_id}.failed-requests.csv"
-    if not csv_path.exists():
-        raise HTTPException(status_code=404, detail="No failed requests CSV found for this report")
-    return FileResponse(
-        path=str(csv_path),
+
+    # If the file exists, serve it directly.
+    if csv_path.exists():
+        return FileResponse(
+            path=str(csv_path),
+            media_type="text/csv",
+            filename=f"failed_requests_{safe_id}.csv",
+        )
+
+    # File missing — try to regenerate from the in-memory execution record.
+    failed_requests: Optional[list] = None
+    for rec in EXECUTIONS.values():
+        if rec.get("report_id") == safe_id and "failed_requests" in rec:
+            failed_requests = rec["failed_requests"]
+            break
+
+    if failed_requests is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No failed requests CSV found for this report and no in-memory data available."
+        )
+
+    if not failed_requests:
+        raise HTTPException(status_code=404, detail="No failed requests recorded for this report.")
+
+    # Build CSV in-memory and write to disk so future requests hit the fast path.
+    buf = _io.StringIO()
+    writer = csv.DictWriter(
+        buf,
+        fieldnames=["url", "statusCode", "mimeType", "errorType"],
+        extrasaction="ignore",
+        lineterminator="\n",
+    )
+    writer.writeheader()
+    writer.writerows(failed_requests)
+    csv_content = buf.getvalue()
+
+    # Persist to disk for next time.
+    try:
+        LIGHTHOUSE_REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+        csv_path.write_text(csv_content, encoding="utf-8")
+    except Exception:
+        pass  # Non-fatal — we still serve the content below.
+
+    from fastapi.responses import Response
+    return Response(
+        content=csv_content,
         media_type="text/csv",
-        filename=f"failed_requests_{safe_id}.csv",
+        headers={"Content-Disposition": f'attachment; filename="failed_requests_{safe_id}.csv"'},
     )
 
 
@@ -1080,7 +1091,6 @@ async def measure_page_load(url: str = Form(...)):
             browser = await p.chromium.launch(headless=True)
             page = await browser.new_page()
             start_time = time.time()
-            # networkidle ensures all dynamic elements and resources have finished loading
             await page.goto(url, wait_until="networkidle", timeout=60000)
             end_time = time.time()
             await browser.close()
@@ -1094,20 +1104,20 @@ def get_lighthouse_history():
     """List all past Lighthouse reports."""
     if not LIGHTHOUSE_REPORTS_DIR.exists():
         return []
-    
+
     reports = []
     for file in LIGHTHOUSE_REPORTS_DIR.glob("*.report.json"):
         try:
             with open(file, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            
+
             url = data.get("finalUrl") or data.get("requestedUrl") or "Unknown URL"
             perf_score = None
             if "categories" in data and "performance" in data["categories"]:
                 s = data["categories"]["performance"].get("score")
                 if s is not None:
                     perf_score = int(s * 100)
-            
+
             metrics = {}
             audits = data.get("audits", {})
             metric_map = {
@@ -1127,8 +1137,7 @@ def get_lighthouse_history():
                         "displayValue": audit.get("displayValue", ""),
                         "score": audit.get("score")
                     }
-            
-            # Extract Full Page Load Time from observedLoad in metrics audit
+
             try:
                 metrics_items = audits.get("metrics", {}).get("details", {}).get("items", [])
                 if metrics_items:
@@ -1141,20 +1150,28 @@ def get_lighthouse_history():
                         }
             except Exception:
                 pass
-                    
+
             report_id = file.name.replace(".report.json", "")
             timestamp = datetime.fromtimestamp(file.stat().st_mtime).isoformat()
-            
-            # Check for associated failed-requests CSV
+
             failed_csv = LIGHTHOUSE_REPORTS_DIR / f"{report_id}.failed-requests.csv"
             failed_count = 0
             has_failed_csv = failed_csv.exists()
             if has_failed_csv:
                 try:
                     with open(failed_csv, "r", encoding="utf-8") as fc:
-                        failed_count = max(0, sum(1 for _ in fc) - 1)  # subtract header
+                        # Subtract 1 for header row; guard against empty files
+                        failed_count = max(0, sum(1 for _ in fc) - 1)
                 except Exception:
                     pass
+
+            # Also check in-memory for a more accurate count (covers the case
+            # where the CSV hasn't been written yet but the run just completed).
+            for rec in EXECUTIONS.values():
+                if rec.get("report_id") == report_id and "failed_requests_count" in rec:
+                    failed_count = rec["failed_requests_count"]
+                    has_failed_csv = rec.get("failed_requests_csv_written", has_failed_csv)
+                    break
 
             reports.append({
                 "url": url,
@@ -1167,7 +1184,7 @@ def get_lighthouse_history():
             })
         except Exception:
             continue
-            
+
     reports.sort(key=lambda x: x["timestamp"], reverse=True)
     return reports
 
@@ -1187,7 +1204,6 @@ def import_test_cases(project_id: str, csv_path: str = Form(...)):
 
         try:
             df = pd.read_csv(p)
-            # Remove existing test cases for this project first
             db.query(TestCaseDB).filter(TestCaseDB.project_id == project_id).delete()
 
             count = 0

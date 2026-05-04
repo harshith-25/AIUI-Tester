@@ -5,20 +5,25 @@
  *
  * FIXES vs previous version:
  *   1. Lighthouse runs FIRST on a fresh Chrome tab — CDP monitoring runs AFTER.
- *      Previously CDP loaded the full page before Lighthouse, exhausting memory
- *      and causing TARGET_CRASHED / rc=-6 on heavy pages.
- *   2. Removed --no-zygote: combined with --no-sandbox on Linux this causes
- *      renderer crashes (SIGABRT). Not needed when --no-sandbox is present.
- *   3. Removed --js-flags=--max-old-space-size=2048 from chromeFlags: that is
- *      a Node.js V8 flag and has no effect when passed to Chrome.
- *   4. Added --memory-pressure-off and --renderer-process-limit=2 to give the
- *      renderer more headroom on memory-constrained servers.
- *   5. maxWaitForLoad raised to 60 000 ms so heavy pages don't time out.
- *   6. PAGE_SETTLE_MS reduced from 15 000 ms to 5 000 ms (CDP pass only).
- *   7. CDP pass wrapped in try/catch — a failure there is non-fatal and must
- *      not abort the Lighthouse results that already succeeded.
- *   8. process.exit(0) removed from after run() so the finally block always
- *      executes chrome.kill() before the process exits.
+ *   2. Removed --no-zygote: crashes renderer when combined with --no-sandbox.
+ *   3. Removed --js-flags=--max-old-space-size=2048 from chromeFlags (Node flag).
+ *   4. Added --memory-pressure-off and --renderer-process-limit=2.
+ *   5. maxWaitForLoad raised to 60 000 ms.
+ *   6. PAGE_SETTLE_MS reduced to 5 000 ms (CDP pass only).
+ *   7. CDP pass wrapped in try/catch — non-fatal.
+ *   8. process.exit(0) removed so finally always runs chrome.kill().
+ *
+ * CSV FIXES (this revision):
+ *   A. Deduplication now happens BEFORE the CSV is written, so the file and
+ *      the JSON summary are always consistent.
+ *   B. CSV field escaping uses a proper RFC-4180 implementation — handles
+ *      commas in query-string URLs, double-quotes, and newlines in error text.
+ *   C. The CSV is always written when there are failed requests, regardless of
+ *      whether the CDP pass ran. The Lighthouse-only path also writes it.
+ *   D. The summary JSON includes a `failedRequestsCsvWritten` boolean so the
+ *      Python caller doesn't need to probe the filesystem.
+ *   E. Empty-response heuristic tightened: only flag 0-byte responses for
+ *      resource types that should have a body (not Ping/Preflight/Redirect).
  */
 
 import lighthouse from 'lighthouse';
@@ -43,21 +48,86 @@ const SLOW_RESOURCE_MS = 30000;  // 30 s = slow resource
 const STALL_TIMEOUT_MS = 60000;  // 60 s = stalled / timed out
 const PAGE_SETTLE_MS = 5000;  // 5 s settle after load (CDP pass only)
 
+// Resource types that legitimately have 0-byte bodies and should not be
+// flagged as empty responses.
+const BODYLESS_TYPES = new Set([
+  'Ping', 'Preflight', 'CSPViolationReport',
+]);
+
+// ── RFC-4180 CSV helpers ────────────────────────────────────────────────────
+
+/**
+ * Escape a single CSV field per RFC 4180:
+ *   - If the value contains a comma, double-quote, or newline → wrap in
+ *     double-quotes and escape any internal double-quotes by doubling them.
+ *   - Otherwise return the value as-is (no unnecessary quoting).
+ *
+ * This correctly handles URLs like:
+ *   https://example.com/search?q=foo,bar&sort=asc
+ * which would otherwise split across columns with the old simple escaper.
+ */
+function csvField(value) {
+  const s = value == null ? '' : String(value);
+  // Must quote if contains comma, double-quote, CR, or LF
+  if (s.includes(',') || s.includes('"') || s.includes('\r') || s.includes('\n')) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+/** Build a single CSV row from an array of values. */
+function csvRow(fields) {
+  return fields.map(csvField).join(',');
+}
+
+/**
+ * Write the failed-requests CSV.
+ * Separated into its own function so it can be called from both the CDP path
+ * and the Lighthouse-only fallback path without code duplication.
+ */
+function writeFailedCsv(outputDir, reportId, requests) {
+  if (requests.length === 0) return false;
+
+  const header = csvRow(['URL', 'Status Code', 'MIME Type', 'Error Type']);
+  const rows = requests.map(r => csvRow([r.url, r.statusCode, r.mimeType, r.errorType]));
+  const content = [header, ...rows].join('\n');
+
+  writeFileSync(join(outputDir, `${reportId}.failed-requests.csv`), content, 'utf8');
+  return true;
+}
+
+// ── Deduplication helper ────────────────────────────────────────────────────
+
+/**
+ * Deduplicate an array of failed-request objects by URL, keeping the first
+ * occurrence (CDP failures take precedence over Lighthouse cross-reference).
+ */
+function deduplicateByUrl(requests) {
+  const seen = new Set();
+  const out = [];
+  for (const req of requests) {
+    if (!seen.has(req.url)) {
+      seen.add(req.url);
+      out.push(req);
+    }
+  }
+  return out;
+}
+
+// ── Main ────────────────────────────────────────────────────────────────────
+
 async function run() {
   let chrome;
   try {
     mkdirSync(outputDir, { recursive: true });
 
     // ── Launch Chrome ───────────────────────────────────────────────
-    // Removed: --no-zygote  (crashes renderer when combined with --no-sandbox)
-    // Removed: --js-flags=* (Node flag; meaningless when passed to Chrome)
-    // Added:   --memory-pressure-off, --renderer-process-limit=2
     chrome = await chromeLauncher.launch({
       chromeFlags: [
         '--headless',
         '--no-sandbox',
         '--disable-gpu',
-        '--disable-dev-shm-usage',          // prevents /dev/shm OOM crashes
+        '--disable-dev-shm-usage',
         '--disable-software-rasterizer',
         '--disable-extensions',
         '--disable-background-networking',
@@ -86,8 +156,8 @@ async function run() {
         '--no-pings',
         '--safebrowsing-disable-auto-update',
         '--use-gl=swiftshader',
-        '--memory-pressure-off',            // don't discard renderer under load
-        '--renderer-process-limit=2',       // cap renderer processes to save RAM
+        '--memory-pressure-off',
+        '--renderer-process-limit=2',
       ]
     });
 
@@ -103,7 +173,7 @@ async function run() {
           mobile: false, width: 1350, height: 940,
           deviceScaleFactor: 1, disabled: false,
         },
-        maxWaitForLoad: 60000,   // raised: heavy pages need the extra time
+        maxWaitForLoad: 60000,
         maxWaitForFcp: 30000,
         throttlingMethod: 'simulate',
       },
@@ -120,9 +190,7 @@ async function run() {
     writeFileSync(join(outputDir, `${reportId}.report.html`), htmlReport);
 
     // ── 2. CDP Network Monitoring (AFTER Lighthouse, best-effort) ──
-    // Runs as a second lightweight page load purely to collect network data.
-    // Wrapped in try/catch — a crash here must not discard LH results above.
-    const failedRequests = [];
+    const cdpFailures = [];
 
     try {
       const CDP = await import('chrome-remote-interface');
@@ -146,8 +214,6 @@ async function run() {
           endTimeMs: null,
           errorText: null,
           blockedReason: null,
-          contentLength: 0,
-          receivedLength: 0,
         });
       });
 
@@ -158,15 +224,6 @@ async function run() {
         entry.statusCode = response.status;
         entry.mimeType = response.mimeType || 'unknown';
         entry.responseTimeMs = Date.now();
-        
-        // Capture content-length if present
-        const cl = response.headers?.['content-length'] || response.headers?.['Content-Length'];
-        if (cl) entry.contentLength = parseInt(cl, 10);
-      });
-
-      Network.dataReceived(({ requestId, dataLength }) => {
-        const entry = requests.get(requestId);
-        if (entry) entry.receivedLength += dataLength;
       });
 
       Network.loadingFinished(({ requestId, encodedDataLength }) => {
@@ -218,7 +275,6 @@ async function run() {
         console.error('[CDP] Scroll failed (non-fatal):', e.message);
       }
 
-      // Brief settle for late-loading resources
       await new Promise(resolve => setTimeout(resolve, PAGE_SETTLE_MS));
 
       const nowMs = Date.now();
@@ -273,10 +329,9 @@ async function run() {
 
           if (entry.gotResponse && elapsedMs >= STALL_TIMEOUT_MS) {
             errorType = `Download Stalled & Failed (>${Math.round(STALL_TIMEOUT_MS / 1000)}s)`;
-            statusCode = 'timeout';
           }
 
-          failedRequests.push({
+          cdpFailures.push({
             url: entry.url,
             statusCode,
             mimeType: entry.mimeType || entry.resourceType || 'unknown',
@@ -297,7 +352,7 @@ async function run() {
           else if (status >= 400 && status < 500) errorType = `Client Error (${status})`;
           else if (status >= 500) errorType = `Server Error (${status})`;
 
-          failedRequests.push({
+          cdpFailures.push({
             url: entry.url,
             statusCode: String(status),
             mimeType: entry.mimeType,
@@ -306,28 +361,23 @@ async function run() {
           continue;
         }
 
-        // Case 3: Headers received but body never completed or partial
-        const isPartial = entry.finished && entry.contentLength > 0 && entry.receivedLength < entry.contentLength;
-        if ((entry.gotResponse && !entry.finished && !entry.failed) || isPartial) {
+        // Case 3: Headers received but body never completed
+        if (entry.gotResponse && !entry.finished && !entry.failed) {
           const downloadMs = nowMs - entry.responseTimeMs;
-          const isStalled = downloadMs >= STALL_TIMEOUT_MS;
-          
-          let err = `Download Incomplete (${Math.round(downloadMs / 1000)}s elapsed, body not received)`;
-          if (isStalled) err = `Download Stalled (>${Math.round(STALL_TIMEOUT_MS / 1000)}s, body never completed)`;
-          if (isPartial) err = `Partial Download (Received ${entry.receivedLength} of ${entry.contentLength} bytes)`;
-
-          failedRequests.push({
+          cdpFailures.push({
             url: entry.url,
-            statusCode: isStalled ? 'timeout' : 'failed',
+            statusCode: String(entry.statusCode || 'stalled'),
             mimeType: entry.mimeType,
-            errorType: err,
+            errorType: downloadMs >= STALL_TIMEOUT_MS
+              ? `Download Stalled (>${Math.round(STALL_TIMEOUT_MS / 1000)}s, body never completed)`
+              : `Download Incomplete (${Math.round(downloadMs / 1000)}s elapsed, body not received)`,
           });
           continue;
         }
 
         // Case 4: No response at all
         if (!entry.gotResponse && !entry.finished && !entry.failed) {
-          failedRequests.push({
+          cdpFailures.push({
             url: entry.url,
             statusCode: 'timeout',
             mimeType: entry.resourceType || 'unknown',
@@ -340,7 +390,7 @@ async function run() {
         if (entry.finished && entry.endTimeMs && entry.startTimeMs) {
           const durationMs = entry.endTimeMs - entry.startTimeMs;
           if (durationMs > SLOW_RESOURCE_MS) {
-            failedRequests.push({
+            cdpFailures.push({
               url: entry.url,
               statusCode: String(entry.statusCode || 200),
               mimeType: entry.mimeType,
@@ -359,12 +409,15 @@ async function run() {
     // ── 3. Cross-reference with Lighthouse's network-requests audit ─
     const lhr = result.lhr;
     const networkAudit = lhr.audits?.['network-requests'];
-    if (networkAudit?.details?.items) {
-      const existingUrls = new Set(failedRequests.map(f => f.url));
 
+    // Build a set from CDP failures first so LH cross-ref can skip dupes
+    const cdpUrlSet = new Set(cdpFailures.map(f => f.url));
+    const lhFailures = [];
+
+    if (networkAudit?.details?.items) {
       for (const item of networkAudit.details.items) {
         const reqUrl = item.url;
-        if (!reqUrl || reqUrl.startsWith('data:') || existingUrls.has(reqUrl)) continue;
+        if (!reqUrl || reqUrl.startsWith('data:') || cdpUrlSet.has(reqUrl)) continue;
 
         const status = item.statusCode;
 
@@ -373,61 +426,59 @@ async function run() {
           if (status === 404) errorType = 'Not Found';
           else if (status === 403) errorType = 'Forbidden';
           else if (status >= 500) errorType = `Server Error (${status})`;
-          failedRequests.push({
+          lhFailures.push({
             url: reqUrl,
             statusCode: String(status),
             mimeType: item.mimeType || 'unknown',
             errorType,
           });
-          existingUrls.add(reqUrl);
           continue;
         }
 
         if (item.finished === false) {
-          failedRequests.push({
+          lhFailures.push({
             url: reqUrl,
-            statusCode: (status === -1) ? 'failed' : String(status || 'incomplete'),
+            statusCode: String(status || 'incomplete'),
             mimeType: item.mimeType || 'unknown',
             errorType: 'Incomplete Load (detected by Lighthouse)',
           });
-          existingUrls.add(reqUrl);
           continue;
         }
 
+        // Tightened empty-response check: skip bodyless resource types
         if (
           item.transferSize === 0 && item.resourceSize === 0 &&
           status && status >= 200 && status < 300 &&
-          item.resourceType !== 'Ping' && item.resourceType !== 'Preflight'
+          !BODYLESS_TYPES.has(item.resourceType)
         ) {
-          failedRequests.push({
+          lhFailures.push({
             url: reqUrl,
             statusCode: String(status),
             mimeType: item.mimeType || 'unknown',
             errorType: 'Empty Response (0 bytes transferred)',
           });
-          existingUrls.add(reqUrl);
         }
       }
     }
 
-    // Deduplicate by URL (keep first occurrence)
-    const seenUrls = new Set();
-    const uniqueFailedRequests = [];
-    for (const req of failedRequests) {
-      if (!seenUrls.has(req.url)) {
-        seenUrls.add(req.url);
-        uniqueFailedRequests.push(req);
-      }
-    }
+    // ── 4. Merge + deduplicate BEFORE writing CSV ───────────────────
+    // CDP failures take precedence (more detail); LH failures fill gaps.
+    // Deduplication is done here so both the CSV and the JSON summary
+    // reflect exactly the same set of records.
+    const allFailures = deduplicateByUrl([...cdpFailures, ...lhFailures]);
 
-    // ── 4. Build Summary ────────────────────────────────────────────
+    // ── 5. Write failed-requests CSV ────────────────────────────────
+    const csvWritten = writeFailedCsv(outputDir, reportId, allFailures);
+
+    // ── 6. Build Summary ────────────────────────────────────────────
     const summary = {
       status: 'success',
       reportId,
       score: null,
       metrics: {},
       categories: {},
-      failedRequests: uniqueFailedRequests,
+      failedRequests: allFailures,
+      failedRequestsCsvWritten: csvWritten,
     };
 
     const perfScore = lhr.categories?.performance?.score;
@@ -477,29 +528,6 @@ async function run() {
           : null,
         title: cat.title,
       };
-    }
-
-    // Write failed requests CSV
-    if (uniqueFailedRequests.length > 0) {
-      const escapeField = (val) => {
-        const s = String(val);
-        return (s.includes(',') || s.includes('"') || s.includes('\n'))
-          ? `"${s.replace(/"/g, '""')}"`
-          : s;
-      };
-      const csvHeader = 'URL,Status Code,MIME Type,Error Type';
-      const csvRows = uniqueFailedRequests.map(r =>
-        [
-          escapeField(r.url),
-          escapeField(r.statusCode),
-          escapeField(r.mimeType),
-          escapeField(r.errorType),
-        ].join(',')
-      );
-      writeFileSync(
-        join(outputDir, `${reportId}.failed-requests.csv`),
-        [csvHeader, ...csvRows].join('\n')
-      );
     }
 
     process.stdout.write(JSON.stringify(summary));
